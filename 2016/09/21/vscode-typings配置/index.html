@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> vscode typings配置 · Fine, thank you, and you.</title><meta name="description" content="vscode typings配置 - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li><li class="nav-list-item"><a href="http://littlelyon.com/resume/" target="_self" class="nav-list-link"><i class="fa fa-info">&nbsp;</i>About</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">vscode typings配置</h1><div class="post-info">Sep 21, 2016</div><div class="post-content"><p>vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提供的，但是js作为ts的编译对象，同样可以享受这个compiler提供的便利。</p>
+<a id="more"></a>
+<p>大体步骤分为：</p>
+<ul>
+<li><a href="#进行vscode的js项目配置">配置typings</a> </li>
+<li><a href="#安装typings的依赖资源">安装typings的依赖资源</a></li>
+<li><a href="#进行vscode的js项目配置">进行vscode的js项目配置</a></li>
+</ul>
+<h2 id="配置typings"><a href="#配置typings" class="headerlink" title="配置typings"></a>配置typings</h2><p>首先你需要安装nodejs环境，这里不赘述了。之后</p>
+<blockquote>
+<p>npm i typings -g</p>
+</blockquote>
+<p>这样全局都可以调用typings这个命令了，然后只需要在你需要提供智能提示的project的根目录执行</p>
+<blockquote>
+<p>typings init</p>
+</blockquote>
+<p>这样会生成一个typings.json文件，这个文件的功能和package.json类似。</p>
+<h2 id="安装typings的依赖资源"><a href="#安装typings的依赖资源" class="headerlink" title="安装typings的依赖资源"></a>安装typings的依赖资源</h2><p>安装依赖就容易多了，比如你需要angular的资源，只需要执行</p>
+<blockquote>
+<p>typings i dt~angular –save –global</p>
+</blockquote>
+<p>这里的dt~是指资源的registry，这个可以在typings的帮助信息中查看。</p>
+<p>如果你不确定某个资源的registry，比如你想要react的资源，你可以执行</p>
+<blockquote>
+<p>typings search react</p>
+</blockquote>
+<p>之后console会列出已知的所有资源的registry。</p>
+<h2 id="进行vscode的js项目配置"><a href="#进行vscode的js项目配置" class="headerlink" title="进行vscode的js项目配置"></a>进行vscode的js项目配置</h2><p>最后一步，需要为vscode指定js项目配置，这个配置文件叫做jsconfig.json，如果你只需要提供智能提示的功能话，这个文件可以为空。</p>
+<p>这个文件的位置表示以当前位置为项目根目录。</p>
+<p>并行的项目可以提供多个jsconfig在不同的项目中，以此来表示它们是彼此区分的。</p>
+<p>对于嵌套的项目，配置多个jsconfig并不会区分父子关系，不是很建议这么做，因为这个智能提示功能是基于vscode extension的language server实现的，如果一个项目文件过多，可能导致解析超时而导致无法提供正确的提示信息（我遇过n次这种情况，开始还以为是vscode的bug），最好还是采用并行的方式。</p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>上图一张</p>
+<img src="/img/vscode_typings_angular.png" width="566" height="312"></div></article></div></section><footer><div class="paginator"><a href="/2016/09/26/我为什么离开了Liferay/" class="prev">上一篇</a><a href="/2016/09/14/7-tips-for-cooking/" class="next">下一篇</a></div><div data-thread-key="2016/09/21/vscode-typings配置/" data-title="vscode typings配置" data-url="http://yoursite.com/2016/09/21/vscode-typings配置/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2016 - 2017 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>

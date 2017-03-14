@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> HTML is about meaning · Fine, thank you, and you.</title><meta name="description" content="HTML is about meaning - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li><li class="nav-list-item"><a href="http://littlelyon.com/resume/" target="_self" class="nav-list-link"><i class="fa fa-info">&nbsp;</i>About</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">HTML is about meaning</h1><div class="post-info">Aug 10, 2016</div><div class="post-content"><blockquote>
+<p>原文地址: <a href="http://marksheet.io/html-semantics.html" target="_blank" rel="external">http://marksheet.io/html-semantics.html</a></p>
+</blockquote>
+<p>HTML标签本身的意义是为了传递对于一个document元素的含义，所以再考虑使用正确的标签表达内容之前，考虑你的网页看起来怎么样为时过早，请将注意力集中到每一个你使用的HTML标签上。</p>
+<p>你需要根据你书写的内容及本文本身的含义，来选择与之匹配的HTML标签。</p>
+<a id="more"></a>
+<h2 id="Structure-elements-组织页面"><a href="#Structure-elements-组织页面" class="headerlink" title="Structure elements: 组织页面"></a>Structure elements: 组织页面</h2><p>你可以使用<strong>结构</strong>元素来组织页面的主要部分，这些部分通常包含其他的HTML元素。</p>
+<p>下面是一个典型的网页需要包含的<strong>主要部分</strong>:</p>
+<ul>
+<li><code>&lt;header&gt;</code>作为页面的第一个元素，包含logo和tagline。</li>
+<li><code>&lt;nav&gt;</code>作为跳转到其他不同的页面的超链接集合。</li>
+<li><code>&lt;h1&gt;</code>作为页面的标题。</li>
+<li><code>&lt;article&gt;</code>作为页面的内容模块，比如blog的一个post。</li>
+<li><code>&lt;footer&gt;</code>作为页面的最后一个元素，位于最底部。</li>
+</ul>
+<h2 id="Text-elements-定义内容"><a href="#Text-elements-定义内容" class="headerlink" title="Text elements: 定义内容"></a>Text elements: 定义内容</h2><p>在结构元素中，通常需要寻找一些<strong>文本</strong>元素来达到定义内容的目的。</p>
+<p>你将主要使用如下标签:</p>
+<ul>
+<li><code>&lt;p&gt;</code>作为段落</li>
+<li><code>&lt;ul&gt;</code>作为无序列表</li>
+<li><code>&lt;ol&gt;</code>作为有序列表</li>
+<li><code>&lt;li&gt;</code>作为列表单元</li>
+<li><code>&lt;blockquote&gt;</code>作为引用</li>
+</ul>
+<h2 id="Inline-elements-区分文本"><a href="#Inline-elements-区分文本" class="headerlink" title="Inline elements: 区分文本"></a>Inline elements: 区分文本</h2><p>因为文本标签通常会很长，并且会有不同的内容，<strong>行内</strong>元素使你可以将一些关键部分从文本中区分出来。</p>
+<p>有很多的行内元素可以使用，但是你会经常用到以下几个:</p>
+<ul>
+<li><code>&lt;strong&gt;</code>作为关键字</li>
+<li><code>&lt;em&gt;</code>作为强调字</li>
+<li><code>&lt;a&gt;</code>作为超链接</li>
+<li><code>&lt;small&gt;</code>作为次要字</li>
+<li><code>&lt;abbr&gt;</code>作为缩写</li>
+</ul>
+<p>尝试阅读下面的HTML代码，你就可以很容易的理解每一个元素的用途。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&lt;article&gt;</div><div class="line">  &lt;h1&gt;Main title of the page&lt;/h1&gt;</div><div class="line">  &lt;h2&gt;A subtitle&lt;/h2&gt;</div><div class="line">  &lt;p&gt;</div><div class="line">    Something something an other stuff and some &lt;em&gt;emphasis&lt;/em&gt; and even &lt;strong&gt;important&lt;/strong&gt; words.</div><div class="line">  &lt;/p&gt;</div><div class="line">  &lt;p&gt;</div><div class="line">    Another paragraph.</div><div class="line">  &lt;/p&gt;</div><div class="line">  &lt;ul&gt;</div><div class="line">    &lt;li&gt;One&lt;/li&gt;</div><div class="line">    &lt;li&gt;Two&lt;/li&gt;</div><div class="line">    &lt;li&gt;Three&lt;/li&gt;</div><div class="line">  &lt;/ul&gt;</div><div class="line">  &lt;blockquote&gt;</div><div class="line">    Once said</div><div class="line">  &lt;/blockquote&gt;</div><div class="line">&lt;/article&gt;</div><div class="line">&lt;aside&gt;</div><div class="line">  &lt;h3&gt;My latest posts&lt;/h3&gt;</div><div class="line">  &lt;ul&gt;</div><div class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</div><div class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</div><div class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</div><div class="line">  &lt;/ul&gt;</div><div class="line">&lt;/aside&gt;</div></pre></td></tr></table></figure>
+<h2 id="Generic-elements-演变标签"><a href="#Generic-elements-演变标签" class="headerlink" title="Generic elements 演变标签"></a>Generic elements 演变标签</h2><p>当没有显而易见的具有语义的标签来匹配相关内容，但你仍然要插入一些标签来达到格式化和分组化的目的，你可以使用一到两个下面的具有演变性的标签:</p>
+<blockquote>
+<p>我理解的演变的意思是这些标签可以通过css样式来变成不同职能的其他标签</p>
+</blockquote>
+<ul>
+<li><code>&lt;div&gt;</code>作为块级元素组</li>
+<li><code>&lt;span&gt;</code>作为行内元素组</li>
+</ul>
+<p>尽管这些标签没有任何的实际意义，但它们与css配合使用将十分有用。</p>
+<h2 id="Don’t-overthink-semantics-不要想太多"><a href="#Don’t-overthink-semantics-不要想太多" class="headerlink" title="Don’t overthink semantics 不要想太多"></a>Don’t overthink semantics 不要想太多</h2><p>大约有100多种语义标签供你使用。如果可以选择合适的元素来使用，那将是十分不错的选择。</p>
+<p>但是不要花费太多的事情太考虑这件事，仅仅从现在开始，有选择地使用上面所提供的标签，你的网页将会变得更好。</p>
+</div></article></div></section><footer><div class="paginator"><a href="/2016/08/22/interview-record-20160822/" class="prev">上一篇</a><a href="/2016/07/26/liferay-portlet-container/" class="next">下一篇</a></div><div data-thread-key="2016/08/10/HTML-is-about-meaning/" data-title="HTML is about meaning" data-url="http://yoursite.com/2016/08/10/HTML-is-about-meaning/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2016 - 2017 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>
