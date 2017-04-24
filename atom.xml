@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-14T12:35:15.000Z</updated>
+  <updated>2017-04-24T01:59:00.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,47 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>es6中的混合器模式</title>
+    <link href="http://yoursite.com/2017/04/24/es6%E4%B8%AD%E7%9A%84%E6%B7%B7%E5%90%88%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/04/24/es6中的混合器模式/</id>
+    <published>2017-04-24T00:48:12.000Z</published>
+    <updated>2017-04-24T01:59:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是有关设计模式相关的第一篇文章，谈及设计模式，一般情况下呢，很多人马上就会说出很多关于它的东西，比如单例模式、策略模式等等。对于各个技术栈的工程师们，各种设计模式应该再熟悉不过，这篇文章要分享的是关于前端中的混合器模式，也可以称作装饰器模式，并分享一些在实际开发中的应用。</p>
+<p>在面向对象的开发中，实际业务的描述是通过<code>类(Class)</code>来进行描述的，如果想给一个已经存在的类扩展某些行为（如增加某个方法、某个属性等），可以通过<code>类的继承</code>来实现，即将可复用、可扩展的方法抽象为父类中的方法之后继承它。</p>
+<p>但是思考一下，这种做法的弊端：</p>
+<ul>
+<li>类的继承所扩展的方法或属性是静态的，既你无法为一个已有的类的实例扩展某些方法。</li>
+<li>类的继承会继承父类中的所有可继承的方法和属性，但是你只想继承其中的某个或某几个方法。</li>
+</ul>
+<p>在es6中，加入了<code>装饰器(Decorator)</code>语法，提供了对于装饰器模式的原生支持。这里对于语法不再进行详细的阐述，可以点击<a href="http://es6.ruanyifeng.com/#docs/decorator#类的修饰" target="_blank" rel="external">这里</a>进行了解或学习。</p>
+<p>在这种模式下，我们可以动态的来为一个类增加某个方法或属性，你可能会问，这样听起来似乎和继承没什么不同？你错了，它的优势体现在<code>动态</code>二字，其含义即为可以动态的为类的实例增加某种行为，也许你又会说，在js中，它本身就是动态语言，这种动态性也失去了优势了吧。</p>
+<p>是的，但是在js中想要实现继承绝非易事，因为它的继承机制是通过原型链进行描述的，对于js新手的话，理解起来其实是有点晦涩的，有些时候我们仅仅想通过更清晰的手段使用另一个类中的某些方法。</p>
+<p>举个例子，在SPA开发中，经常会遇到处理分页数据的需求，对于分页逻辑的处理，很显然是一块需要抽象为公共方法的逻辑，但是如果你按继承的角度去考虑，就会发现，有些时候你继承了这些处理分页逻辑的方法反而是多余了，因为并不是每个页面都需要分页，这种情况下，使用混合器模式来实现则可以更好的解决问题。</p>
+<p>我们先来实现一个分页逻辑的混合器，它其实是个函数，函数的参数是一个类，之后会动态的在这个类上增加一些方法，从而达到在<strong>一个类中混入另一个类的某些方法的目的</strong>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">export const PaginationMixin = (superClass) =&gt; class extends superClass &#123;</div><div class="line">  nextPage (url, callback) &#123;</div><div class="line">    this.handlePaginationResolve(url, callback)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  previousPage (url, callback) &#123;</div><div class="line">    this.handlePaginationResolve(url, callback)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  handlePaginationResolve (url, callback) &#123;</div><div class="line">    if (!url) return</div><div class="line"></div><div class="line">    customAPIComposer(url, &apos;get&apos;).then(callback)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>之后，只需要按如下进行代码，对需要扩展的类进行扩展，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class AttendanceManageCtrl extends PaginationMixin(MixinBase)</div></pre></td></tr></table></figure></p>
+<p>扩展后就可以使用混合器中混入的方法了，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;oa-list-table list-data=&apos;$ctrl.listData&apos; on-next=&apos;$ctrl.nextPage($ctrl.listData.next, $ctrl.render)&apos; on-previous=&apos;$ctrl.previousPage($ctrl.listData.previous, $ctrl.render)&apos;&gt;</div></pre></td></tr></table></figure></p>
+<p>这样做似乎和继承没什么区别，但是不妨看看如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class PeopleCtrl extends R.compose(PaginationMixin, StateManageMixin)(MixinBase)</div></pre></td></tr></table></figure></p>
+<p>没错，你可以对一个类同时使用多个混合器，但是你却无法使一个类同时继承与多个类，虽然你可以通过多重继承实现，但显然比前者繁琐很多。</p>
+<p>尽情混入吧。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这是有关设计模式相关的第一篇文章，谈及设计模式，一般情况下呢，很多人马上就会说出很多关于它的东西，比如单例模式、策略模式等等。对于各个技术栈的工程师们，各种设计模式应该再熟悉不过，这篇文章要分享的是关于前端中的混合器模式，也可以称作装饰器模式，并分享一些在实际开发中的应用。
+    
+    </summary>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="es6" scheme="http://yoursite.com/tags/es6/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>codereview-s8</title>
@@ -397,9 +438,9 @@
     </summary>
     
     
-      <category term="html" scheme="http://yoursite.com/tags/html/"/>
-    
       <category term="interview" scheme="http://yoursite.com/tags/interview/"/>
+    
+      <category term="html" scheme="http://yoursite.com/tags/html/"/>
     
       <category term="css" scheme="http://yoursite.com/tags/css/"/>
     
@@ -471,9 +512,9 @@
     </summary>
     
     
-      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
-    
       <category term="html" scheme="http://yoursite.com/tags/html/"/>
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
     
   </entry>
   
@@ -929,74 +970,6 @@
     
     
       <category term="其他，话题" scheme="http://yoursite.com/tags/%E5%85%B6%E4%BB%96%EF%BC%8C%E8%AF%9D%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>20160627</title>
-    <link href="http://yoursite.com/2016/06/27/20160627/"/>
-    <id>http://yoursite.com/2016/06/27/20160627/</id>
-    <published>2016-06-27T07:21:00.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>shortage 短缺</p>
-<blockquote>
-<p>a shortage of …(funds, ideas, water)</p>
-</blockquote>
-<p>under/over weight 短重/超重</p>
-<blockquote>
-<p>the goods are under weight.</p>
-</blockquote>
-<p>inferior/superior quality 质量很差</p>
-<blockquote>
-<p>I feel inferior to someone. 我觉的我比别人低一等。</p>
-</blockquote>
-<a id="more"></a>
-<p>replace 代替</p>
-<blockquote>
-<p>A replace B = sb replace B with A.</p>
-</blockquote>
-<p>adequate/inadequate 足够的/不足够的</p>
-<blockquote>
-<p>the resource is adequate for us.</p>
-</blockquote>
-<p>omission/omit 忽略，遗漏</p>
-<blockquote>
-<p>the omission ‘t’ in word ‘shorage’ is incorrect.</p>
-</blockquote>
-<p>reinforce 巩固，加强</p>
-<blockquote>
-<p>refinforce evidence 提供证据</p>
-</blockquote>
-<p>minimize/maxmize 最小化/最大化</p>
-<blockquote>
-<p>minimize …(risks, problems, unpleasant situations)</p>
-</blockquote>
-<p>sell out 售罄</p>
-<blockquote>
-<p>the shoes have been sell out.</p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;shortage 短缺&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;a shortage of …(funds, ideas, water)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;under/over weight 短重/超重&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;the goods are under weight.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;inferior/superior quality 质量很差&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;I feel inferior to someone. 我觉的我比别人低一等。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-    
-      <category term="英语" scheme="http://yoursite.com/tags/%E8%8B%B1%E8%AF%AD/"/>
     
   </entry>
   
