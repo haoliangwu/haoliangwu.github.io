@@ -56,9 +56,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="kata" scheme="http://yoursite.com/tags/kata/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
   </entry>
   
