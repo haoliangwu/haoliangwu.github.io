@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-18T07:56:47.000Z</updated>
+  <updated>2018-01-10T09:21:19.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>aacp-1</title>
+    <link href="http://yoursite.com/2018/01/10/aacp-1/"/>
+    <id>http://yoursite.com/2018/01/10/aacp-1/</id>
+    <published>2018-01-10T09:21:19.000Z</published>
+    <updated>2018-01-10T09:21:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="01-Build-a-Toggle-Component"><a href="#01-Build-a-Toggle-Component" class="headerlink" title="01 Build a Toggle Component"></a>01 Build a Toggle Component</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/build-a-toggle-component-6e8f44889c2c" target="_blank" rel="external">Build a Toggle Component</a></p>
+</blockquote>
+<p>如<a href="https://egghead.io/lessons/react-introducing-advanced-react-component-patterns" target="_blank" rel="external">Kent C. Dodds Advanced React Component Patterns</a>那样，我们将使用一个相对简单的<code>&lt;toggle&gt;</code>组件来说明这些模式。<code>&lt;toggole&gt;</code>组件的职责是仅仅是管理一个简单的布尔值状态属性: <code>on</code>。使用如此简单的组件进行说明的目的，是因为我们可以将更多的注意力投入到相对组件本身而言较复杂的模式中。</p>
+<p>经过这一系列文章，我将提供包含完整功能的、可运行的演示代码链接。你仅仅需要将注意力集中到<code>app</code>文件夹和<code>toggle</code>文件夹。<code>toggle</code>文件夹包含一些可复用的库（一系列组件），当然这个库会随着文章的深入而改变。<code>app</code>文件夹并且特别是<code>app.component.html</code>，将针对库在不同的情形下的使用做出相应的改变。</p>
+<p>我们将从最原始的<code>toggle</code>组件版本开始。它仅仅有一个使用了<code>@Input()</code>装饰器的<code>on</code>属性，这个属性所控制的状态代表组件本身的开关状态，同时它还有一个是使用了<code>@Output()</code>装饰器的<code>toggle</code>事件发射器，这个事件发射器会在组件开关状态改变的情况下，通知父组件。</p>
+<p>在我们开始下一个话题<a href="">02 Write Compound Components</a>之前，可以在<a href="https://stackblitz.com/edit/adv-ng-patterns-01-build-toggle-component" target="_blank" rel="external">在线代码仓库</a>看看这个组件的实现以及演示。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;01-Build-a-Toggle-Component&quot;&gt;&lt;a href=&quot;#01-Build-a-Toggle-Component&quot; class=&quot;headerlink&quot; title=&quot;01 Build a Toggle Component&quot;&gt;&lt;/a&gt;01 Bu
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+  </entry>
   
   <entry>
     <title>多维数组取值问题</title>
@@ -676,9 +705,9 @@
     </summary>
     
     
-      <category term="css" scheme="http://yoursite.com/tags/css/"/>
-    
       <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
     
   </entry>
   
@@ -709,9 +738,9 @@
     </summary>
     
     
-      <category term="css" scheme="http://yoursite.com/tags/css/"/>
-    
       <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
     
   </entry>
   
@@ -803,9 +832,9 @@
     </summary>
     
     
-      <category term="css" scheme="http://yoursite.com/tags/css/"/>
-    
       <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
     
   </entry>
   
@@ -924,58 +953,6 @@
     
     
       <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>20160705</title>
-    <link href="http://yoursite.com/2016/07/05/20160705/"/>
-    <id>http://yoursite.com/2016/07/05/20160705/</id>
-    <published>2016-07-05T08:32:25.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>inadequate/improper packing 包装不善</p>
-<blockquote>
-<p>the damage of the goods due to inadequate packing. 货物的损毁归咎于包装不善。</p>
-</blockquote>
-<p>meet the shortage 弥补缺失</p>
-<blockquote>
-<p>I will send the goods to meet the shortage ASAP. 我会尽快补发缺失的货物。</p>
-</blockquote>
-<p>make amends for the losses 对损失做出补偿</p>
-<blockquote>
-<p>I’ll make amends for your losses. 我会对你的损失做出补偿。</p>
-</blockquote>
-<a id="more"></a>
-<p>underweight 短重，还可以修饰人的体重过轻</p>
-<blockquote>
-<p>The doctor said I am underweight and unhealthy. 医生说我体重过轻并且不健康。</p>
-</blockquote>
-<p>go ok 顺利</p>
-<blockquote>
-<p>I am calling to see your delivery went ok. 我给你打电话来确认货物是否顺利抵达。</p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;inadequate/improper packing 包装不善&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;the damage of the goods due to inadequate packing. 货物的损毁归咎于包装不善。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;meet the shortage 弥补缺失&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;I will send the goods to meet the shortage ASAP. 我会尽快补发缺失的货物。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;make amends for the losses 对损失做出补偿&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;I’ll make amends for your losses. 我会对你的损失做出补偿。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-    
-      <category term="英语" scheme="http://yoursite.com/tags/%E8%8B%B1%E8%AF%AD/"/>
     
   </entry>
   
