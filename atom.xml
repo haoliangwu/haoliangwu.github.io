@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-01-10T13:13:31.000Z</updated>
+  <updated>2018-01-10T14:02:45.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>高级 Angular 组件模式 (3a)</title>
+    <link href="http://yoursite.com/2018/01/10/aacp-3a/"/>
+    <id>http://yoursite.com/2018/01/10/aacp-3a/</id>
+    <published>2018-01-10T14:02:45.000Z</published>
+    <updated>2018-01-10T14:02:45.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="external">Communicate Between Components Using Dependency Injection</a></p>
+</blockquote>
+<p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
+<ul>
+<li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
+<li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
+</ul>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
+<ul>
+<li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
+<li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
+<p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
+<p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
+<blockquote>
+<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
+</blockquote>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
+<p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
+<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03a-compound-comp-inject-parent" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
+<p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
+<p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
+<p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;03-a-Communicate-Between-Components-Using-Dependency-Injection&quot;&gt;&lt;a href=&quot;#03-a-Communicate-Between-Components-Using-Dependency-Injec
+    
+    </summary>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>高级 Angular 组件模式 (2)</title>
@@ -899,80 +951,6 @@
       <category term="css" scheme="http://yoursite.com/tags/css/"/>
     
       <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>20160711</title>
-    <link href="http://yoursite.com/2016/07/11/20160711/"/>
-    <id>http://yoursite.com/2016/07/11/20160711/</id>
-    <published>2016-07-11T06:43:59.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>decent 体面的、正派的</p>
-<blockquote>
-<p>decent person 正派的人</p>
-</blockquote>
-<p>sovereignty 主权</p>
-<p>conservative 保守的</p>
-<blockquote>
-<p>conservative party 保守党</p>
-</blockquote>
-<a id="more"></a>
-<p>accountable 负责任的</p>
-<blockquote>
-<p>be accountable to sth 对某物负有责任</p>
-</blockquote>
-<p>complimente 表扬</p>
-<blockquote>
-<p>the teacher complimente him because his grade. 老师因为他的成绩表扬了他。</p>
-</blockquote>
-<p>turn ones back on 置之不理</p>
-<blockquote>
-<p>I turn my back on him due to his betrayal. 我因为他的背叛而对他不理不睬。 </p>
-</blockquote>
-<p>refer sth to sb 提交</p>
-<blockquote>
-<p>I refer this matter to you. 我向你提交这件事。</p>
-</blockquote>
-<p>the stock of stn 库存</p>
-<p>make a prompt settlement 做出及时的解决</p>
-<p>see your way to 设法</p>
-<blockquote>
-<p>see your way to make a prompt settlement. 设法做出及时的解决</p>
-</blockquote>
-<p>on the fritz 出故障</p>
-<blockquote>
-<p>the yogurt turned sour because the fridge was on the fritz. 酸奶变酸了因为冰箱坏了。</p>
-</blockquote>
-<p>dilemma 困境</p>
-<p>re-order 续订</p>
-<p>kits 成套的装备或设备</p>
-<blockquote>
-<p>travel kits 旅行套装 gym kits 健身套装 sport kits 运动套装 first-aid kits 急救套装</p>
-</blockquote>
-<p>inventory 详细的清单、存货</p>
-<blockquote>
-<p>I’ll get the inventory on the line. 我将致电获取存货状况。</p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;decent 体面的、正派的&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;decent person 正派的人&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;sovereignty 主权&lt;/p&gt;
-&lt;p&gt;conservative 保守的&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;conservative party 保守党&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-    
-      <category term="英语" scheme="http://yoursite.com/tags/%E8%8B%B1%E8%AF%AD/"/>
     
   </entry>
   
