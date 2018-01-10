@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-01-10T09:34:56.000Z</updated>
+  <updated>2018-01-10T13:05:59.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,11 +16,62 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>高级 Angular 组件模式 (2)</title>
+    <link href="http://yoursite.com/2018/01/10/aacp-2/"/>
+    <id>http://yoursite.com/2018/01/10/aacp-2/</id>
+    <published>2018-01-10T13:05:59.000Z</published>
+    <updated>2018-01-10T13:05:59.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="02-Write-Compound-Components"><a href="#02-Write-Compound-Components" class="headerlink" title="02 Write Compound Components"></a>02 Write Compound Components</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/write-compound-components-1001449c67f0" target="_blank" rel="external">Write Compound Components</a></p>
+</blockquote>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>我们需要实现的需求是能够使使用者通过<code>&lt;toggle&gt;</code>组件动态的改变包含在它内部的内容。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们可以把toggle抽象为一个复合组件，由三个新的组件<code>&lt;toggle-button&gt;</code>、<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>构成。</p>
+<p>每一个组件的职能与它们的父组件保持一致，它们各自的职能如下：</p>
+<ul>
+<li><code>toggle-button</code>: 代表开关，用来渲染父组件的开关状态</li>
+<li><code>toggle-on</code>: 根据父组件的开关状态，渲染当状态为<strong>开</strong>时的内容</li>
+<li><code>toggle-off</code>: 根据父组件的开关状态，渲染当状态为<strong>关</strong>时的内容</li>
+</ul>
+<p><code>&lt;toggle&gt;</code>组件可以实现<code>@ContentChild</code>装饰器获取这三个子组件的引用，从而可以根据开关状态的变化调整它们之间的关联逻辑。</p>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>经过这样的调整，我们可以使用户通过使用<code>&lt;toggle&gt;</code>组件去自定义包含在它其中内容的显示逻辑，内容中会有一个按钮负责切换开关的状态。可以尝试在在线代码库中调整子组件的顺序，你可以在它们中间嵌套任何的<code>html</code>字符串，只要这三个组件是作为<code>&lt;toggle&gt;</code>的子组件存在的，一切都将正常的运行。</p>
+<h2 id="相关话题"><a href="#相关话题" class="headerlink" title="相关话题"></a>相关话题</h2><ul>
+<li><p><code>@ContentChild</code>装饰器将会返回在组件标签包含的内容中，第一个符合选择器的子组件或者子指令的引用，比如<code>&lt;toggle&gt; This is the content &lt;/toggle&gt;</code>。如果想获取所有的子组件或者子指令，使用<code>@ContentChildren</code>。</p>
+</li>
+<li><p><code>@ViewChild</code>或者<code>@ViewChildren</code>装饰器是用来获取在组件内部模板中使用的单个或者多个组件的。比如<code>template: &#39;This is the view&#39;</code>或者<code>templateUrl: &#39;./my.component.html&#39;</code></p>
+</li>
+</ul>
+<iframe src="https://stackblitz.com/edit/adv-ng-patterns-02-compound-components" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>我认为分别<code>@ContentChild</code>和<code>@ViewChild</code>的使用场景，仅仅看装饰器的前缀就可以了。</p>
+<ul>
+<li><code>Content</code>代表内容，这些内容在组件渲染时已经存在于组件声明标签的内部，通常在组件内部以<code>&lt;ng-content&gt;</code>为占位符</li>
+<li><code>View</code>代表视图，视图代表组件本身的模板，代表组件本身的渲染逻辑</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;02-Write-Compound-Components&quot;&gt;&lt;a href=&quot;#02-Write-Compound-Components&quot; class=&quot;headerlink&quot; title=&quot;02 Write Compound Components&quot;&gt;&lt;/a&gt;02
+    
+    </summary>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>高级 Angular 组件模式 (1)</title>
     <link href="http://yoursite.com/2018/01/10/aacp-1/"/>
     <id>http://yoursite.com/2018/01/10/aacp-1/</id>
     <published>2018-01-10T09:21:19.000Z</published>
-    <updated>2018-01-10T09:34:56.000Z</updated>
+    <updated>2018-01-10T12:35:49.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="01-Build-a-Toggle-Component"><a href="#01-Build-a-Toggle-Component" class="headerlink" title="01 Build a Toggle Component"></a>01 Build a Toggle Component</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/build-a-toggle-component-6e8f44889c2c" target="_blank" rel="external">Build a Toggle Component</a></p>
@@ -30,6 +81,11 @@
 <p>我们将从最原始的<code>toggle</code>组件版本开始。它仅仅有一个使用了<code>@Input()</code>装饰器的<code>on</code>属性，这个属性所控制的状态代表组件本身的开关状态，同时它还有一个是使用了<code>@Output()</code>装饰器的<code>toggle</code>事件发射器，这个事件发射器会在组件开关状态改变的情况下，通知父组件。</p>
 <p>在我们开始下一个话题<a href="">02 Write Compound Components</a>之前，可以在<a href="https://stackblitz.com/edit/adv-ng-patterns-01-build-toggle-component" target="_blank" rel="external">在线代码仓库</a>看看这个组件的实现以及演示。</p>
 <iframe src="https://stackblitz.com/edit/adv-ng-patterns-01-build-toggle-component" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p><code>toggle</code>组件的实现是一个很典型的利用单向数据流作为数据源的简单组件：</p>
+<ul>
+<li><code>on</code>是单向数据源，同时代表组件内部的开关状态</li>
+<li><code>toggle`是事件发射器`，以回调的方式将</code>on``状态的变化传递给父组件</li>
+</ul>
 ]]></content>
     
     <summary type="html">
@@ -39,9 +95,9 @@
     </summary>
     
     
-      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
-    
       <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
     
       <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
     
@@ -90,9 +146,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="kata" scheme="http://yoursite.com/tags/kata/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
   </entry>
   
@@ -914,50 +970,6 @@
     
     
       <category term="英语" scheme="http://yoursite.com/tags/%E8%8B%B1%E8%AF%AD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>warriorjs，只能感叹城会玩</title>
-    <link href="http://yoursite.com/2016/07/06/warriorjs%EF%BC%8C%E5%8F%AA%E8%83%BD%E6%84%9F%E5%8F%B9%E5%9F%8E%E4%BC%9A%E7%8E%A9/"/>
-    <id>http://yoursite.com/2016/07/06/warriorjs，只能感叹城会玩/</id>
-    <published>2016-07-06T02:06:04.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>昨天build bundle的时候，无意中在掘金看到的，反正build时间那么长，不如抽空“劳逸结合”一下。</p>
-<p>打开它的github项目<a href="https://github.com/olistic/warriorjs" target="_blank" rel="external">地址</a>，大概看了一下，具体就是一个文字编程游戏，其目的是边玩游戏边学习js编程。游戏的任务简单说，就是你需要设计一个“无敌”的战士，之后会在一座塔中进行试炼（无尽之剑??），然后这个战士的智商要能够达到以下几点：</p>
-<ul>
-<li>知道何时前进</li>
-<li>知道何时进攻</li>
-<li>知道何时休息</li>
-<li>知道不要滥杀无辜（救俘虏）</li>
-</ul>
-<a id="more"></a>
-<p>因为原来玩过一个叫coding tank的游戏，表面看这个游戏相对那个简单不少，我寻思着写个大概的应该不求最优只求通关不成问题，结果后来发现远比想象中的复杂，大体的坑主要体现在：</p>
-<ul>
-<li>不能无脑冲或者进攻(因为你只有20滴血)</li>
-<li>也不能采用只要残血就休息的策略(因为有弓箭手啊)</li>
-<li>也不能见怪就砍(砍着俘虏就不好了)</li>
-</ul>
-<p>所以写一个比较完善的“战士”还是需要慢慢来，而且一开始是一层一层挑战，当全部关卡完成后，会开启史诗模式，大体意思就是从1层直接干到顶层。</p>
-<p>唉，之后我会把通关过程更新到这里，最后感叹句，老外真是城会玩。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;昨天build bundle的时候，无意中在掘金看到的，反正build时间那么长，不如抽空“劳逸结合”一下。&lt;/p&gt;
-&lt;p&gt;打开它的github项目&lt;a href=&quot;https://github.com/olistic/warriorjs&quot;&gt;地址&lt;/a&gt;，大概看了一下，具体就是一个文字编程游戏，其目的是边玩游戏边学习js编程。游戏的任务简单说，就是你需要设计一个“无敌”的战士，之后会在一座塔中进行试炼（无尽之剑??），然后这个战士的智商要能够达到以下几点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;知道何时前进&lt;/li&gt;
-&lt;li&gt;知道何时进攻&lt;/li&gt;
-&lt;li&gt;知道何时休息&lt;/li&gt;
-&lt;li&gt;知道不要滥杀无辜（救俘虏）&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-    
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
   </entry>
   

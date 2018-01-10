@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 高级 Angular 组件模式 (2) · Fine, thank you, and you.</title><meta name="description" content="高级 Angular 组件模式 (2) - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">高级 Angular 组件模式 (2)</h1><div class="post-info">Jan 10, 2018</div><div class="post-content"><h2 id="02-Write-Compound-Components"><a href="#02-Write-Compound-Components" class="headerlink" title="02 Write Compound Components"></a>02 Write Compound Components</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/write-compound-components-1001449c67f0" target="_blank" rel="external">Write Compound Components</a></p>
+</blockquote>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>我们需要实现的需求是能够使使用者通过<code>&lt;toggle&gt;</code>组件动态的改变包含在它内部的内容。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们可以把toggle抽象为一个复合组件，由三个新的组件<code>&lt;toggle-button&gt;</code>、<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>构成。</p>
+<p>每一个组件的职能与它们的父组件保持一致，它们各自的职能如下：</p>
+<ul>
+<li><code>toggle-button</code>: 代表开关，用来渲染父组件的开关状态</li>
+<li><code>toggle-on</code>: 根据父组件的开关状态，渲染当状态为<strong>开</strong>时的内容</li>
+<li><code>toggle-off</code>: 根据父组件的开关状态，渲染当状态为<strong>关</strong>时的内容</li>
+</ul>
+<p><code>&lt;toggle&gt;</code>组件可以实现<code>@ContentChild</code>装饰器获取这三个子组件的引用，从而可以根据开关状态的变化调整它们之间的关联逻辑。</p>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>经过这样的调整，我们可以使用户通过使用<code>&lt;toggle&gt;</code>组件去自定义包含在它其中内容的显示逻辑，内容中会有一个按钮负责切换开关的状态。可以尝试在在线代码库中调整子组件的顺序，你可以在它们中间嵌套任何的<code>html</code>字符串，只要这三个组件是作为<code>&lt;toggle&gt;</code>的子组件存在的，一切都将正常的运行。</p>
+<h2 id="相关话题"><a href="#相关话题" class="headerlink" title="相关话题"></a>相关话题</h2><ul>
+<li><p><code>@ContentChild</code>装饰器将会返回在组件标签包含的内容中，第一个符合选择器的子组件或者子指令的引用，比如<code>&lt;toggle&gt; This is the content &lt;/toggle&gt;</code>。如果想获取所有的子组件或者子指令，使用<code>@ContentChildren</code>。</p>
+</li>
+<li><p><code>@ViewChild</code>或者<code>@ViewChildren</code>装饰器是用来获取在组件内部模板中使用的单个或者多个组件的。比如<code>template: &#39;This is the view&#39;</code>或者<code>templateUrl: &#39;./my.component.html&#39;</code></p>
+</li>
+</ul>
+<iframe src="https://stackblitz.com/edit/adv-ng-patterns-02-compound-components" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>我认为分别<code>@ContentChild</code>和<code>@ViewChild</code>的使用场景，仅仅看装饰器的前缀就可以了。</p>
+<ul>
+<li><code>Content</code>代表内容，这些内容在组件渲染时已经存在于组件声明标签的内部，通常在组件内部以<code>&lt;ng-content&gt;</code>为占位符</li>
+<li><code>View</code>代表视图，视图代表组件本身的模板，代表组件本身的渲染逻辑</li>
+</ul>
+</div></article></div></section><footer><div class="paginator"><a href="/2018/01/10/aacp-1/" class="next">NEXT</a></div><div data-thread-key="2018/01/10/aacp-2/" data-title="高级 Angular 组件模式 (2)" data-url="http://yoursite.com/2018/01/10/aacp-2/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>

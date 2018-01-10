@@ -6,7 +6,12 @@
 <p>我们将从最原始的<code>toggle</code>组件版本开始。它仅仅有一个使用了<code>@Input()</code>装饰器的<code>on</code>属性，这个属性所控制的状态代表组件本身的开关状态，同时它还有一个是使用了<code>@Output()</code>装饰器的<code>toggle</code>事件发射器，这个事件发射器会在组件开关状态改变的情况下，通知父组件。</p>
 <p>在我们开始下一个话题<a href="">02 Write Compound Components</a>之前，可以在<a href="https://stackblitz.com/edit/adv-ng-patterns-01-build-toggle-component" target="_blank" rel="external">在线代码仓库</a>看看这个组件的实现以及演示。</p>
 <iframe src="https://stackblitz.com/edit/adv-ng-patterns-01-build-toggle-component" width="800" height="600" frameborder="0" allowfullscreen></iframe>
-</div></article></div></section><footer><div class="paginator"><a href="/2017/12/18/多维数组取值问题/" class="next">下一篇</a></div><div data-thread-key="2018/01/10/aacp-1/" data-title="高级 Angular 组件模式 (1)" data-url="http://yoursite.com/2018/01/10/aacp-1/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p><code>toggle</code>组件的实现是一个很典型的利用单向数据流作为数据源的简单组件：</p>
+<ul>
+<li><code>on</code>是单向数据源，同时代表组件内部的开关状态</li>
+<li><code>toggle`是事件发射器`，以回调的方式将</code>on``状态的变化传递给父组件</li>
+</ul>
+</div></article></div></section><footer><div class="paginator"><a href="/2018/01/10/aacp-2/" class="prev">PREV</a><a href="/2017/12/18/多维数组取值问题/" class="next">NEXT</a></div><div data-thread-key="2018/01/10/aacp-1/" data-title="高级 Angular 组件模式 (1)" data-url="http://yoursite.com/2018/01/10/aacp-1/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
