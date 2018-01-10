@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-01-10T13:05:59.000Z</updated>
+  <updated>2018-01-10T13:13:31.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2018/01/10/aacp-2/"/>
     <id>http://yoursite.com/2018/01/10/aacp-2/</id>
     <published>2018-01-10T13:05:59.000Z</published>
-    <updated>2018-01-10T13:05:59.000Z</updated>
+    <updated>2018-01-10T13:13:31.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="02-Write-Compound-Components"><a href="#02-Write-Compound-Components" class="headerlink" title="02 Write Compound Components"></a>02 Write Compound Components</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/write-compound-components-1001449c67f0" target="_blank" rel="external">Write Compound Components</a></p>
@@ -42,11 +42,14 @@
 </li>
 </ul>
 <iframe src="https://stackblitz.com/edit/adv-ng-patterns-02-compound-components" width="800" height="600" frameborder="0" allowfullscreen></iframe>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>我认为分别<code>@ContentChild</code>和<code>@ViewChild</code>的使用场景，仅仅看装饰器的前缀就可以了。</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这里组件架构方式是标准的<code>Smart Component（智能组件）</code>和<code>Dump Component（木偶组件）</code>组件架构方式。</p>
+<p>以上的需求完全是可以在<code>&lt;toggle&gt;</code>内部实现的，但是这样会使它的内部充满逻辑代码，反之我们可以将一些职能划分为成更小的碎片，并委托到它的子组件中，本身作为容器组件存在，负责协作子组件从而达到目的。</p>
+<p>对于<code>@ContentChild</code>和<code>@ViewChild</code>的使用场景，我认为通过看装饰器前缀的寓意是最后的方式。</p>
 <ul>
 <li><code>Content</code>代表内容，这些内容在组件渲染时已经存在于组件声明标签的内部，通常在组件内部以<code>&lt;ng-content&gt;</code>为占位符</li>
 <li><code>View</code>代表视图，视图代表组件本身的模板，代表组件本身的渲染逻辑</li>
 </ul>
+<p><code>@ContentChildren</code>和<code>@ViewChildren</code>同理。</p>
 ]]></content>
     
     <summary type="html">
