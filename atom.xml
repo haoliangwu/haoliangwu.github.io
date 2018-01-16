@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-01-10T14:02:45.000Z</updated>
+  <updated>2018-01-16T02:11:31.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,76 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>尝鲜 workerize 源码</title>
+    <link href="http://yoursite.com/2018/01/16/workerize/"/>
+    <id>http://yoursite.com/2018/01/16/workerize/</id>
+    <published>2018-01-16T02:11:31.000Z</published>
+    <updated>2018-01-16T02:11:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近正好在看web worker相关的东西，今天无意中就看到了github一周最热项目的推送中，有这么一个项目<a href="https://github.com/developit/workerize" target="_blank" rel="external">workerize</a>，repo里的文档的描述如下：</p>
+<blockquote>
+<p>Moves a module into a Web Worker, automatically reflecting exported functions as asynchronous proxies.</p>
+</blockquote>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>关于README很简单，包含一个类似hello world的例子就没其他什么了。但是从例子本身可以看出这个库要解决的问题，是想通过模块化的方式编写运行在web worker中的脚本，因为通常情况下，web worker每加载一个脚本文件是需要通过一个符合同源策略的URL的，这样会对服务端发送一个额外的请求。同时对于web worker本身加载的js文件的执行环境，与主线程是隔离的（这也是它在进行复杂运算时不会阻塞主线程的原因），与主线程的通讯靠<code>postMessage</code>api和<code>onmessage</code>回调事件来通讯，这样我们在编写一些通信代码时，需要同时在两个不同的环境中分别编写发送消息和接受消息的逻辑，比较繁琐，同时这些代码也不能以模块化的形式存在。</p>
+<p>如果存在一种方式，我们可以以模块化的方式来编写代码，注入web worker，之后还能通过类似Promsie机制来处理等异步，那便是极好的。</p>
+<p>先来看看例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">import workerize from &apos;workerize&apos;</div><div class="line"></div><div class="line">let worker1 = workerize(`</div><div class="line">	export function add(a, b) &#123;</div><div class="line">		let start = Date.now();</div><div class="line">		while (Date.now()-start &lt; 500);</div><div class="line">		return a + b;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  export default function minus(a, b)&#123;</div><div class="line">    let start = Date.now();</div><div class="line">		while (Date.now()-start &lt; 500);</div><div class="line">    return a - b</div><div class="line">  &#125;</div><div class="line">`)</div><div class="line"></div><div class="line">let worker2 = workerize(function (m) &#123;</div><div class="line">  m.add = function (a, b) &#123;</div><div class="line">    let start = Date.now()</div><div class="line">    while (Date.now() - start &lt; 500);</div><div class="line">    return a + b</div><div class="line">  &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">(async () =&gt; &#123;</div><div class="line">  console.log(&apos;1 + 2 = &apos;, await worker1.add(1, 2))</div><div class="line">  console.log(&apos;3 + 9 = &apos;, await worker2.call(&apos;add&apos;, [3, 9]))</div><div class="line">&#125;)()</div></pre></td></tr></table></figure></p>
+<p>worker1和worker2是两种不同的使用方式，一种是以字符串的形式声明模块，一种以函数的形式声明模块。但是无论哪种，最后的结果都是一样的，我们可以通过worker实例显示的调用我们想要调用的方法，每个方法的调用结果均是一个Promise，因此它还可以完美的适配async/await语法。</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>那么问题来了，这种模块的加载机制和调用方式是怎样实现的呢？我在运行demo代码的时候心中也默默想到，我去，看了好几天的web worker原来还能这么玩，所以一定要研究研究它的源码和它的实现原理。</p>
+<p>打开源代码才发现其实并没有多少代码，官文文档也通过一句话强调了这一点：</p>
+<blockquote>
+<p>Just 900 bytes of gzipped ES3</p>
+</blockquote>
+<p>所以对其中主要的两点进行简单说明：</p>
+<ul>
+<li>如何实现按内容模块化加载脚本而不是通过URL</li>
+<li>如何通过Promise来代理主线程与worker线程的通讯过程</li>
+</ul>
+<h3 id="使用Blob动态生成加载脚本资源"><a href="#使用Blob动态生成加载脚本资源" class="headerlink" title="使用Blob动态生成加载脚本资源"></a>使用Blob动态生成加载脚本资源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">let blob = new Blob([code], &#123;</div><div class="line">      type: &apos;application/javascript&apos;</div><div class="line">    &#125;),</div><div class="line">    url = URL.createObjectURL(blob),</div><div class="line">    worker = new Worker(url)</div></pre></td></tr></table></figure>
+<p>这其实不是什么新鲜的东西，就是将代码的内容转化为Blob对象，之后再通过<code>URL.createObjectURL</code>将Blob对象转化为URL的形式，之后再用worker加载它，仅此而已。但是这里的问题是，这个<code>code</code>是哪里从哪里来的呢？</p>
+<h3 id="将加载代码模块化"><a href="#将加载代码模块化" class="headerlink" title="将加载代码模块化"></a>将加载代码模块化</h3><p>在加载代码之前，还有重要的一步，就是需要将加载的代码转变为模块，模板本身只对外暴露统一的接口，这样不论对于主线程还是worker线程，就有了统一的约束条件。源码中作者把上一步中的<code>code</code>转化为了类似commonjs的形式，主要涉及的代码有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let exportsObjName = `__EXPORTS_$&#123;Math.random().toString().substring(2)&#125;__`</div><div class="line">  if (typeof code === &apos;function&apos;) code = `($&#123;toCode(code)&#125;)($&#123;exportsObjName&#125;)`</div><div class="line">  code = toCjs(code, exportsObjName, exports)</div><div class="line">  code += `\n($&#123;toCode(setup)&#125;)(self, $&#123;exportsObjName&#125;, &#123;&#125;)`</div></pre></td></tr></table></figure></p>
+<p>和<code>toCjs</code>方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">function toCjs (code, exportsObjName, exports) &#123;</div><div class="line">  exportsObjName = exportsObjName || &apos;exports&apos;</div><div class="line">  exports = exports || &#123;&#125;</div><div class="line">  code = code.replace(/^(\s*)export\s+default\s+/m, (s, before) =&gt; &#123;</div><div class="line">    exports.default = true</div><div class="line">    return `$&#123;before&#125;$&#123;exportsObjName&#125;.default = `</div><div class="line">  &#125;)</div><div class="line">  code = code.replace(/^(\s*)export\s+(function|const|let|var)(\s+)([a-zA-Z$_][a-zA-Z0-9$_]*)/m, (s, before, type, ws, name) =&gt; &#123;</div><div class="line">    exports[name] = true</div><div class="line">    return `$&#123;before&#125;$&#123;exportsObjName&#125;.$&#123;name&#125; = $&#123;type&#125;$&#123;ws&#125;$&#123;name&#125;`</div><div class="line">  &#125;)</div><div class="line">  return `var $&#123;exportsObjName&#125; = &#123;&#125;;\n$&#123;code&#125;\n$&#123;exportsObjName&#125;;`</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>关于toCjs方法，如果你的正则知识比较扎实的话，可以发现，它做了一件事，就是将字符串类型的code中的所有导出方法的声明，使用commonjs的导出语法替换掉(中间会涉及一些具体的语法规则)，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// 如果 exportsObjName 使用默认值 exports, ...代表省略代码</div><div class="line">export function foo()&#123; ... &#125; =&gt; exports.foo = function foo()&#123; ... &#125;</div><div class="line">export default ... =&gt; exports.default = ...</div></pre></td></tr></table></figure></p>
+<p>如果code是函数类型，则首先使用<code>toCode</code>函数将code转化为string类型，之后再将它转化为IIFE的形式，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 如果 exportsObjName 使用默认值 exports, ...代表省略代码</div><div class="line">// 传入的code是如下形式：</div><div class="line">function( m )&#123; </div><div class="line">  ... </div><div class="line">&#125;</div><div class="line">// 转化为</div><div class="line">(function( m )&#123;</div><div class="line">  ...</div><div class="line">&#125;)(exports)</div></pre></td></tr></table></figure></p>
+<p>这里的<code>exportsObjName</code>代表模块的名字，默认值是<code>exports</code>(联想commonjs)，不过这里会在一开始就随机生成一个模块名字，生成代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">let exportsObjName = `__EXPORTS_$&#123;Math.random().toString().substring(2)&#125;__`</div></pre></td></tr></table></figure></p>
+<p>这样只有我们按照约定的语法来编写web worker加载的代码，它便会加载了一个符合同样约定的commonjs模块。</p>
+<h3 id="使用-Promise-来做异步代理"><a href="#使用-Promise-来做异步代理" class="headerlink" title="使用 Promise 来做异步代理"></a>使用 Promise 来做异步代理</h3><p>经过上面两步，web worker加载到了模块化的代码，但是worker线程与主线程进行通讯则是仍然需要通过<code>postMessage</code>方法和<code>onmessage</code>回调事件来进行，如果无法优雅地处理这里的异步逻辑，那么之前所做的工作其实意义并不大。</p>
+<p>workerize针对这里的异步逻辑，设计了一个简单的rpc协议（文档中将这个称作<code>a tiny, purpose-built RPC</code>），先来看一下源码中的<code>setup</code>函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">function setup (ctx, rpcMethods, callbacks) &#123;</div><div class="line">    ctx.addEventListener(&apos;message&apos;, (&#123; data &#125;) =&gt; &#123;</div><div class="line">      // 只捕获满足条件的数据对象</div><div class="line">      if (data.type === &apos;RPC&apos;) &#123;</div><div class="line">        // 获取数据对象中的 id 属性</div><div class="line">        let id = data.id</div><div class="line">        if (id != null) &#123;</div><div class="line">          // 如果数据对象中存在非空 method 属性，则证明是主线程发送的消息</div><div class="line">          if (data.method) &#123;</div><div class="line">            // 获取所要调用的方法实例</div><div class="line">            let method = rpcMethods[data.method]</div><div class="line">            if (method == null) &#123;</div><div class="line">              // 如果所调用的方法实例不存在，则发送方法不存在的消息</div><div class="line">              ctx.postMessage(&#123; type: &apos;RPC&apos;, id, error: &apos;NO_SUCH_METHOD&apos; &#125;)</div><div class="line">            &#125; else &#123;</div><div class="line">              // 如果方法存在，则调用它，并将调用结果按不同的类型发送</div><div class="line">              Promise.resolve()</div><div class="line">                .then(() =&gt; method.apply(null, data.params))</div><div class="line">                .then(result =&gt; &#123; ctx.postMessage(&#123; type: &apos;RPC&apos;, id, result &#125;) &#125;)</div><div class="line">                .catch(error =&gt; &#123; ctx.postMessage(&#123; type: &apos;RPC&apos;, id, error &#125;) &#125;)</div><div class="line">            &#125;</div><div class="line">          // 如果 method 属性为空，则证明是 worker 线程发送的消息</div><div class="line">          &#125; else &#123;</div><div class="line">            // 获取每个消息所对应的处于pending状态的Promise实例</div><div class="line">            let callback = callbacks[id]</div><div class="line">            if (callback == null) throw Error(`Unknown callback $&#123;id&#125;`)</div><div class="line">            delete callbacks[id]</div><div class="line"></div><div class="line">            // 按消息的类型将Promise转化为resolve状态或reject状态。</div><div class="line">            if (data.error) callback.reject(Error(data.error))</div><div class="line">            else callback.resolve(data.result)</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>根据注释我们可以知道，这里的setup函数包含了rpc协议的解析规则，因此主线程和worker线程对会调用该方法来注册安装这个rpc协议，具体的代码如下：</p>
+<ul>
+<li>主线程: <code>setup(worker, worker.rpcMethods, callbacks)</code></li>
+<li>worker线程: <code>code += `\n(${toCode(setup)})(self, ${exportsObjName}, {})</code></li>
+</ul>
+<p>这两处代码都是在各自的作用域中，将rpc协议与当前加载的模块绑定起来，只不过主进程所传<code>callbacks</code>是有意义的，而worker则使用一个空对象代替。</p>
+<h3 id="注册调用逻辑"><a href="#注册调用逻辑" class="headerlink" title="注册调用逻辑"></a>注册调用逻辑</h3><p>在拥有了rpc协议的基础上，只需要实现调用逻辑即可，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">worker.call = (method, params) =&gt; new Promise((resolve, reject) =&gt; &#123;</div><div class="line">    let id = `rpc$&#123;++counter&#125;`</div><div class="line">    callbacks[id] = &#123; method, resolve, reject &#125;</div><div class="line">    worker.postMessage(&#123; type: &apos;RPC&apos;, id, method, params &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>这个<code>call</code>方法，每次会将一次方法的调用，转化为一个<code>pending</code>状态的<code>Promise</code>实例，并存在<code>callbacks</code>变量中，同时向worker线程发送一个格式为调用方法数据格式的消息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for (let i in exports) &#123;</div><div class="line">   if (exports.hasOwnProperty(i) &amp;&amp; !(i in worker)) &#123;</div><div class="line">     worker[i] = (...args) =&gt; worker.call(i, args)</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同时在初始化的过程中，会将主线程加载的模块中的每个方法，都绑定一个快捷方法，其方法名与模块中的函数声明保持一致，内部则使用<code>worker.call</code>来完成调用逻辑。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>关于这个库本身，还存在一些可以探讨的问题，比如：</p>
+<ul>
+<li>是否支持依赖解析机制</li>
+<li>如果引入外部依赖模块</li>
+<li>针对消息是否需要按队列进行处理</li>
+</ul>
+<p>关于前两点，似乎作者有一个相同的项目，叫做<code>workerize-loader</code>，可以解决，关于第三点，作者在代码中增加了todo，表示实现消息队列机制可能没有必要，因为当前的通讯基于postMessage，本身的结果已经是有序状态的了。</p>
+<p>关于源码本身的分析大概就这样了，希望可以抛砖引玉，如有错误，还望指正。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;写在前面&quot;&gt;&lt;a href=&quot;#写在前面&quot; class=&quot;headerlink&quot; title=&quot;写在前面&quot;&gt;&lt;/a&gt;写在前面&lt;/h2&gt;&lt;p&gt;最近正好在看web worker相关的东西，今天无意中就看到了github一周最热项目的推送中，有这么一个项目&lt;a href
+    
+    </summary>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="web worker" scheme="http://yoursite.com/tags/web-worker/"/>
+    
+      <category term="源码" scheme="http://yoursite.com/tags/%E6%BA%90%E7%A0%81/"/>
+    
+  </entry>
   
   <entry>
     <title>高级 Angular 组件模式 (3a)</title>
@@ -884,9 +954,9 @@
     </summary>
     
     
-      <category term="css" scheme="http://yoursite.com/tags/css/"/>
-    
       <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
     
   </entry>
   
@@ -917,74 +987,9 @@
     </summary>
     
     
+      <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
+    
       <category term="css" scheme="http://yoursite.com/tags/css/"/>
-    
-      <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>liferay和proxy server那点事</title>
-    <link href="http://yoursite.com/2016/07/19/liferay-forward-proxy/"/>
-    <id>http://yoursite.com/2016/07/19/liferay-forward-proxy/</id>
-    <published>2016-07-19T08:41:41.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>Set up a server to use as a proxy for requests from Liferay (such as Apache web server)</p>
-</blockquote>
-<a id="more"></a>
-<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
-<li>Ubuntu 14.04</li>
-<li>httpd(apache2 for Ubuntu)</li>
-<li>liferay 7.0</li>
-</ul>
-<h1 id="知识背景"><a href="#知识背景" class="headerlink" title="知识背景"></a>知识背景</h1><p>这里的proxy server应当是指正向代理(forward proxy)。正向代理大概的意思，就是一个位于客户端和原始服务器之间的服务器，当客户端为了从原始服务器拿一些内容的时候，不向原始服务器直接发送请求而是向代理服务器发送，代理服务器转发客户端请求给原始服务器并将获得内容返还给客户端。</p>
-<p>正向代理的意思，大体就是一个跳板，对于你不方便去的地方或者不能去的地方，它可以带你去，比如一些vpn代理，其原理就是你访问代理服务器，代理服务器访问被墙的网站，之后把内容返还给你。</p>
-<p>既然说了正向代理，就捎带说一下反向代理。反向代理和正向代理相反，对与访问者来说，你访问一个反向代理服务器后，它同样会从原始服务器拿数据，但是这里和正向代理的区别是，访问者不需要进行额外的设置，反向代理服务器判断请求如何转发给原始服务器，之后把内容返还给客户端。</p>
-<p>反向代理的意思，大体就是一个服务柜台，对于你不方便去的地方或者不能去的地方，有人可以帮你去，比如一些设置了防火墙的原始服务器为了提供给外网用户访问，就会使用反向代理。</p>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h3 id="配置proxy-server"><a href="#配置proxy-server" class="headerlink" title="配置proxy server"></a>配置proxy server</h3><p>以ubuntu为例(windows应该会更方便)，直接用apt-get安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install apache2</div></pre></td></tr></table></figure>
-<p>之后server的根目录是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/etc/apache2</div></pre></td></tr></table></figure></p>
-<p>进入这里，会发现有一个<strong>apache2.conf</strong>的配置文件，这个文件是apache2的主要配置文件，其中包含了若干子配置文件，分别配置不同模块的配置，看注释就可以大概知道每个模块是做什么的。</p>
-<p>我们这里需要着重看的是<strong>ports.conf</strong>和<strong>000-default.conf</strong>。</p>
-<p>前者主要设置一些关于server监听端口的配置，它的源码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Listen 80</div><div class="line"></div><div class="line">&lt;IfModule ssl_module&gt;</div><div class="line">	Listen 443</div><div class="line">&lt;/IfModule&gt;</div><div class="line"></div><div class="line">&lt;IfModule mod_gnutls.c&gt;</div><div class="line">	Listen 443</div><div class="line">&lt;/IfModule&gt;</div></pre></td></tr></table></figure></p>
-<p>大体的意思是</p>
-<blockquote>
-<p>监听80端口，如果有ssl_module和mod_gnutls.c模块加载的话，同时也监听443端口。</p>
-</blockquote>
-<p>如果你还想监听别端口，比如81，可以直接添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Listen 81</div></pre></td></tr></table></figure></p>
-<p>后者主要设置一些关于虚拟主机的配置，<strong>apache2.conf</strong>中有一行代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">IncludeOptional sites-enabled/*.conf</div></pre></td></tr></table></figure></p>
-<p>意思是会在启动服务器的时候，把所有<strong>./sites-enabled</strong>目录下的配置文件都包含进来，所以我们可以自己新建一个.conf文件，也可以直接更改默认的文件，也就是<strong>000-default.conf</strong>。</p>
-<h2 id="配置VirtualHost"><a href="#配置VirtualHost" class="headerlink" title="配置VirtualHost"></a>配置VirtualHost</h2><p>配置完proxy server的监听端口，该配置虚拟主机了，打开默认配置文件，添加如下代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ProxyRequests On</div><div class="line">ProxyVia On</div><div class="line"></div><div class="line">&lt;VirtualHost *:80&gt;  </div><div class="line">	ServerAdmin prograsliu@gmail.com</div><div class="line">    ServerName www.test.com</div><div class="line">    ServerAlias test.com</div><div class="line">    ErrorLog &quot;logs/test.com-error.log&quot;</div><div class="line">    CustomLog &quot;logs/test.com-access.log&quot; common    </div><div class="line">    </div><div class="line">    #正向代理设置</div><div class="line">    ProxyRequests On</div><div class="line">    ProxyVia On</div><div class="line"></div><div class="line">    &lt;Proxy *&gt;</div><div class="line">        Order deny,allow</div><div class="line">        Deny from all</div><div class="line">        Allow from 127.0.0.1</div><div class="line">    &lt;/Proxy&gt;</div><div class="line">&lt;/VirtualHost&gt;</div></pre></td></tr></table></figure>
-<p>开启Apache正向代理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ProxyRequests On</div></pre></td></tr></table></figure></p>
-<p>之后设置控制位于代理服务器链中的代理请求的流向<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ProxyVia On</div></pre></td></tr></table></figure></p>
-<p>每个请求和应答都会对应当前主机得到一个”Via:”头。</p>
-<p>再设置对apache监听主机的请求的匹配规则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;VirtualHost *:80&gt;</div></pre></td></tr></table></figure></p>
-<p>这个表示匹配所有80端口的请求，之后又由于这个标签中还有一些其他的设置，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ServerName www.test.com</div><div class="line">ServerAlias test.com</div><div class="line">ErrorLog &quot;logs/test.com-error.log&quot;</div><div class="line">CustomLog &quot;logs/test.com-access.log&quot; common</div></pre></td></tr></table></figure></p>
-<p>因此，匹配规则会变为，匹配所有请求www.test.com:80这个主机的请求，同时呢，这个主机的小名是test.com，日志文件根据事件类型按不同路径保存。</p>
-<h2 id="测试一下"><a href="#测试一下" class="headerlink" title="测试一下"></a>测试一下</h2><p>设置到这里，proxy server已经设置完成，因此也可以来简单测试一下，比如打开ＦＦ浏览器，之后在<strong>Preference &gt; Advanced &gt; Connection</strong>中，选择<strong>manual proxy configuration</strong>，然后把代理配置填进去，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HTTP proxy: www.test.com</div><div class="line">Port: 80</div></pre></td></tr></table></figure></p>
-<p>注意下面有一个<strong>No Proxy for</strong>的选项，因此不要拿本地的请求作测试。</p>
-<p>然后访问<strong>www.163.com</strong>，使用f12抓包，可以发现请求的相应头(response header)中，会增加一个字段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Via: &quot;1.1 www.test.com&quot;</div></pre></td></tr></table></figure></p>
-<p>大体意思就是，你打开的163的页面，并不是从网易的浏览器直接获得的，而是从你配置的叫做www.test.com的代理服务器获得的，真正访问网易服务器的是www.test.com。</p>
-<h2 id="配置liferay"><a href="#配置liferay" class="headerlink" title="配置liferay"></a>配置liferay</h2><p>接下来就很简单了，只需要让liferay来使用我们配置好的proxy server即可。</p>
-<p>liferay中的system.properties有如下三个参数，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># Set the location of the HTTP proxy that the portal will use to fetch</div><div class="line"># external content.</div><div class="line">#</div><div class="line"># Set http.nonProxyHosts for hosts that will not be proxied. This is useful</div><div class="line"># for proxied environments where you need direct access to internal servers.</div><div class="line"># This should follow the same semantics as the java.net package.</div><div class="line">#</div><div class="line">#http.proxyHost=192.168.0.200</div><div class="line">#http.proxyPort=4480</div><div class="line">#http.nonProxyHosts=192.168.0.250</div></pre></td></tr></table></figure></p>
-<p>最后一个不用管，只需要配置前两个，把它改成我们配置的proxy server对应的参数即可，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http.proxyHost=www.test.com</div><div class="line">http.proxyPort=80</div></pre></td></tr></table></figure></p>
-<p>之后就大功告成了。当portal从外部的server，获取资源时，会使用代理，比如使用亚马逊的s3 store云储存服务时。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://www.cnblogs.com/zemliu/archive/2012/04/18/2454655.html" target="_blank" rel="external">Apache配置正向代理与反向代理</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;Set up a server to use as a proxy for requests from Liferay (such as Apache web server)&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-    
-      <category term="liferay" scheme="http://yoursite.com/tags/liferay/"/>
     
   </entry>
   
