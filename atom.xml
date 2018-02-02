@@ -152,11 +152,11 @@
   </entry>
   
   <entry>
-    <title>【译】 Understanding SOLID Principles - Dependency Inversion</title>
+    <title>【译】Understanding SOLID Principles - Dependency Inversion</title>
     <link href="http://yoursite.com/2018/01/22/SOLID-d/"/>
     <id>http://yoursite.com/2018/01/22/SOLID-d/</id>
     <published>2018-01-22T02:21:35.000Z</published>
-    <updated>2018-01-22T02:24:37.000Z</updated>
+    <updated>2018-02-02T07:30:59.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="Understanding-SOLID-Principles-Dependency-Inversion"><a href="#Understanding-SOLID-Principles-Dependency-Inversion" class="headerlink" title="Understanding SOLID Principles: Dependency Inversion"></a><a href="https://codeburst.io/understanding-solid-principles-dependency-injection-d570c15560ab" target="_blank" rel="external">Understanding SOLID Principles: Dependency Inversion</a></h1><blockquote>
 <p>这是理解<code>SOLID</code>原则中，关于<strong>依赖倒置</strong>原则如何帮助我们编写低耦合和可测试代码的第一篇文章。</p>
