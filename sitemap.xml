@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/02/08/SOLID-l/</loc>
+    
+    <lastmod>2018-02-08T03:16:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/02/08/SOLID-i/</loc>
     
     <lastmod>2018-02-08T01:40:33.000Z</lastmod>
@@ -100,7 +107,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
+    <loc>http://yoursite.com/2016/08/22/interview-record-20160822/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -121,13 +128,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2016/09/14/7-tips-for-cooking/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
@@ -135,14 +135,21 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/08/22/interview-record-20160822/</loc>
+    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/05/20160705/</loc>
+    <loc>http://yoursite.com/2016/07/01/20160701/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -170,7 +177,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
+    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -191,13 +198,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2016/06/30/%E5%81%9A%E9%A5%AD%E8%BF%99%E4%BB%B6%E5%B0%8F%E4%BA%8B/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
@@ -212,7 +212,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/01/20160701/</loc>
+    <loc>http://yoursite.com/2016/07/05/20160705/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -240,14 +247,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/liferay/Fundamentals.html</loc>
+    <loc>http://yoursite.com/liferay/index.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/liferay/index.html</loc>
+    <loc>http://yoursite.com/liferay/Fundamentals.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     

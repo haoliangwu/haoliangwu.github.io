@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-02-08T01:40:33.000Z</updated>
+  <updated>2018-02-08T03:16:57.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,145 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【译】Understanding SOLID Principles - Liskov Substitution Principle</title>
+    <link href="http://yoursite.com/2018/02/08/SOLID-l/"/>
+    <id>http://yoursite.com/2018/02/08/SOLID-l/</id>
+    <published>2018-02-08T03:16:57.000Z</published>
+    <updated>2018-02-08T03:16:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Understanding-SOLID-Principles-Liskov-Substitution-Principle"><a href="#Understanding-SOLID-Principles-Liskov-Substitution-Principle" class="headerlink" title="Understanding SOLID Principles: Liskov Substitution Principle"></a><a href="https://codeburst.io/understanding-solid-principles-liskov-substitution-principle-e7f35277d8d5" target="_blank" rel="external">Understanding SOLID Principles: Liskov Substitution Principle</a></h1><blockquote>
+<p>这是理解<code>SOLID</code>原则，关于<strong>里氏替换原则</strong>为什么提倡我们面向抽象层编程而不是具体实现层，以及为什么这样可以使代码更具维护性和复用性。</p>
+</blockquote>
+<h2 id="什么是里氏替换原则"><a href="#什么是里氏替换原则" class="headerlink" title="什么是里氏替换原则"></a>什么是里氏替换原则</h2><blockquote>
+<p>Objects should be replaceable with instances of their subtypes without altering the correctness of that program.</p>
+<p>某个对象实例的子类实例应当可以在不影响程序正确性的基础上替换它们。</p>
+</blockquote>
+<p>这句话的意思是说，当我们在传递一个父抽象的子类型时，你需要保证你不会修改任何关于这个父抽象的行为和状态语义。</p>
+<p>如果你不遵循里氏替换原则，那么你可能会面临以下问题：</p>
+<ul>
+<li>类继承会变得很混乱，因此奇怪的行为会发生</li>
+<li>对于父类的单元测试对于子类是无效的，因此会降低代码的可测试性和验证程度</li>
+</ul>
+<p>通常打破这条原则的情况发生在修改父类中在其他方法中使用的，与当前子类无关联的内部或者私有变量。这通常算得上是一种对于类本身的一次潜在攻击，而且这种攻击可能是你在不经意间自己发起的，而且不仅在子类中。</p>
+<h2 id="反面例子"><a href="#反面例子" class="headerlink" title="反面例子"></a>反面例子</h2><p>让我们通过一个<strong>反面例子</strong>来演示这种修改行为和它所产生的后果。比如，我们有一个关于<code>Store</code>的抽象类和它的实现类<code>BasicStore</code>，这个类会储存一些消息在内存中，直到储存的个数超过每个上限。客户端代码的实现也很简单明了，它期望通过调用<code>retrieveMessages</code>就可以获取到所有储存的消息。</p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">interface Store &#123;</div><div class="line">    store(message: string);</div><div class="line">    retrieveMessages(): string[];</div><div class="line">&#125;</div><div class="line"></div><div class="line">const STORE_LIMIT = 5;</div><div class="line"></div><div class="line">class BasicStore implements Store &#123;</div><div class="line">   protected stash: string[] = [];</div><div class="line">   protected storeLimit: number = STORE_LIMIT;</div><div class="line">  </div><div class="line">   store(message: string) &#123;</div><div class="line">     if (this.storeLimit === this.stash.length) &#123;</div><div class="line">         this.makeMoreRoomForStore();</div><div class="line">      &#125;</div><div class="line">      this.stash.push(message);</div><div class="line">    &#125;</div><div class="line">  </div><div class="line">    retrieveMessages(): string[] &#123;</div><div class="line">      return this.stash;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    makeMoreRoomForStore(): void &#123;</div><div class="line">       this.storeLimit += 5;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>之后通过继承<code>BasicStore</code>，我们又创建了一个新的<code>RotatingStore</code>实现类，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">class RotatingStore extends BasicStore &#123;</div><div class="line">    makeMoreRoomForStore() &#123;</div><div class="line">        this.stash = this.stash.slice(1);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意<code>RotatingStore</code>中覆盖父类<code>makeMoreRoomForStore</code>方法的代码以及它是如何隐蔽地改变了父类<code>BasicStore</code>关于<code>stash</code>的状态语义的。它不仅修改了<code>stash</code>变量，还销毁了在程序进程中已储存的消息已为将来的消息提供额外的空间。</p>
+<p>在使用<code>RotatingStore</code>的过程中，我们会遇到一些奇怪的现象，这正式由于<code>RotatingStore</code>本身产生的，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">const st: Store = new RotatingStore()</div><div class="line"></div><div class="line">st.store(&quot;hello&quot;)</div><div class="line">st.store(&quot;world&quot;)</div><div class="line">st.store(&quot;how&quot;)</div><div class="line">st.store(&quot;are&quot;)</div><div class="line">st.store(&quot;you&quot;)</div><div class="line">st.store(&quot;today&quot;)</div><div class="line">st.store(&quot;sir?&quot;)</div><div class="line"></div><div class="line">st.retrieveMessages() // 一些消息丢失了</div></pre></td></tr></table></figure>
+<p>一些消息会无故消失，当前这个类的表现逻辑与所有消息均可以被取出的基本需求不一致。</p>
+<h2 id="如何实践里氏替换原则"><a href="#如何实践里氏替换原则" class="headerlink" title="如何实践里氏替换原则"></a>如何实践里氏替换原则</h2><p>为了避免这种奇怪现象的发生，里氏替换原则推荐我们通过在子类中调用父类的公有方法来获取一些内部状态变量，而不是直接使用它。这样我们就可以保证父类抽象中正确的状态语义，从而避免了副作用和非法的状态转变。</p>
+<p>它也推荐我们应当尽可能的使基本抽象保持简单和最小化，因为对于子类来说，有助于提供父类的扩展性。如果一个父类是比较复杂的，那么子类在覆盖它的时候，在不影响父类状态语义的情况下进行扩展绝非易事。</p>
+<p>对于内部系统做可行的后置条件检查也是一个不错的方式，这种检查通常会验证是否子类会搅乱一些关键代码的运行路径（译者注：也可以理解为状态语义），但是我本身对这个实践并没有太多的经验，所以无法给予具体的例子。</p>
+<p>代码评论也可以一定程度上给予好的帮助。当你在开发一些你可能无意间做出一些对已有系统的破坏，但是你的同事可能会很容易地发现这些（当局者迷旁观者清）。软件设计保持一致性是一件十分重要的事情，因此应当尽早、尽可能多地查明那些对对象继承链作出潜在修改的代码。</p>
+<p>最后，在<strong>单一职责原则</strong>中，我们曾提及，考虑使用<strong>组合模式</strong>来替换<strong>继承模式</strong>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如你所看到的，在开发软件时，我们往往需要额外花一些努力和精力来使它变得更好。将这些原则牢记于心，理解它们所存在的意义以及它们想要解决的问题，这样会使你的工作变得更加容易、更具条理性，但是同时记住，这并不是一件容易的事，相反，你应当在构思软件时，花相当多的事件思考如何更好地实践这些原则。</p>
+<p>试着让自己设计的软件系统具备可适应性，这种适应性可以抵御各种不利的变化以及潜在的错误，这样自然而然地可以使你少加班和早回家（译者注：看来加班是每个程序员都要面临的问题啊）</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这是<strong>SOLID</strong>原则中我所接触和了解较少的一个原则，但经过仔细思考后，发现其实我们还是经常会在实际工作中运用它的。</p>
+<p>在许多面向相对的编程语言中，关于对象的继承机制中，都会提供一些内部变量和状态的修饰符，比如<code>public（公有）</code>、<code>protect（保护）</code>和<code>private（私有）</code>，关于这些修饰符本身的异同这里不再赘述，我想说的是，这些修饰符存在必然有它存在的意义，一定要在实际工作中，使用它们。之前做java后端时，经常在公司的项目的历史代码中发现，很少使用<code>protect</code>和<code>private</code>对类内部的方法和变量做约束，可见当时的编写者并没有对类本身的职能有一个清晰的认识，又或者是随着时间一步步迭代出来的结果。</p>
+<p>那么问题来了，一些静态语言有这些修饰符，但是像<code>javascript</code>这种鸭子类型语言怎么办呢？其实没有必要担心，最早开始学前端的时候，这个问题我就问过自己无数次，<code>javascript</code>虽然没有这些修饰符，但是我们可以通过别的方式来达到类似的效果，或者使用<code>typescript</code>。</p>
+<p>除了在编程语言层面，在前端实际工作中，你可能会听到一个叫作<code>immutable</code>的概念，这个概念我认为也是里氏替换原则的一直延伸。因为当前的前端框架一般提倡的理念均是<code>f(state) =&gt; view</code>，即数据状态代表视图，而数据状态本身由于<code>javascript</code>动态语言的特性，很容易会在不经意间被修改，一旦存在这种修改，视图中便会产生一些意想不到的问题，因此<code>immutable</code>和<code>函数式</code>的概念才会在前段时间火起来。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>经过这五篇文章，我们来分别总结一下这五条基本原则以及它们带来的好处：</p>
+<ul>
+<li>单一职责原则：提高代码实现层的内聚度，降低实现单元彼此之间的耦合度</li>
+<li>开闭原则：提高代码实现层的可扩展性，提高面临改变的可适应性，降低修改代码的冗余度</li>
+<li>里氏替换原则：提高代码抽象层的可维护性，提高实现层代码与抽象层的一致性</li>
+<li>接口隔离原则：提高代码抽象层的内聚度，降低代码实现层与抽象层的耦合度，降低代码实现层的冗余度</li>
+<li>依赖倒置原则：降低代码实现层由依赖关系产生的耦合度，提高代码实现层的可测试性</li>
+</ul>
+<p>可以注意到我这里刻意使用了<code>降低/提高 + 实现层/抽象层 + 特性/程度（耦合度、内聚度、扩展性、冗余度、可维护性，可测试性）</code>这样的句式，之所以这么做是因为在软件工作中，我们理想中的软件应当具备的特点是, 高内聚、低耦合、可扩展、少冗余、可维护、易于测试，而这五个原则也按正确的方向，将我们的软件系统向我们理想中的标准推进。</p>
+<p>为了便于对比，特别绘制了下面的表格，希望大家从真正意义上做到将这些原则牢记于心，并付诸于行。</p>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>耦合度</th>
+<th>内聚度</th>
+<th>扩展性</th>
+<th>冗余度</th>
+<th>维护性</th>
+<th>测试性</th>
+<th>适应性</th>
+<th>一致性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单一职责原则</td>
+<td>-</td>
+<td>+</td>
+<td>o</td>
+<td>o</td>
+<td>+</td>
+<td>+</td>
+<td>o</td>
+<td>o</td>
+</tr>
+<tr>
+<td>开闭原则</td>
+<td>o</td>
+<td>o</td>
+<td>+</td>
+<td>-</td>
+<td>+</td>
+<td>o</td>
+<td>+</td>
+<td>o</td>
+</tr>
+<tr>
+<td>里氏替换原则</td>
+<td>-</td>
+<td>o</td>
+<td>o</td>
+<td>o</td>
+<td>+</td>
+<td>o</td>
+<td>o</td>
+<td>+</td>
+</tr>
+<tr>
+<td>接口隔离原则</td>
+<td>-</td>
+<td>+</td>
+<td>o</td>
+<td>-</td>
+<td>o</td>
+<td>o</td>
+<td>+</td>
+<td>o</td>
+</tr>
+<tr>
+<td>依赖倒置原则</td>
+<td>-</td>
+<td>o</td>
+<td>o</td>
+<td>-</td>
+<td>o</td>
+<td>+</td>
+<td>+</td>
+<td>o</td>
+</tr>
+</tbody>
+</table>
+<p>Note: <code>+</code>代表增加, <code>-</code>代表降低, <code>o</code>代表持平</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Understanding-SOLID-Principles-Liskov-Substitution-Principle&quot;&gt;&lt;a href=&quot;#Understanding-SOLID-Principles-Liskov-Substitution-Principle
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="编程思想" scheme="http://yoursite.com/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
+    
+  </entry>
   
   <entry>
     <title>【译】Understanding SOLID Principles - Interface Segregation Principle</title>
@@ -438,6 +577,58 @@
   </entry>
   
   <entry>
+    <title>高级 Angular 组件模式 (3a)</title>
+    <link href="http://yoursite.com/2018/01/10/aacp-3a/"/>
+    <id>http://yoursite.com/2018/01/10/aacp-3a/</id>
+    <published>2018-01-10T14:02:45.000Z</published>
+    <updated>2018-01-10T14:02:45.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="external">Communicate Between Components Using Dependency Injection</a></p>
+</blockquote>
+<p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
+<ul>
+<li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
+<li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
+</ul>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
+<ul>
+<li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
+<li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
+<p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
+<p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
+<blockquote>
+<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
+</blockquote>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
+<p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
+<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03a-compound-comp-inject-parent" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
+<p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
+<p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
+<p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;03-a-Communicate-Between-Components-Using-Dependency-Injection&quot;&gt;&lt;a href=&quot;#03-a-Communicate-Between-Components-Using-Dependency-Injec
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>高级 Angular 组件模式 (3b)</title>
     <link href="http://yoursite.com/2018/01/10/aacp-3b/"/>
     <id>http://yoursite.com/2018/01/10/aacp-3b/</id>
@@ -484,58 +675,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;03-b-Enhance-Components-with-Directives&quot;&gt;&lt;a href=&quot;#03-b-Enhance-Components-with-Directives&quot; class=&quot;headerlink&quot; title=&quot;03-b Enhance C
-    
-    </summary>
-    
-    
-      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
-    
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
-      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
-    
-      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>高级 Angular 组件模式 (3a)</title>
-    <link href="http://yoursite.com/2018/01/10/aacp-3a/"/>
-    <id>http://yoursite.com/2018/01/10/aacp-3a/</id>
-    <published>2018-01-10T14:02:45.000Z</published>
-    <updated>2018-01-10T14:02:45.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
-<p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="external">Communicate Between Components Using Dependency Injection</a></p>
-</blockquote>
-<p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
-<ul>
-<li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
-<li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
-</ul>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
-<ul>
-<li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
-<li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
-</ul>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
-<p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
-<p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
-<blockquote>
-<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
-</blockquote>
-<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
-<p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
-<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03a-compound-comp-inject-parent" width="800" height="600" frameborder="0" allowfullscreen></iframe>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
-<p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
-<p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
-<p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;03-a-Communicate-Between-Components-Using-Dependency-Injection&quot;&gt;&lt;a href=&quot;#03-a-Communicate-Between-Components-Using-Dependency-Injec
     
     </summary>
     
@@ -1127,33 +1266,6 @@
     
     
       <category term="英语" scheme="http://yoursite.com/tags/%E8%8B%B1%E8%AF%AD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>angular学习笔记</title>
-    <link href="http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>http://yoursite.com/2016/09/06/angular学习笔记/</id>
-    <published>2016-09-06T06:36:48.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近没有怎么写东西，主要是因为准备要换工作了，一方面是以前工作的交接，另一方面就是新公司让我利用这段时间熟悉熟悉angular相关的东西。说来惭愧，angular这个东西其实早在2年前我就涉足过，只可惜当时水平有限，连个npm都玩不明白，更别说什么双向绑定、自定义指令什么的了，然后后来就放弃了。后来就慢慢自学，从html/css到js，再到es6，最后又发现react火了，学了一段时间。</p>
-<a id="more"></a>
-<p>虽然对于mvvm框架，掌握react一个其实已经够用，但是从找工作开始慢慢才发现，其实react对于好多中小型的公司还算比较”新”的技术，所谓新不是指这个技术有多新，而是因为很多项目的构建基于一些相对而言比较旧的技术，比如angular，因此为了迎合新技术推翻重来一次明显是不现实的，我慢慢意识到２年前欠下的债得还。</p>
-<p>因此最近的时间基本都花在重学angular上了，不过可能因为基础相对第一次学习时扎实了不少，又加上有了mvvm框架的使用经验，学习过程相对轻松了不少，但是轻松归轻松，angular给我的感觉依旧是大而全，就是入门很简单，熟练需要经验，精通很难，而且es6的语法也流行开来，angualr当时为了解决很多问题的框架语法现在利用es6的语法完全可以解决，因此我觉的有必要好好梳理一下，先挖个坑，以后慢慢填。</p>
-<p>我把所有的笔记都放到了<a href="/angular">这里</a>，供记录参考。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近没有怎么写东西，主要是因为准备要换工作了，一方面是以前工作的交接，另一方面就是新公司让我利用这段时间熟悉熟悉angular相关的东西。说来惭愧，angular这个东西其实早在2年前我就涉足过，只可惜当时水平有限，连个npm都玩不明白，更别说什么双向绑定、自定义指令什么的了，然后后来就放弃了。后来就慢慢自学，从html/css到js，再到es6，最后又发现react火了，学了一段时间。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
-      <category term="angular" scheme="http://yoursite.com/tags/angular/"/>
     
   </entry>
   
