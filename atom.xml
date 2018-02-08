@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-02-04T01:34:48.000Z</updated>
+  <updated>2018-02-08T01:40:33.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,68 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【译】Understanding SOLID Principles - Interface Segregation Principle</title>
+    <link href="http://yoursite.com/2018/02/08/SOLID-i/"/>
+    <id>http://yoursite.com/2018/02/08/SOLID-i/</id>
+    <published>2018-02-08T01:40:33.000Z</published>
+    <updated>2018-02-08T01:40:33.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Understanding-SOLID-Principles-Interface-Segregation-Principle"><a href="#Understanding-SOLID-Principles-Interface-Segregation-Principle" class="headerlink" title="Understanding SOLID Principles: Interface Segregation Principle"></a><a href="https://codeburst.io/understanding-solid-principles-interface-segregation-principle-b2d57026cf6c" target="_blank" rel="external">Understanding SOLID Principles: Interface Segregation Principle</a></h1><blockquote>
+<p>这是理解<code>SOLID</code>原则，关于<strong>接口隔离</strong>原则如何帮助我们创建简单的抽象接口，并使客户端代与接口之间存在的更少的依赖关系。</p>
+</blockquote>
+<h2 id="接口隔离原则是什么"><a href="#接口隔离原则是什么" class="headerlink" title="接口隔离原则是什么"></a>接口隔离原则是什么</h2><blockquote>
+<p>Clients should not be forced to depend on methods that they do not use.</p>
+<p>客户端代码不应当被迫依赖于它们不需要的方法。</p>
+</blockquote>
+<p>这个原则本身与单一职责原则关系十分紧密，它意味着当你在定义你的抽象层代码时，不应当在客户端代码在实现抽象逻辑时，暴露一些客户端代码不需要使用或者关心的方法。</p>
+<p>进一步说明的话，就是当你有意地在抽象层中暴露的方法时，这意味着所有实现这些抽象逻辑的客户端代码都必须要实现所有的抽象方法，尽管这些方法并不一定都对客户端代码有意义。</p>
+<p>将你的接口的保持精简和小颗粒度，并且不要在它们中间增加无用的抽象方法，当你在对新的抽象接口进行命名时，你就会拥有更好的选择，因为你已有了若干小颗粒的命名类型。这样做的意义在于当你在需要提供一个更加大颗粒度的抽象接口时，你可以拥有足够的灵活性来将已有的小颗粒度接口进行组合。</p>
+<h2 id="如何实践接口隔离原则"><a href="#如何实践接口隔离原则" class="headerlink" title="如何实践接口隔离原则"></a>如何实践接口隔离原则</h2><p>这个例子是关于一个ATM用户界面的抽象接口，这个接口会处理诸如存款请求、取款请求等逻辑，从这个例子中我们会了解到，我们如何对这个接口进行隔离，使其进一步划分为多个独立的、更加具体的若干接口。</p>
+<p>首先我们应当有一个工具函数库接口，这个接口会描述我们想要暴露的关于<code>byte</code>操作逻辑的方法，让我们创建这样一个接口，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">type ByteUtils interface &#123;</div><div class="line">    Read(b []byte) (n int, err error) // Read into buffer</div><div class="line">    Write(b []byte)(n int, err error) // Write into buffer</div><div class="line">    Trim(b []byte, exclusions string)[]byte // Trim buffer by removing bytes from the exclusion chars</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它可以正常工作一段时间，但是很快我们就会发现以下两个问题：</p>
+<ul>
+<li>它的命名<code>ByteUtils</code>太过于通用，如果我们仅通过命名本身，基本无法获取任何具体的信息</li>
+<li>当使用它时，会有一些古怪的感觉，因为当你根据不同的优化场景来按不同逻辑实现<code>trim</code>方法时，你所实现的<code>read</code>和<code>write</code>几乎没什么差别，但是你却需要重复地实现它们，同时在某些不需要读或者写的场景，仍然需要实现它们。</li>
+</ul>
+<p>所以它虽然能够正常工作，但是却不够好。</p>
+<p>我们可以通过创建三个更精简、更具体的接口来替代原先通用的接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">type Reader interface &#123;</div><div class="line">    Read(b []byte) (n int, err error) </div><div class="line">&#125;</div><div class="line">type Writer interface &#123;</div><div class="line">    Write(b []byte)(n int, err error) </div><div class="line">&#125;</div><div class="line">type Trimmer interface &#123;</div><div class="line">    Trim(b []byte, exclusions string)[]byte </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这种颗粒度比较细的接口也可以称为<strong>角色接口</strong>，因为它们更易于重构和改变，甚至对于已经定义好的角色和目的也可以很容易的进行重新部署和定义。</p>
+<p>在这三个基础上，我们可以通过组合它们来获取一个更有关联性的接口列表，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">type ReadWriter interface &#123;</div><div class="line">    Reader</div><div class="line">    Writer </div><div class="line">&#125;</div><div class="line">type TrimReader interface &#123;</div><div class="line">    Trimmer</div><div class="line">    Reader</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这意味客户端代码拥有了可以根据它们各自的需求来组合抽象层接口的灵活性，这样就会避免在实现抽象接口时不必要的麻烦（比如必须要实现某些无用的方法），比如上面的<code>TrimReader</code>的实现并未包含多余的<code>Write</code>方法的声明。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如你所看到的，通用的接口往往会无意识的将自己和类的实现耦合在了一起，所以你应当尽量的避免这种情况的发生。在设计接口时，你应当时刻提醒自己，我是否需要使用所有在接口中声明的方法呢？如果不是的话，将接口细分为更多个更精简、更具体的接口。</p>
+<p>正如甘地曾经说过：</p>
+<blockquote>
+<p>你的行动决定你的习惯，你的习惯决定你的价值，你的价值会决定你的命运。</p>
+</blockquote>
+<p>如果在架构中，你每次都会经过仔细思考，会按照好的模式来进行设计，它将会成为一种习惯，自然慢慢会转变为你的价值或者原则，最终则会成为你的命运，比如成为了一个始终给予完善解决方案的软件架构师。</p>
+<p>我的观点是，始终通过挑战自己来变的更好，在某些时刻，你可能会遇到问题，但是往往你可能已经拥有了答案。</p>
+<p>Happy coding!</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>对于接口隔离原则的理解，我一直觉的它本身其实是单一职责原则的一个扩展，但是它们之间也有细微的不同：</p>
+<ul>
+<li>单一职责原则往往面向实现层，比如具体的类或者某个方法</li>
+<li>接口隔离原则往往面向抽象层，比如一些抽象类或者抽象方法</li>
+</ul>
+<p>所以将两个原则结合起来看的话，可以很容器得到当时提出这两个原则的人的意图，那就是一定要时刻<code>保持简单</code>。</p>
+<p>在实际工作中，我深知<strong>保持简单</strong>是一件十分困难的事情，因为工程师本身的使命便是解决问题，而问题往往充满了未知性，而未知性往往代表着改变，这还没有考虑到在项目实施过程中，产品经理天马行空的设计思路，客户们五花八门的需求等等。在这些外界条件下，我们的代码往往会变得复杂无比，充满了各种反模式和冗余代码，最终会使自己陷入无尽的bug修复和维护工作中，怎么还会有时间进行自我提升呢？</p>
+<p>所以，为了能够按时下班，为了能够及早回家，为了能够让我们的拥有更多的时间来提升自己和陪伴家人，在软件设计之初，尽可能地针对将来所面临的改变，在设计层面降低软件抽象模块间的耦合程度，在项目实施时，提高每个具体实现模块内部的内聚程度，同时使它们保持简单，这样便是一个好的开始。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Understanding-SOLID-Principles-Interface-Segregation-Principle&quot;&gt;&lt;a href=&quot;#Understanding-SOLID-Principles-Interface-Segregation-Princ
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="编程思想" scheme="http://yoursite.com/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
+    
+  </entry>
   
   <entry>
     <title>【译】Understanding SOLID Principles - Open Closed Principle</title>
@@ -86,9 +148,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="编程思想" scheme="http://yoursite.com/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     
@@ -222,9 +284,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="编程思想" scheme="http://yoursite.com/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     
@@ -297,9 +359,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="编程思想" scheme="http://yoursite.com/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     
@@ -426,9 +488,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
     
@@ -478,9 +540,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
     
@@ -532,9 +594,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
     
@@ -573,9 +635,9 @@
     </summary>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
     
@@ -624,9 +686,9 @@
     </summary>
     
     
-      <category term="kata" scheme="http://yoursite.com/tags/kata/"/>
-    
       <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="kata" scheme="http://yoursite.com/tags/kata/"/>
     
   </entry>
   
@@ -1092,62 +1154,6 @@
       <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="angular" scheme="http://yoursite.com/tags/angular/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>interview record 20160822</title>
-    <link href="http://yoursite.com/2016/08/22/interview-record-20160822/"/>
-    <id>http://yoursite.com/2016/08/22/interview-record-20160822/</id>
-    <published>2016-08-22T09:12:41.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="面试公司"><a href="#面试公司" class="headerlink" title="面试公司"></a>面试公司</h2><p>大连云匠软件</p>
-<a id="more"></a>
-<h2 id="面试职位"><a href="#面试职位" class="headerlink" title="面试职位"></a>面试职位</h2><p>Web前端开发</p>
-<h2 id="面试方式"><a href="#面试方式" class="headerlink" title="面试方式"></a>面试方式</h2><p>电话面试</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>问了一些列范围超级广的问题，不过我感觉大部分问题的答案，面试官还是比较满意的，有一些小问题没有答上来，我觉的并不是因为自己没有能力，其实就是所谓的“约书亚树”道理，当你不明白或者不知道一个事情的时候，如果没有机会去了解它，确实可能永远不可能了解了。就好比这次面试，如果面试官不问我，而我项目经验又比较匮乏，确实真的不知道啊。</p>
-<p>有两个问题我特意去网上查了一下，因此这里特意记录下来，知道的就无视吧，不知道的共勉吧。</p>
-<blockquote>
-<p>display:inline-block为默认样式的标签有哪些？</p>
-</blockquote>
-<p>这个问题我去网上查了一圈，最终按我的理解，这个问题答案的起点应该始于，HTML中有哪些替代标签?</p>
-<p>那么就来查概念吧，<strong>替换标签</strong>是浏览器根据其标签的元素与属性来判断具体显示内容的标签。比如常见的input，根据type属性的值会生成不同功能及样式的标签。所以举一反三咯，a也是，img也是，textarea也是，select也是，因为这些标签本身并没有内容，它们的内容依赖于属性，因此是可”替换”的。</p>
-<p>值得一提的是，替换标签均可以增加行高(line-height)，还可以调整baseline（vertical-align），废话，因为人家是inline嘛。</p>
-<blockquote>
-<p>内容区高度值 = padding-top + padding-bottom + margin-top + margin-bottom + height</p>
-</blockquote>
-<p>那么反过来，<strong>非替换标签</strong>就是浏览器根据其标签内容直接判断具体显示内容的标签。这个就很常见了，因为浏览器中的标签大部分都是非替换的，比如div, p等等。非替换元素添加padding-top或padding-bottom，不影响行框高度，但内容区高度会变化，margin-top，margin- bottom对行框没有任何影响。添加左右边距会影响非替换元素水平位置。要使非替换元素在父元素框内居中，可以设定line-height = 父元素框的高度。</p>
-<p>参考: <a href="http://www.cnblogs.com/huangyin1213/p/5566192.html" target="_blank" rel="external">html中label宽度设置、非替换元素和替换元素</a></p>
-<blockquote>
-<p>使用display:inline-block时，标签之间的空格如何解决（非margin）？ </p>
-</blockquote>
-<p>这个问题是面试官连着上面的问题问的，当时直接就蒙逼了。后来挂了电话之后，回到电脑上试了一下，这个问题其实以前也确实遇到过，只不过没有在意罢了。</p>
-<p>这个问题的表现类似于这样：</p>
-<iframe src="http://jsbin.com/cabetumewu/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe>
-<p>其中第一行中的input之间有一个小小的空格，然后呢，源码中并没有类似的的空格，然而真的没有吗，并不是的，这里的空格其实是input后跟着的那个换行符，要解决这个问题，下边的大神博客给了Ｎ种方法，我并没有挨个试，因为我没有额外的ie浏览器进行验证，只挑了几个简单易行的。</p>
-<ul>
-<li>可以不写换行符，直接把元素写到一行，如果觉的可读性不行，那就把换行符写到块级注释中。</li>
-<li>可以使用margin为负值进行调整，但是这个不推荐，因为空格宽度因浏览器不同而不同。</li>
-<li>可以使用无闭合标签</li>
-<li>可以对父元素使用<code>font-size: 0;</code></li>
-</ul>
-<p>这几个方法我亲测有效，其他方法日后有机会也试试，最后感叹句css真是博大精深，我表示除了积累应该是没有捷径了。</p>
-<p>参考: <a href="http://www.zhangxinxu.com/wordpress/?p=2357" target="_blank" rel="external">去除inline-block元素间间距的N种方法</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;面试公司&quot;&gt;&lt;a href=&quot;#面试公司&quot; class=&quot;headerlink&quot; title=&quot;面试公司&quot;&gt;&lt;/a&gt;面试公司&lt;/h2&gt;&lt;p&gt;大连云匠软件&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="html" scheme="http://yoursite.com/tags/html/"/>
-    
-      <category term="interview" scheme="http://yoursite.com/tags/interview/"/>
-    
-      <category term="css" scheme="http://yoursite.com/tags/css/"/>
     
   </entry>
   
