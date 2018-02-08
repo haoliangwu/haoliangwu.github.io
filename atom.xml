@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-02-08T09:32:46.000Z</updated>
+  <updated>2018-02-08T09:34:23.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,12 +20,11 @@
     <link href="http://yoursite.com/2018/02/08/javascript%E5%8E%9F%E5%9E%8B%E9%93%BEreview/"/>
     <id>http://yoursite.com/2018/02/08/javascript原型链review/</id>
     <published>2018-02-08T09:28:48.000Z</published>
-    <updated>2018-02-08T09:32:46.000Z</updated>
+    <updated>2018-02-08T09:34:23.000Z</updated>
     
-    <content type="html"><![CDATA[<p>虽然现在es8都已经在预发布阶段了，但是无论发布到es几，其本身的运作原理都是一样的。</p>
-<p>首先祭上一张图：<br><img src="/img/e83bca5f1d1e6bf359d1f75727968c11_hd.jpg"></p>
-<h2 id="简单说明"><a href="#简单说明" class="headerlink" title="简单说明"></a>简单说明</h2><p>这张图主要描述了以下的关系，如果觉的这里的说明过于复杂可以直接看<a href="#总结">最后一段</a>。</p>
-<p>关于<code>function(class)A</code>和它的原型之间的关系</p>
+    <content type="html"><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>虽然现在es8都已经在预发布阶段了，但是无论发布到es几，其本身的运作原理都是一样的。</p>
+<p>首先祭上一张图, 这张图主要描述了以下的关系，如果觉的这里的说明过于复杂可以直接看<a href="#总结">最后一段</a>。<br><img src="/img/e83bca5f1d1e6bf359d1f75727968c11_hd.jpg"></p>
+<h2 id="简单说明"><a href="#简单说明" class="headerlink" title="简单说明"></a>简单说明</h2><p>关于<code>function(class)A</code>和它的原型之间的关系</p>
 <blockquote>
 <p><code>A.prototype.constructor</code>与<code>A</code>等价</p>
 </blockquote>
@@ -80,9 +79,8 @@
     
     <summary type="html">
     
-      &lt;p&gt;虽然现在es8都已经在预发布阶段了，但是无论发布到es几，其本身的运作原理都是一样的。&lt;/p&gt;
-&lt;p&gt;首先祭上一张图：&lt;br&gt;&lt;img src=&quot;/img/e83bca5f1d1e6bf359d1f75727968c11_hd.jpg&quot;&gt;&lt;/p&gt;
-&lt;h2 id=&quot;简单说明&quot;
+      &lt;h2 id=&quot;写在前面&quot;&gt;&lt;a href=&quot;#写在前面&quot; class=&quot;headerlink&quot; title=&quot;写在前面&quot;&gt;&lt;/a&gt;写在前面&lt;/h2&gt;&lt;p&gt;虽然现在es8都已经在预发布阶段了，但是无论发布到es几，其本身的运作原理都是一样的。&lt;/p&gt;
+&lt;p&gt;首先祭上一张图, 这张
     
     </summary>
     
