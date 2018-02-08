@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> javascript原型链-review · Fine, thank you, and you.</title><meta name="description" content="javascript原型链-review - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">javascript原型链-review</h1><div class="post-info">Feb 8, 2018</div><div class="post-content"><p>虽然现在es8都已经在预发布阶段了，但是无论发布到es几，其本身的运作原理都是一样的。</p>
+<p>首先祭上一张图：<br><img src="/img/e83bca5f1d1e6bf359d1f75727968c11_hd"></p>
+<h2 id="简单说明"><a href="#简单说明" class="headerlink" title="简单说明"></a>简单说明</h2><p>这张图主要描述了以下的关系，如果觉的这里的说明过于复杂可以直接看<a href="#总结">最后一段</a>。</p>
+<p>关于<code>function(class)A</code>和它的原型之间的关系</p>
+<blockquote>
+<p><code>A.prototype.constructor</code>与<code>A</code>等价</p>
+</blockquote>
+<p>关于<code>function(class)A</code>的实例<code>a</code>与它的原型之间的关系</p>
+<blockquote>
+<p><code>a.__proto__</code>与<code>A.prototype</code>等价</p>
+</blockquote>
+<p>在上面两个等价条件的基础上，就可以很容易得到</p>
+<blockquote>
+<p><code>a.__proto__.prototype.constructor</code>与<code>A</code>等价</p>
+</blockquote>
+<p>这是一般的类和对象实例之间的原型继承关系。</p>
+<p>在此基础上，对于<code>Object</code>和<code>Function</code>还有一些特殊的关系。</p>
+<p>关于<code>function(class)A</code>和<code>Function</code>之间的关系</p>
+<blockquote>
+<p><code>A.__proto__</code>与<code>Function.prototype</code>等价</p>
+</blockquote>
+<p>关于<code>function(class)A</code>的原型和<code>Object</code>之间的关系</p>
+<blockquote>
+<p><code>A.prototype.__proto__</code>与<code>Object.prototype</code>等价</p>
+</blockquote>
+<p>关于<code>Function</code>的原型和<code>Object</code>之间的关系</p>
+<blockquote>
+<p><code>Function.prototype.__proto__</code>与<code>Object.prototype</code>等价</p>
+</blockquote>
+<p>所以也可以很容易知道</p>
+<blockquote>
+<p><code>A.__proto__.__proto__</code>与<code>Object.prototype</code>等价</p>
+</blockquote>
+<p><code>Object</code>对象比较特殊，因为它是所有对象的根，所以约定它的原型所指向的原型对象为空</p>
+<blockquote>
+<p><code>Object.prototype.__proto__</code>与<code>null</code>等价</p>
+</blockquote>
+<p>同时javascript中一切皆为对象，但<code>Object</code>本身是一个构造函数，因此它本身的原型对象指向<code>Function.prototype</code></p>
+<blockquote>
+<p><code>Object.__proto__</code>与<code>Function.prototype</code></p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>所以无论是es5风格的继承还是es6风格的继承语法，原型链的形成是都是通过<code>__proto__</code>和<code>prototype</code>描述的，举个例子，这里使用<code>es6</code>, 即:</p>
+<p>如果有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">class B extends A &#123;&#125;</div><div class="line">const a = new B()</div></pre></td></tr></table></figure></p>
+<p>则有：</p>
+<ul>
+<li><code>a.__proto__ === B.prototype</code></li>
+<li><code>B.prototype.constructor.__proto__ === B.__proto__</code></li>
+<li><code>B.__proto__ === A</code></li>
+<li><code>A.prototype.constructor.__proto === A.__proto__</code></li>
+<li><code>A.__proto__ === Function.prototype</code></li>
+<li><code>Function.prototype.__proto__ === Object.prototype</code></li>
+<li><code>Object.prototype.__proto__ === null</code></li>
+</ul>
+<p>其他的以此类推。</p>
+</div></article></div></section><footer><div class="paginator"><a href="/2018/02/08/SOLID-l/" class="next">NEXT</a></div><div data-thread-key="2018/02/08/javascript原型链review/" data-title="javascript原型链-review" data-url="http://yoursite.com/2018/02/08/javascript原型链review/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>

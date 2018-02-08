@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/02/08/javascript%E5%8E%9F%E5%9E%8B%E9%93%BEreview/</loc>
+    
+    <lastmod>2018-02-08T09:28:48.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/02/08/SOLID-l/</loc>
     
     <lastmod>2018-02-08T03:16:57.000Z</lastmod>
@@ -107,21 +114,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/08/22/interview-record-20160822/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/11/28/async-for-js/</loc>
+    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -135,7 +128,21 @@
   </url>
   
   <url>
+    <loc>http://yoursite.com/2016/11/28/async-for-js/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/08/22/interview-record-20160822/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -149,13 +156,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2016/07/26/liferay-portlet-container/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
@@ -163,7 +163,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/22/liferay-progress-bar/</loc>
+    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -185,6 +185,13 @@
   
   <url>
     <loc>http://yoursite.com/2016/09/21/vscode-typings%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/22/liferay-progress-bar/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -219,14 +226,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/06/20/%E5%BC%80%E5%A7%8B/</loc>
+    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -247,7 +247,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/liferay/index.html</loc>
+    <loc>http://yoursite.com/2016/06/20/%E5%BC%80%E5%A7%8B/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -262,6 +262,13 @@
   
   <url>
     <loc>http://yoursite.com/pages/index.html</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/liferay/index.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
