@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-02-17T11:07:14.000Z</updated>
+  <updated>2018-02-17T11:08:26.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>高级 Angular 组件模式 (4)</title>
+    <link href="http://yoursite.com/2018/02/17/aacp-4/"/>
+    <id>http://yoursite.com/2018/02/17/aacp-4/</id>
+    <published>2018-02-17T11:08:26.000Z</published>
+    <updated>2018-02-17T11:08:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="04-Avoid-Namespace-Clashes-with-Directives"><a href="#04-Avoid-Namespace-Clashes-with-Directives" class="headerlink" title="04 Avoid Namespace Clashes with Directives"></a>04 Avoid Namespace Clashes with Directives</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/avoid-namespace-clashes-with-directives-1f00d62de445" target="_blank" rel="external">Avoid Namespace Clashes with Directives</a></p>
+</blockquote>
+<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>在同一个<code>html</code>元素上绑定多个指令可能会造成命名冲突。</p>
+<p>命名冲突不仅存在于指令的选择器之间，同时也会存在于指令的<code>Inputs</code>和<code>Outputs</code>属性，当这些属性名一样时，Angular并不会进行提示，它会按原本的逻辑正常工作。这种情况有时候是我们希望看到的，有些时候却不是。</p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>避免存在于绑定在相同元素上的多个指令上的命名冲突。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>因为<code>toggle</code>和<code>withToggle</code>指令都绑定于<code>&lt;toggle&gt;</code>元素，我们将通过为它们增加一个<code>label</code>属性来说明问题。</p>
+<p>首先我们设置一个<code>label</code>属性，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;toggle label=&quot;some label&quot;&gt;</div></pre></td></tr></table></figure></p>
+<p>这个<code>label</code>属性的值会同时绑定在每个指令上，如果想要为其中的某个指令单独绑定，只能通过使用<code>prefix(前缀)</code>来实现。</p>
+<p>Angular官方提供的规范指南也警示了这一点，当你在使用<code>prefix</code>修饰指令的名称时，也需要注意使用<code>prefix</code>来修饰<code>Input</code>和<code>Output</code>属性的名称。</p>
+<p>Note: 当使用<code>Output</code>属性重写原生<code>DOM</code>元素的事件和使用<code>Input</code>属性重写原生元素的属性时，请额外注意，没有任何方式可以获知别人在他们编写的应用或者库中使用的命名，但是你可以很轻易的知道的具体命名的大体规则是什么，并且不要重写它们，除非你有意为之。</p>
+<p>增加<code>prefix</code>的一种方式是在每个指令的<code>label</code>属性的装饰器内增加一个字符串参数，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// In withToggle.directive.ts</div><div class="line">@Input(&apos;withToggleLabel&apos;) label;</div><div class="line"></div><div class="line">// In toggle.directive.ts</div><div class="line">@Input(&apos;toggleLabel&apos;) label;</div></pre></td></tr></table></figure></p>
+<p>但是这种解决方案的前提时，你至少能够更改存在命名冲突中的一个或多个指令的源码。如果在两个第三方库中存在命名冲突，这种情况是最棘手的，我们不在这里讨论它们。</p>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><iframe src="https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>原文中关于最后一段提出的关于在多个第三方库中存在的命名冲突的场景，作者提供做出具体的解决方案，我在这里简单分享一下自己对于这种情况的解决方案：</p>
+<p>通常这种情况比较少见，但是万一存在这种情况，我们可以通过创建一个新的<code>wrapper</code>指令来封装第三方指令，<code>wrapper</code>指令提供与第三方指令一样的接口属性，但是因为我们对于<code>wrapper</code>指令有绝对的控制权，我们可以提供统一的<code>prefix</code>来修饰这些接口属性，从而达到解决冲突的效果。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;04-Avoid-Namespace-Clashes-with-Directives&quot;&gt;&lt;a href=&quot;#04-Avoid-Namespace-Clashes-with-Directives&quot; class=&quot;headerlink&quot; title=&quot;04 Avoid
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>高级 Angular 组件模式 (5)</title>
@@ -700,6 +742,58 @@
   </entry>
   
   <entry>
+    <title>高级 Angular 组件模式 (3a)</title>
+    <link href="http://yoursite.com/2018/01/10/aacp-3a/"/>
+    <id>http://yoursite.com/2018/01/10/aacp-3a/</id>
+    <published>2018-01-10T14:02:45.000Z</published>
+    <updated>2018-01-10T14:02:45.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="external">Communicate Between Components Using Dependency Injection</a></p>
+</blockquote>
+<p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
+<ul>
+<li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
+<li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
+</ul>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
+<ul>
+<li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
+<li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
+<p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
+<p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
+<blockquote>
+<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
+</blockquote>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
+<p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
+<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03a-compound-comp-inject-parent" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
+<p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
+<p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
+<p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;03-a-Communicate-Between-Components-Using-Dependency-Injection&quot;&gt;&lt;a href=&quot;#03-a-Communicate-Between-Components-Using-Dependency-Injec
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>高级 Angular 组件模式 (3b)</title>
     <link href="http://yoursite.com/2018/01/10/aacp-3b/"/>
     <id>http://yoursite.com/2018/01/10/aacp-3b/</id>
@@ -746,58 +840,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;03-b-Enhance-Components-with-Directives&quot;&gt;&lt;a href=&quot;#03-b-Enhance-Components-with-Directives&quot; class=&quot;headerlink&quot; title=&quot;03-b Enhance C
-    
-    </summary>
-    
-    
-      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
-    
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
-      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
-    
-      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>高级 Angular 组件模式 (3a)</title>
-    <link href="http://yoursite.com/2018/01/10/aacp-3a/"/>
-    <id>http://yoursite.com/2018/01/10/aacp-3a/</id>
-    <published>2018-01-10T14:02:45.000Z</published>
-    <updated>2018-01-10T14:02:45.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
-<p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="external">Communicate Between Components Using Dependency Injection</a></p>
-</blockquote>
-<p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
-<ul>
-<li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
-<li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
-</ul>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
-<ul>
-<li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
-<li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
-</ul>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
-<p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
-<p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
-<blockquote>
-<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
-</blockquote>
-<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
-<p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
-<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03a-compound-comp-inject-parent" width="800" height="600" frameborder="0" allowfullscreen></iframe>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
-<p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
-<p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
-<p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;03-a-Communicate-Between-Components-Using-Dependency-Injection&quot;&gt;&lt;a href=&quot;#03-a-Communicate-Between-Components-Using-Dependency-Injec
     
     </summary>
     
@@ -1222,59 +1264,6 @@
     
       &lt;p&gt;转行做前端开发正好一周了，仔细一想，是真正意义上的一周呀，因为连上了7天班了。&lt;/p&gt;
 &lt;p&gt;说到感觉如何，我只能说，那是太好了。自从来了新公司，心情一下就变好了，回想这半年来，一直因为一些事情闷闷不乐，我也是蛮能拼的。不过总体工作还是比较忙，因为正好赶上项目要发布的最后一周，而且前端组的好多工作似乎还堆积了，不过好在最后也是按时完成了任务。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="心情" scheme="http://yoursite.com/tags/%E5%BF%83%E6%83%85/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>我为什么选择离开了Liferay</title>
-    <link href="http://yoursite.com/2016/09/26/%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E7%A6%BB%E5%BC%80%E4%BA%86Liferay/"/>
-    <id>http://yoursite.com/2016/09/26/我为什么离开了Liferay/</id>
-    <published>2016-09-26T06:21:15.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>距离离开Liferay还剩下用指头可以数出来的日子了，心中不禁感慨万千。这一个月除了做一些交接工作和下一份工作的准备意外，剩下的时间基本都在思考在Liferay的两年半时间我到底得到了什么，又留下了什么？仔细想想，好像没留下什么，至于得到的，确是很多的，毕竟这是我毕业步入社会进入的第一家公司，很多事情从未知到已知都是从这里开始。</p>
-<p>在这里认识了不少人，我从他们身上都学到了很多很多，不经意间也帮助了我很多很多，我衷心说声谢谢，同时我也想说，对于我的离职我只想说，离别是为了下次更好的相遇。</p>
-<p>不过写这篇的目的并不是为了怀旧，只是最近稍微熟悉点儿的人都在问我一个问题，“你为什么离职？”。这个问题，我从有离职想法的那天，到念头一点点变大，再到最后做出离职的决定，我已经问过自己无数次了。细说起来，大大小小的原因有很多，不过大体概括也就两点，一，我无法得到我想要的，二，Liferay同时也并不需要我这样的人，仅此而已，所以我选择离开。</p>
-<p>这里直接说Liferay好像扣上了一个很大的帽子，好吧，这里只是说中国这边的Liferay，后边不特殊说明均指代Liferay CN，如果再具体些，可以指代Liferay CNQA。</p>
-<a id="more"></a>
-<p>时间回到两年前，我刚刚来Liferay的时候，呆了一个星期左右，大体的感觉是，中国竟然还有这样人性化的公司？弹性制，不加班，年假长，事还少，虽然待遇差点，我心想也值得了，多给我个1000、2000的估计我也不会换其他公司，我也暗自决定，虽然闲，但是不能浪费这些时间，要好好利用空余的时间好好提升自己。事实上，我也是这么做的，这两年间我基本把所有空余的时间都投入到了学技术，学英语，学xx上。但越到后边，越觉的感觉不对，总觉的自己与公司、团队的距离越来越远了，最终不得不选择离职。</p>
-<p>最直接的感觉是，团队的技术氛围越来越淡了，做事风格也越来越浮躁了，做很多事情只求结果。还有一些我至今也不是特别懂的事情莫名其妙就发生了，比如:</p>
-<p>以前一个关一个ticket是很有自豪感，可以很负责任地说我关闭了它，它是没有问题的，现在我可以以各种流程为理由关闭它，但我再也不敢说它是没有问题的了。</p>
-<p>前段时间CN这边也开始做test-fix，其实一开始我挺期待的，后边才发现确实不适合我做，我遇事但求个明白，我一直想要一个fix的技术标准，得到的标准却是as it work。</p>
-<p>我后来抽时间给团队分享了一本有关公司测试脚本语音的学习笔记，心想水平虽然比不上某些去美国培训的人强吧，至少也是我自学这么长时间的一些心得体会，抛钻引玉而已，然后竟然被贴了一个“不尊重上级”的标签，还被越级告了一状。</p>
-<p>再后来，我给团队写一个editor吧，也是对培养我两年之久的团队的一个证明，心想不求能极大的提高团队效率，能节省3、5分钟也是极好的，最终却令某些人嗤之以鼻，以“用工具最终出了问题谁负责”，“３、５分钟Lyon也许你觉得很重要，反正我觉得不重要”，“IDE评估了要半年才能做好这么一个东西”等理由被拒绝，最终说我态度有问题和我吵了一架，然后也没有下文了。后来我交了辞职信从别人口中得知，似乎也是尝试性地用过我做的这个editor的，之后似乎是真的没有下文了。不过对于这个editor反馈是好，还是不好，我一点都不清楚。在我看来，这更多算是一种“无声抗议”吧，你也不能说人家就是不愿意用你做的东西不是？但是人家就是不愿意。</p>
-<p>我想说的是，和我这么多的不痛快，到底图个啥？我自以为，归根结底是因为我做很多事情，总是先斩后奏，导致别人总觉得上级领导是偏心我怎么的。据我猜测，应该是我这个人总让人产生不安全感，总让人觉的盛气凌人，总让人觉得会从别人那里抢走什么似的。那我确实不知道说什么了，毕竟这是人的问题，性格问题，处心积虑地为保全自己的地位来这么一次，我表示理解。</p>
-<p>其实对于别人的想法，我是略委屈的，有些时候我也不知道我做这些最终图个啥？从未计较过薪酬待遇，也未曾计较过一官半职，只想尽情做自己想做的事情，为团队尽力所能及之力，改变一些事情。到头来却发现困难重重，一方面是因为团队相对别的office资源本来较少，工作中又常常处于被动的一方，没有什么话语权，另一方面则是团队大部分人本身就缺乏积极性，对于做出改变这种事情，大家大多选择安于现状，对于新鲜事毫无兴趣，少数人甚至比较排斥。</p>
-<p>这两年来，我最大的遗憾，莫过于没有向美国证明，中国这边也是可以做技术活儿的，并不一定要依赖他们。我一直很不爽的事情，莫过于被人轻视，不过也是怪我，将这种情结也联系到了工作上面，致使我一直这么觉的，中国office是被美国轻视的，然后qa组的在中国的是被别的组的轻视的，然而最终还是证明我图样图森破，以一己之力，怎么可以带动整个团队？反过来想，现在的这样子的一个团队似乎也不能怪人家轻视。既缺乏核心技术竞争力，同时又处于工作中的被动方，人力成本又便宜，轻视你，怎么了？</p>
-<p>我离开Liferay只因为我做事太爱钻死理儿。逢事必问为什么，不然只能靠自己去寻找答案，却在寻找答案的过程中，碰了某些人的所谓的底线。</p>
-<p>我离开Liferay只因为我做事不喜欢拖太久。今日事今日毕，有些时候其实并不怪我有些事情先斩后奏，实在是就算先奏，等能斩的时候黄花菜都凉了。</p>
-<p>我离开Liferay只因为我做事脑子太“懒”，手却太“勤”，总强调一个效率。时间就是金钱我的朋友，别总和我说３分钟，５分钟不重要这种话，对于我，很重要，对于团队，也很重要。</p>
-<p>我离开Liferay只因为我太执着，很多事情但凡投入心血，很难放下。是的，很难放下，但是我还是选择离开了，我并非薄情寡义之人，实在有苦难言，有痛难言。</p>
-<p>不过我真心感谢我的直系经理sophia和小组组长steven还有整个fixpack组的每一个人，这两年间给予了我很多支持和鼓励，没有这些，<strong>我想我无法坚持这么久，也无法完成看起来无法完成的事情</strong>。</p>
-<p>mark一下，从加入fixpack到离开的可计量工作（其实不是很完全和准确，因为后来做editor没太多精力了）和一些自发的全栈项目。</p>
-<p>fixpack改为sub task后的工作量分布图:</p>
-<img src="/img/sub-tasks.png" width="250" height="350">
-<p>项目:</p>
-<ul>
-<li><a href="https://github.com/haoliangwu/vscode-poshi" target="_blank" rel="external">vscode-poshi</a></li>
-<li><a href="https://github.com/haoliangwu/EasyComment" target="_blank" rel="external">easycomment</a></li>
-<li><a href="https://github.com/haoliangwu/testray-screenshot" target="_blank" rel="external">testray-screenshot</a></li>
-<li><a href="https://github.com/haoliangwu/FixPack-Workbench" target="_blank" rel="external">fixpack-workbench</a></li>
-</ul>
-<p>最后祝Liferay越来越好，每个人工作顺利，开心。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;距离离开Liferay还剩下用指头可以数出来的日子了，心中不禁感慨万千。这一个月除了做一些交接工作和下一份工作的准备意外，剩下的时间基本都在思考在Liferay的两年半时间我到底得到了什么，又留下了什么？仔细想想，好像没留下什么，至于得到的，确是很多的，毕竟这是我毕业步入社会进入的第一家公司，很多事情从未知到已知都是从这里开始。&lt;/p&gt;
-&lt;p&gt;在这里认识了不少人，我从他们身上都学到了很多很多，不经意间也帮助了我很多很多，我衷心说声谢谢，同时我也想说，对于我的离职我只想说，离别是为了下次更好的相遇。&lt;/p&gt;
-&lt;p&gt;不过写这篇的目的并不是为了怀旧，只是最近稍微熟悉点儿的人都在问我一个问题，“你为什么离职？”。这个问题，我从有离职想法的那天，到念头一点点变大，再到最后做出离职的决定，我已经问过自己无数次了。细说起来，大大小小的原因有很多，不过大体概括也就两点，一，我无法得到我想要的，二，Liferay同时也并不需要我这样的人，仅此而已，所以我选择离开。&lt;/p&gt;
-&lt;p&gt;这里直接说Liferay好像扣上了一个很大的帽子，好吧，这里只是说中国这边的Liferay，后边不特殊说明均指代Liferay CN，如果再具体些，可以指代Liferay CNQA。&lt;/p&gt;
     
     </summary>
     
