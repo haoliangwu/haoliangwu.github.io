@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-02-08T09:34:23.000Z</updated>
+  <updated>2018-02-17T11:07:14.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,55 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>高级 Angular 组件模式 (5)</title>
+    <link href="http://yoursite.com/2018/02/17/aacp-5/"/>
+    <id>http://yoursite.com/2018/02/17/aacp-5/</id>
+    <published>2018-02-17T11:07:14.000Z</published>
+    <updated>2018-02-17T11:07:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="05-Handle-Template-Reference-Variables-with-Directives"><a href="#05-Handle-Template-Reference-Variables-with-Directives" class="headerlink" title="05 Handle Template Reference Variables with Directives"></a>05 Handle Template Reference Variables with Directives</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/handle-template-reference-variables-with-directives-223081bc70c2" target="_blank" rel="external">Handle Template Reference Variables with Directives</a></p>
+</blockquote>
+<p>在之前的例子中，已经出现多次使用<code>template reference variable（模板引用变量）</code>的场景，现在让我们来深入研究如何通过使用模板引用变量来关联某个具体指令。</p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在视图模板内，获取一个指令的引用。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>模板引用变量是获取某个元素、组件或者指令引用的一种方式，这个引用可以在当前的视图模板中的任何地方使用。它们通常是以<code>#baseToggle</code>或者<code>#myToggle=&quot;toggle&quot;</code>的语法声明的。一旦声明，在视图模板的任何地方就可以使用它。</p>
+<p>Note: 请注意作用域的问题，如果你使用<code>&lt;ng-template&gt;</code>或者是一个结构性指令，比如<code>*ngIf</code>或者<code>*ngFor</code>，它会在这个模板上创建一个新的作用域，之后在其内部声明的模板引用变量无法在该模板作用域以外使用。</p>
+<p>模板引用变量的解析顺序通常为：</p>
+<ol>
+<li>一个指令或者组件通过它自身的<code>exportAs</code>属性，比如<code>#myToggle=&quot;toggle&quot;</code></li>
+<li>声明于以自定义标签存在的组件，比如<code>&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</code></li>
+<li>原生html元素，并且没有任何组件绑定与它，比如<code>&lt;div #someDiv&gt;&lt;/div&gt;</code></li>
+</ol>
+<p>之后我们来分别看3个例子。</p>
+<h3 id="指令与exportAs"><a href="#指令与exportAs" class="headerlink" title="指令与exportAs"></a>指令与<code>exportAs</code></h3><p>指令可以在它的元数据中声明<code>exportAs</code>属性，这个属性表示它被这个模板引用变量所标识，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// toggle.directive.ts</div><div class="line">@Directive(&#123;</div><div class="line">  selector: &apos;[toggle]&apos;,</div><div class="line">  exportAs: &apos;toggle&apos;,</div><div class="line">&#125;)</div><div class="line">export class ToggleDirective &#123; ... &#125;</div></pre></td></tr></table></figure></p>
+<p>之后我们可以在视图模板中直接使用<code>toggle</code>来获取指令的引用，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// app.component.html</div><div class="line">&lt;div toggle #myTemplateRefVar=&quot;toggle&quot;&gt;&lt;/div&gt;</div><div class="line">// myTemplateRefVar is the ToggleDirective</div></pre></td></tr></table></figure></p>
+<h3 id="组件与exportAs"><a href="#组件与exportAs" class="headerlink" title="组件与exportAs"></a>组件与<code>exportAs</code></h3><p>对于每一个<code>html</code>元素，只会有一个组件与之对应。当一个组件绑定于一个元素时，那么声明的模板引用变量将会被解析为当前元素上所绑定的组件，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// app.component.html</div><div class="line">&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</div><div class="line">// toggleOn is the ToggleOnComponent</div></pre></td></tr></table></figure></p>
+<h3 id="HTML元素与exportAs"><a href="#HTML元素与exportAs" class="headerlink" title="HTML元素与exportAs"></a>HTML元素与<code>exportAs</code></h3><p>如果没有组件与元素绑定，模板引用变量会指向当前这个<code>html</code>元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// app.component.html</div><div class="line">&lt;div #someDiv&gt;&lt;/div&gt;</div><div class="line">// someDiv is an HTMLDivElement</div></pre></td></tr></table></figure></p>
+<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><p>Note: 在<code>stackblitz</code>中，我通过打印模板引用变量所指向的类的名字（constructor.name）来演示它所代表的引用。<br><iframe src="https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables" width="800" height="600" frameborder="0" allowfullscreen></iframe></p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这篇文章作者关于模板引用变量，仅仅介绍了关于如何声明和在视图模板中如何使用，我在这里再补充一些，如何在组件或者指令类的内部使用。</p>
+<p>在类内部获取模板引用变量所指向的引用是通过使用<code>ViewChild</code>装饰器完成的，比如上述文章中的第二个例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">@Component(&#123;</div><div class="line">  selector: &apos;my-app&apos;,</div><div class="line">  template: `</div><div class="line">    &lt;div #myDiv&gt;&lt;/div&gt;</div><div class="line">  `,</div><div class="line">&#125;)</div><div class="line">export class AppComponent &#123;</div><div class="line">  @ViewChild(&apos;myDiv&apos;)</div><div class="line">  myDiv: ElementRef;</div><div class="line"></div><div class="line">  ngAfterViewInit() &#123;</div><div class="line">    console.log(this.myDiv);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里的<code>myDiv</code>即指向当前模板引用变量所指向的html元素。</p>
+<p>Note: 在类中获取模板引用变量所指向的引用时，请格外注意你期望获取的引用类型，在例子中，我们期望获取html元素，因此这里的引用类型是<code>ElementRef</code>，如果是指令或者组件，则分别要对应其类型的<code>Type</code>。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;05-Handle-Template-Reference-Variables-with-Directives&quot;&gt;&lt;a href=&quot;#05-Handle-Template-Reference-Variables-with-Directives&quot; class=&quot;hea
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>javascript原型链-review</title>
@@ -651,58 +700,6 @@
   </entry>
   
   <entry>
-    <title>高级 Angular 组件模式 (3a)</title>
-    <link href="http://yoursite.com/2018/01/10/aacp-3a/"/>
-    <id>http://yoursite.com/2018/01/10/aacp-3a/</id>
-    <published>2018-01-10T14:02:45.000Z</published>
-    <updated>2018-01-10T14:02:45.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
-<p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="external">Communicate Between Components Using Dependency Injection</a></p>
-</blockquote>
-<p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
-<ul>
-<li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
-<li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
-</ul>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
-<ul>
-<li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
-<li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
-</ul>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
-<p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
-<p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
-<blockquote>
-<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
-</blockquote>
-<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
-<p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
-<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03a-compound-comp-inject-parent" width="800" height="600" frameborder="0" allowfullscreen></iframe>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
-<p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
-<p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
-<p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;03-a-Communicate-Between-Components-Using-Dependency-Injection&quot;&gt;&lt;a href=&quot;#03-a-Communicate-Between-Components-Using-Dependency-Injec
-    
-    </summary>
-    
-    
-      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
-    
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
-      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
-    
-      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>高级 Angular 组件模式 (3b)</title>
     <link href="http://yoursite.com/2018/01/10/aacp-3b/"/>
     <id>http://yoursite.com/2018/01/10/aacp-3b/</id>
@@ -749,6 +746,58 @@
     <summary type="html">
     
       &lt;h2 id=&quot;03-b-Enhance-Components-with-Directives&quot;&gt;&lt;a href=&quot;#03-b-Enhance-Components-with-Directives&quot; class=&quot;headerlink&quot; title=&quot;03-b Enhance C
+    
+    </summary>
+    
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="ngx" scheme="http://yoursite.com/tags/ngx/"/>
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>高级 Angular 组件模式 (3a)</title>
+    <link href="http://yoursite.com/2018/01/10/aacp-3a/"/>
+    <id>http://yoursite.com/2018/01/10/aacp-3a/</id>
+    <published>2018-01-10T14:02:45.000Z</published>
+    <updated>2018-01-10T14:02:45.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="external">Communicate Between Components Using Dependency Injection</a></p>
+</blockquote>
+<p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
+<ul>
+<li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
+<li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
+</ul>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
+<ul>
+<li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
+<li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
+<p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
+<p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
+<blockquote>
+<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
+</blockquote>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
+<p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
+<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03a-compound-comp-inject-parent" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
+<p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
+<p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
+<p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;03-a-Communicate-Between-Components-Using-Dependency-Injection&quot;&gt;&lt;a href=&quot;#03-a-Communicate-Between-Components-Using-Dependency-Injec
     
     </summary>
     
@@ -1231,58 +1280,6 @@
     
     
       <category term="心情" scheme="http://yoursite.com/tags/%E5%BF%83%E6%83%85/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>vscode typings配置</title>
-    <link href="http://yoursite.com/2016/09/21/vscode-typings%E9%85%8D%E7%BD%AE/"/>
-    <id>http://yoursite.com/2016/09/21/vscode-typings配置/</id>
-    <published>2016-09-21T07:33:31.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提供的，但是js作为ts的编译对象，同样可以享受这个compiler提供的便利。</p>
-<a id="more"></a>
-<p>大体步骤分为：</p>
-<ul>
-<li><a href="#进行vscode的js项目配置">配置typings</a> </li>
-<li><a href="#安装typings的依赖资源">安装typings的依赖资源</a></li>
-<li><a href="#进行vscode的js项目配置">进行vscode的js项目配置</a></li>
-</ul>
-<h2 id="配置typings"><a href="#配置typings" class="headerlink" title="配置typings"></a>配置typings</h2><p>首先你需要安装nodejs环境，这里不赘述了。之后</p>
-<blockquote>
-<p>npm i typings -g</p>
-</blockquote>
-<p>这样全局都可以调用typings这个命令了，然后只需要在你需要提供智能提示的project的根目录执行</p>
-<blockquote>
-<p>typings init</p>
-</blockquote>
-<p>这样会生成一个typings.json文件，这个文件的功能和package.json类似。</p>
-<h2 id="安装typings的依赖资源"><a href="#安装typings的依赖资源" class="headerlink" title="安装typings的依赖资源"></a>安装typings的依赖资源</h2><p>安装依赖就容易多了，比如你需要angular的资源，只需要执行</p>
-<blockquote>
-<p>typings i dt~angular –save –global</p>
-</blockquote>
-<p>这里的dt~是指资源的registry，这个可以在typings的帮助信息中查看。</p>
-<p>如果你不确定某个资源的registry，比如你想要react的资源，你可以执行</p>
-<blockquote>
-<p>typings search react</p>
-</blockquote>
-<p>之后console会列出已知的所有资源的registry。</p>
-<h2 id="进行vscode的js项目配置"><a href="#进行vscode的js项目配置" class="headerlink" title="进行vscode的js项目配置"></a>进行vscode的js项目配置</h2><p>最后一步，需要为vscode指定js项目配置，这个配置文件叫做jsconfig.json，如果你只需要提供智能提示的功能话，这个文件可以为空。</p>
-<p>这个文件的位置表示以当前位置为项目根目录。</p>
-<p>并行的项目可以提供多个jsconfig在不同的项目中，以此来表示它们是彼此区分的。</p>
-<p>对于嵌套的项目，配置多个jsconfig并不会区分父子关系，不是很建议这么做，因为这个智能提示功能是基于vscode extension的language server实现的，如果一个项目文件过多，可能导致解析超时而导致无法提供正确的提示信息（我遇过n次这种情况，开始还以为是vscode的bug），最好还是采用并行的方式。</p>
-<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>上图一张</p>
-<img src="/img/vscode_typings_angular.png" width="566" height="312">]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提供的，但是js作为ts的编译对象，同样可以享受这个compiler提供的便利。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
   </entry>
   

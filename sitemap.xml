@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/02/17/aacp-5/</loc>
+    
+    <lastmod>2018-02-17T11:07:14.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/02/08/javascript%E5%8E%9F%E5%9E%8B%E9%93%BEreview/</loc>
     
     <lastmod>2018-02-08T09:34:23.000Z</lastmod>
@@ -128,21 +135,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/09/14/7-tips-for-cooking/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -156,7 +149,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
+    <loc>http://yoursite.com/2016/07/05/20160705/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -170,7 +170,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/15/liferay-smile-face/</loc>
+    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -184,7 +184,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/06/27/20160627/</loc>
+    <loc>http://yoursite.com/2016/07/15/liferay-smile-face/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -205,21 +205,14 @@
   </url>
   
   <url>
+    <loc>http://yoursite.com/2016/06/27/20160627/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/06/30/%E5%81%9A%E9%A5%AD%E8%BF%99%E4%BB%B6%E5%B0%8F%E4%BA%8B/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/05/20160705/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -233,7 +226,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
+    <loc>http://yoursite.com/2016/09/14/7-tips-for-cooking/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -241,6 +241,13 @@
   
   <url>
     <loc>http://yoursite.com/2016/10/14/%E5%BD%93%E5%BC%80%E5%8F%91%E4%B8%80%E5%91%A8%E4%BA%86/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -268,14 +275,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/recipes/index.html</loc>
+    <loc>http://yoursite.com/pages/index.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/pages/index.html</loc>
+    <loc>http://yoursite.com/recipes/index.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
