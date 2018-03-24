@@ -14,7 +14,7 @@
 <h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><iframe src="https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes" width="800" height="600" frameborder="0" allowfullscreen></iframe>
 <h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>原文中关于最后一段提出的关于在多个第三方库中存在的命名冲突的场景，作者提供做出具体的解决方案，我在这里简单分享一下自己对于这种情况的解决方案：</p>
 <p>通常这种情况比较少见，但是万一存在这种情况，我们可以通过创建一个新的<code>wrapper</code>指令来封装第三方指令，<code>wrapper</code>指令提供与第三方指令一样的接口属性，但是因为我们对于<code>wrapper</code>指令有绝对的控制权，我们可以提供统一的<code>prefix</code>来修饰这些接口属性，从而达到解决冲突的效果。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/02/17/aacp-5/" class="next">NEXT</a></div><div data-thread-key="2018/02/17/aacp-4/" data-title="高级 Angular 组件模式 (4)" data-url="http://yoursite.com/2018/02/17/aacp-4/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+</div></article></div></section><footer><div class="paginator"><a href="/2018/03/24/rpc-reset-graphql/" class="prev">PREV</a><a href="/2018/02/17/aacp-5/" class="next">NEXT</a></div><div data-thread-key="2018/02/17/aacp-4/" data-title="高级 Angular 组件模式 (4)" data-url="http://yoursite.com/2018/02/17/aacp-4/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;

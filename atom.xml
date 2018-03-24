@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-02-17T11:08:26.000Z</updated>
+  <updated>2018-03-24T10:03:27.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,118 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>rpc-reset-graphql</title>
+    <link href="http://yoursite.com/2018/03/24/rpc-reset-graphql/"/>
+    <id>http://yoursite.com/2018/03/24/rpc-reset-graphql/</id>
+    <published>2018-03-24T10:03:27.000Z</published>
+    <updated>2018-03-24T10:03:27.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="RPC-vs-REST-vs-GraphQL"><a href="#RPC-vs-REST-vs-GraphQL" class="headerlink" title="RPC vs REST vs GraphQL"></a>RPC vs REST vs GraphQL</h1><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
+<p>其实在使用和学习的过程中，有很多文章都对比过它们的异同，但是大部分文章并没有从一个相对客观的角度来对比，更多是为了突显一个的优点而刻意指出另外一个的缺点。这让我想到一句话，脱离业务情景谈技术就是耍流氓。</p>
+<p>昨天订阅的<code>GraphQL Weekly</code>中推送的一个视频正好是讲关于它们这三者的，于是就点进去看了看，发现质量还是不错的，于是就想整理出来，分享给大家。</p>
+<p>原视频地址(油管地址，自备梯子)：<a href="https://www.youtube.com/watch?v=IvsANO0qZEg" target="_blank" rel="external">这里</a></p>
+<p>如果没有梯子的话直接看我整理的东西也可以，我觉的应该都覆盖到视频中所讲的重点内容了。</p>
+<p>当然，这些内容如果分开来讲，每一块内容所涉及的东西都够写一本书了，这里仅仅是简单归纳和整理，从宏观的角度来对比它们的异同，从而能够在日后面临技术选型时，有一个更佳明确的决策方向。</p>
+<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><p>先简单介绍下<code>RPC</code>，它是<code>Remote Procedure Call(远程过程调用)</code>的简称。一般基于<code>RPC</code>协议所设计的接口，是基于网络采用客户端/服务端的模式完成调用接口的。</p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>简单并且易于理解（面向开发者）</li>
+<li>轻量级的数据载体</li>
+<li>高性能</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>对于系统本身耦合性高</li>
+<li>因为RPC本身很简单、轻量，因此很容易造成 <code>function explosion</code></li>
+</ul>
+<p>关于<code>RPC</code>的优点其实很好理解，就是因为它性能高同时又很简单，但是我认为这是对于接口提供者来讲的（因为它的高耦合性）。</p>
+<p>但是如果从接口调用者的角度来看，高耦合性就变成了缺点，因为高耦合意味着调用者必须要足够了解系统本身的实现才能够完成调用，比如：</p>
+<ul>
+<li>调用者需要知道所调用接口的函数名、参数格式、参数顺序、参数名称等等</li>
+<li>如果接口提供者(server)要对接口做出一些改变，很容易对接口调用者(client)造成<code>breaking change</code>（违背开闭原则)</li>
+<li>一般<code>RPC</code>所暴露接口仅仅会暴露函数的名称和参数等信息，对于函数之间的调用关系无法提供，这意味着调用者必须足够了解系统，从能够知道如何正确的调用这些接口，但是对于接口调用者往往不需要了解过多系统内部实现细节</li>
+</ul>
+<p>关于上面的第二点，为了减少<code>breaking change</code>，我之前实现接口的时候一般都会引入版本的概念，就是在暴露接口的方法名中加入版本号，一开始效果确实不错，但是随后就不知不觉的形成了<code>function explosion</code>，和视频中主讲人所举例的例子差不多，贴一下视频中的截图感受一波：<br><img src="../img/func_explosion.png" alt="img"></p>
+<h1 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h1><p>当前REST风格的API架构方式已经成了主流解决方案了，相比较RPC，它的主要不同之处在于，它所对于资源(Resource)的模型化而非步骤(Procedure)。</p>
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>对于系统本身耦合性低，调用者不再需要了解接口内部处理和实现细节</li>
+<li>重复使用了一些 http 协议中的已定义好的部分状态动词，增强语义表现力</li>
+<li>API可以随着时间而不断演进</li>
+</ul>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>缺少约束，缺少简单、统一的规范</li>
+<li>有时候 payload 会变的冗余(overload)，有时候调用api会比较繁琐(chattiness) </li>
+<li>有时候需要发送多条请求已获取数据，在网络带宽较低的场景，往往会造成不好的影响</li>
+</ul>
+<p>REST的优点基本解决了RPC中存在的问题，就是解耦，从而使得前后端分离成为可能。接口提供者在修改接口时，不容易造成breaking-change，接口调用者在调用接口时，往往面向数据模型编程，而省去了了解接口本身的时间成本。</p>
+<p>但是，我认为REST当前最大的问题在于虽然它利用<code>http</code>的动词约束了接口的暴露方式，同时增强了语义，但是却没有约束接口如何返回数据的最佳实践，总让人感觉只要是返回json格式的接口都可以称作REST。</p>
+<p>我在实际工作中，经常会遇到第二条缺点所指出的问题，就是接口返回的数据冗余度很高，但是却缺少我真正需要的数据，因此不得已只能调用其他接口或者直接和后端商议修改接口，并且这种问题会在web端和移动端共用一套接口中被放大。</p>
+<p>当前比较好的解决方案就是规范化返回数据的格式，比如json-schema或者自己制定的规范。</p>
+<h1 id="GraphQL"><a href="#GraphQL" class="headerlink" title="GraphQL"></a>GraphQL</h1><p>GraphQL是近来比较热门的一个技术话题，相比REST和RPC，它汲取了两者的优点，即不面向资源，也不面向过程，而是面向数据查询(ask for exactly what you want)。</p>
+<p>同时GraphQL本身需要使用强类型的Schema来对数据模型进行定义，因此相比REST它的约束性更强。</p>
+<h3 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>网络开销低，可以在单一请求中获取REST中使用多条请求获取的资源</li>
+<li>强类型Schema（约束意味着可以根据规范形成文档、IDE、错误提示等生态工具）</li>
+<li>特别适合<em>图</em>状数据结构的业务场景（比如好友、流程、组织架构等系统）</li>
+</ul>
+<h3 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>本身的语法相比较REST和RPC均复杂一些</li>
+<li>实现方面需要配套 Caching 以解决性能瓶颈</li>
+<li>对于 API 的版本控制当前没有完善解决方案（社区的建议是不要使API版本化）</li>
+<li>仍然是新鲜事物，很多技术细节仍然处于待验证状态</li>
+</ul>
+<p>鉴于GraphQL这两个星期我也仅仅是做了一些简单地使用和了解，仅仅说一下感受。</p>
+<p>首先值得肯定的是，在某些程度上确实解决了REST的缺点所带来的问题，同时配套社区建议的各种工具和库，相比使用REST风格，全栈开发体验上升一个台阶。</p>
+<p>但是这个看起来很好的东西为什么没有火起来呢？我觉的最主要的原因是因为GraphQL所带来的好处，大部分是对于接口调用者而言的，但是实现这部分的工作却需要接口提供者来完成。</p>
+<p>同时GraphQL的最佳实践场景应当是类似像Facebook这样的网站，业务逻辑模型是图状数据结构，比如社交。如果在一些业务逻辑模型相对简单的场景，使用GraphQL确实不如使用REST来得简单明了、直截了当。</p>
+<p>另外一方面是GraphQL的使用场景相当灵活，在我自己的调研项目中，我是把它当做一个类似ORM的框架来使用的，在别人的一些文章中，会把它当做一个中间层来做渐进式开发和系统升级。这应当算是另外一个优点。</p>
+<h3 id="到底用哪个"><a href="#到底用哪个" class="headerlink" title="到底用哪个"></a>到底用哪个</h3><p>下面根据要设计的API类型给予一些技术选型建议。</p>
+<p>如果是<code>Management API</code>，这类API的特点如下：</p>
+<ul>
+<li>关注于对象与资源</li>
+<li>会有多种不同的客户端</li>
+<li>需要良好的可发现性和文档</li>
+</ul>
+<p>这种情景使用<code>REST + JSON API</code>可能会更好。</p>
+<p>如果是<code>Command or Action API</code>，这类API的特点如下：</p>
+<ul>
+<li>面向动作或者指令</li>
+<li>仅需要简单的交互</li>
+</ul>
+<p>这种情况使用<code>RPC</code>就足够了。</p>
+<p>如果是<code>Internal Micro Services API</code>，这类API的特点如下：</p>
+<ul>
+<li>消息密集型</li>
+<li>对系统性能有较高要求</li>
+</ul>
+<p>这种情景仍然建议使用<code>RPC</code>。</p>
+<p>如果是<code>Micro Services API</code>，这类API的特点如下：</p>
+<ul>
+<li>消息密集型</li>
+<li>期望系统开销较低</li>
+</ul>
+<p>这种情景使用<code>RPC</code>或者<code>REST</code>均可。</p>
+<p>如果是<code>Data or Mobile API</code>，这类API的特点是：</p>
+<ul>
+<li>数据类型是具有图状的特点</li>
+<li>希望对于高延迟场景可以有更好的优化</li>
+</ul>
+<p>这种场景无疑<code>GraphQL</code>是最好的选择。</p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>最后引用人月神话中的观点<code>no silver bullet</code>，在技术选型时需要具体情况具体分析。不过鉴于GraphQL的灵活性，把它与RPC和REST配置使用，也是不错的选择。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;RPC-vs-REST-vs-GraphQL&quot;&gt;&lt;a href=&quot;#RPC-vs-REST-vs-GraphQL&quot; class=&quot;headerlink&quot; title=&quot;RPC vs REST vs GraphQL&quot;&gt;&lt;/a&gt;RPC vs REST vs Graph
+    
+    </summary>
+    
+    
+      <category term="api" scheme="http://yoursite.com/tags/api/"/>
+    
+      <category term="接口设计" scheme="http://yoursite.com/tags/%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
   
   <entry>
     <title>高级 Angular 组件模式 (4)</title>
@@ -1242,33 +1354,6 @@
       <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
       <category term="学习" scheme="http://yoursite.com/tags/%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>当开发一周了</title>
-    <link href="http://yoursite.com/2016/10/14/%E5%BD%93%E5%BC%80%E5%8F%91%E4%B8%80%E5%91%A8%E4%BA%86/"/>
-    <id>http://yoursite.com/2016/10/14/当开发一周了/</id>
-    <published>2016-10-14T07:00:09.000Z</published>
-    <updated>2017-03-08T07:51:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>转行做前端开发正好一周了，仔细一想，是真正意义上的一周呀，因为连上了7天班了。</p>
-<p>说到感觉如何，我只能说，那是太好了。自从来了新公司，心情一下就变好了，回想这半年来，一直因为一些事情闷闷不乐，我也是蛮能拼的。不过总体工作还是比较忙，因为正好赶上项目要发布的最后一周，而且前端组的好多工作似乎还堆积了，不过好在最后也是按时完成了任务。</p>
-<a id="more"></a>
-<p>说到公司整体印象，挺好的。我本来寻思吧，估计大连没有像Liferay一样自由的公司了，然而我得到的答案是“自由最自由，只有更自由”。不过这种自由和Liferay相比还不一样，平时的时候，很自由，很轻松，工作或者解决问题的时候，大家又变得很认真、很紧张，这点不同对于我来说，其实是好的。其实原来我也一直在寻找这种感觉，就是大家为一个目标共同努力，共同工作，最后一直也没有找到。原来在Liferay的感觉是，虽然大家都在一起工作，但其实彼此的工作，联系似乎太少了，总是感觉个干个的，交流也少，整体的工作的节奏也比较慢，能解决的事情就解决，解决不了就拖着，慢慢就不了了之了。</p>
-<p>说到工作内容，我还是有点惭愧的。我本想，作为一个新来的，代码也不熟悉，业务也不熟悉，然后就把一部分核心功能交给我做了。我只能说，对于我这种半路出家的前端开发，这是有多信任我啊，我自己都有点受宠若惊的感觉。按我的理解，一般新来还不先改改bug，熟悉熟悉业务，之后慢慢再开始做功能，先做次要的，再做主要的，再来核心的。所以导致我写代码的时候，总是有一种使命感似的，因为要对得起这份别人的信任啊。这种感觉仔细想想，似乎仅仅在两年前刚入职Liferay那会有，所以我后来就下定决心好好学习了，现在这种感觉又回来了，真好。</p>
-<p>最后，我只想说，作为一个新的开始，只要仍然能够做到不忘初心，能够真心实意的为做一些事情而付出，开开心心的度过每一天，我就很满足了。</p>
-<img src="/img/new_start.jpg" width="500" height="350">]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;转行做前端开发正好一周了，仔细一想，是真正意义上的一周呀，因为连上了7天班了。&lt;/p&gt;
-&lt;p&gt;说到感觉如何，我只能说，那是太好了。自从来了新公司，心情一下就变好了，回想这半年来，一直因为一些事情闷闷不乐，我也是蛮能拼的。不过总体工作还是比较忙，因为正好赶上项目要发布的最后一周，而且前端组的好多工作似乎还堆积了，不过好在最后也是按时完成了任务。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="心情" scheme="http://yoursite.com/tags/%E5%BF%83%E6%83%85/"/>
     
   </entry>
   
