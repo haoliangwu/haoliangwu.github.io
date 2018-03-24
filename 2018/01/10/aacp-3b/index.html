@@ -33,7 +33,7 @@
 </ul>
 <p>这种开发模式，在实际工作中，我有一次在重构公司项目中一个关于表单组件的过程中曾使用过，之所以使用这种方式，是因为在表单组件中，会存在一些关于联动校验或者分组的需求，如果将这部门逻辑封装为<code>service</code>或者直接写在<code>controller</code>内部，越到后面会发现逻辑复杂度越高，从而越来越难维护。</p>
 <p>使用这种模式，将复杂的逻辑划分成小的颗粒，再封装为独立的指令，在需要用到这些逻辑的组件中注入这些指令即可，指令的特点就是一般都会比较简洁，只会做一些简单的事情，相比之下，维护一个十分复杂的service和维护若干简单的指令，我更倾向于后者。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/01/10/aacp-3a/" class="prev">上一篇</a><a href="/2018/01/10/aacp-2/" class="next">下一篇</a></div><div data-thread-key="2018/01/10/aacp-3b/" data-title="高级 Angular 组件模式 (3b)" data-url="http://yoursite.com/2018/01/10/aacp-3b/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+</div></article></div></section><footer><div class="paginator"><a href="/2018/01/16/workerize/" class="prev">PREV</a><a href="/2018/01/10/aacp-3a/" class="next">NEXT</a></div><div data-thread-key="2018/01/10/aacp-3b/" data-title="高级 Angular 组件模式 (3b)" data-url="http://yoursite.com/2018/01/10/aacp-3b/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;

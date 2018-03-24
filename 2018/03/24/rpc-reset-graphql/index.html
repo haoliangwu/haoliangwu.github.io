@@ -21,7 +21,7 @@
 <li>如果接口提供者(server)要对接口做出一些改变，很容易对接口调用者(client)造成<code>breaking change</code>（违背开闭原则)</li>
 <li>一般<code>RPC</code>所暴露接口仅仅会暴露函数的名称和参数等信息，对于函数之间的调用关系无法提供，这意味着调用者必须足够了解系统，从能够知道如何正确的调用这些接口，但是对于接口调用者往往不需要了解过多系统内部实现细节</li>
 </ul>
-<p>关于上面的第二点，为了减少<code>breaking change</code>，我之前实现接口的时候一般都会引入版本的概念，就是在暴露接口的方法名中加入版本号，一开始效果确实不错，但是随后就不知不觉的形成了<code>function explosion</code>，和视频中主讲人所举例的例子差不多，贴一下视频中的截图感受一波：<br><img src="../img/func_explosion.png" alt="img"></p>
+<p>关于上面的第二点，为了减少<code>breaking change</code>，我之前实现接口的时候一般都会引入版本的概念，就是在暴露接口的方法名中加入版本号，一开始效果确实不错，但是随后就不知不觉的形成了<code>function explosion</code>，和视频中主讲人所举例的例子差不多，贴一下视频中的截图感受一波：<br><!-- ![img](../img/func_explosion.png) --><br><img class="img/func_explosion.png"></p>
 <h1 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h1><p>当前REST风格的API架构方式已经成了主流解决方案了，相比较RPC，它的主要不同之处在于，它所对于资源(Resource)的模型化而非步骤(Procedure)。</p>
 <h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>对于系统本身耦合性低，调用者不再需要了解接口内部处理和实现细节</li>
@@ -131,7 +131,7 @@
 </tbody>
 </table>
 <p>最后引用人月神话中的观点<code>no silver bullet</code>，在技术选型时需要具体情况具体分析，不过鉴于GraphQL的灵活性，把它与RPC和REST配置使用，也是不错的选择。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/02/17/aacp-4/" class="next">下一篇</a></div><div data-thread-key="2018/03/24/rpc-reset-graphql/" data-title="RPC vs REST vs GraphQL" data-url="http://yoursite.com/2018/03/24/rpc-reset-graphql/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+</div></article></div></section><footer><div class="paginator"><a href="/2018/02/17/aacp-4/" class="next">NEXT</a></div><div data-thread-key="2018/03/24/rpc-reset-graphql/" data-title="RPC vs REST vs GraphQL" data-url="http://yoursite.com/2018/03/24/rpc-reset-graphql/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
