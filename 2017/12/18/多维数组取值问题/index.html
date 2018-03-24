@@ -23,7 +23,7 @@
 <p>当然还有其他的暴力破解法，我觉的想法也不错，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function getElement(array, indexes) &#123;</div><div class="line">  return eval(`array[$&#123;indexes.join(&quot;][&quot;)&#125;]`);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>还有利用<code>spread</code>运算符的方法，如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const getElement = (array,[index,...moreIndices]) =&gt; moreIndices.length ? getElement( array[index], moreIndices ) : array[index]</div></pre></td></tr></table></figure></p>
 <p>所以工作累了，或者闲来无事，刷刷题还是挺有意思的，可以看见一些自己平时很熟悉但是在需要用时又难以想起的知识。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/01/10/aacp-1/" class="prev">上一篇</a><a href="/2017/07/21/ng2-关于NgModule的简易归纳/" class="next">下一篇</a></div><div data-thread-key="2017/12/18/多维数组取值问题/" data-title="多维数组取值问题" data-url="http://yoursite.com/2017/12/18/多维数组取值问题/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
+</div></article></div></section><footer><div class="paginator"><a href="/2018/01/10/aacp-1/" class="prev">PREV</a><a href="/2017/07/21/ng2-关于NgModule的简易归纳/" class="next">NEXT</a></div><div data-thread-key="2017/12/18/多维数组取值问题/" data-title="多维数组取值问题" data-url="http://yoursite.com/2017/12/18/多维数组取值问题/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
