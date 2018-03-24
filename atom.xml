@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-03-24T10:03:27.000Z</updated>
+  <updated>2018-03-24T10:42:12.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,13 +16,13 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>rpc-reset-graphql</title>
+    <title>RPC vs REST vs GraphQL</title>
     <link href="http://yoursite.com/2018/03/24/rpc-reset-graphql/"/>
     <id>http://yoursite.com/2018/03/24/rpc-reset-graphql/</id>
     <published>2018-03-24T10:03:27.000Z</published>
-    <updated>2018-03-24T10:03:27.000Z</updated>
+    <updated>2018-03-24T10:42:12.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="RPC-vs-REST-vs-GraphQL"><a href="#RPC-vs-REST-vs-GraphQL" class="headerlink" title="RPC vs REST vs GraphQL"></a>RPC vs REST vs GraphQL</h1><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
+    <content type="html"><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
 <p>其实在使用和学习的过程中，有很多文章都对比过它们的异同，但是大部分文章并没有从一个相对客观的角度来对比，更多是为了突显一个的优点而刻意指出另外一个的缺点。这让我想到一句话，脱离业务情景谈技术就是耍流氓。</p>
 <p>昨天订阅的<code>GraphQL Weekly</code>中推送的一个视频正好是讲关于它们这三者的，于是就点进去看了看，发现质量还是不错的，于是就想整理出来，分享给大家。</p>
 <p>原视频地址(油管地址，自备梯子)：<a href="https://www.youtube.com/watch?v=IvsANO0qZEg" target="_blank" rel="external">这里</a></p>
@@ -111,12 +111,55 @@
 <li>希望对于高延迟场景可以有更好的优化</li>
 </ul>
 <p>这种场景无疑<code>GraphQL</code>是最好的选择。</p>
-<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>最后引用人月神话中的观点<code>no silver bullet</code>，在技术选型时需要具体情况具体分析。不过鉴于GraphQL的灵活性，把它与RPC和REST配置使用，也是不错的选择。</p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>提供一张表格来总览它们之间在不同指标下的表现：</p>
+<table>
+<thead>
+<tr>
+<th>—-</th>
+<th>耦合性</th>
+<th>约束性</th>
+<th>复杂度</th>
+<th>缓存</th>
+<th>可发现性</th>
+<th>版本控制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RPC(Function)</td>
+<td>high</td>
+<td>medium</td>
+<td>low</td>
+<td>custom</td>
+<td>bad</td>
+<td>hard</td>
+</tr>
+<tr>
+<td>REST(Resource)</td>
+<td>low</td>
+<td>low</td>
+<td>low</td>
+<td>http</td>
+<td>good</td>
+<td>easy</td>
+</tr>
+<tr>
+<td>GraphQL(Query)</td>
+<td>medium</td>
+<td>high</td>
+<td>medium</td>
+<td>custom</td>
+<td>good</td>
+<td>???</td>
+</tr>
+</tbody>
+</table>
+<p>最后引用人月神话中的观点<code>no silver bullet</code>，在技术选型时需要具体情况具体分析，不过鉴于GraphQL的灵活性，把它与RPC和REST配置使用，也是不错的选择。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;RPC-vs-REST-vs-GraphQL&quot;&gt;&lt;a href=&quot;#RPC-vs-REST-vs-GraphQL&quot; class=&quot;headerlink&quot; title=&quot;RPC vs REST vs GraphQL&quot;&gt;&lt;/a&gt;RPC vs REST vs Graph
+      &lt;h2 id=&quot;写在前面&quot;&gt;&lt;a href=&quot;#写在前面&quot; class=&quot;headerlink&quot; title=&quot;写在前面&quot;&gt;&lt;/a&gt;写在前面&lt;/h2&gt;&lt;p&gt;最近2周的时间由于工作不忙，一直在看有关&lt;code&gt;GraphQL&lt;/code&gt;的东西，前后端均有涉及，由于我之前做过后端开
     
     </summary>
     
