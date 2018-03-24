@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-03-24T10:44:25.000Z</updated>
+  <updated>2018-03-24T10:46:27.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2018/03/24/rpc-reset-graphql/"/>
     <id>http://yoursite.com/2018/03/24/rpc-reset-graphql/</id>
     <published>2018-03-24T10:03:27.000Z</published>
-    <updated>2018-03-24T10:44:25.000Z</updated>
+    <updated>2018-03-24T10:46:27.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
 <p>其实在使用和学习的过程中，有很多文章都对比过它们的异同，但是大部分文章并没有从一个相对客观的角度来对比，更多是为了突显一个的优点而刻意指出另外一个的缺点。这让我想到一句话，脱离业务情景谈技术就是耍流氓。</p>
@@ -116,41 +116,41 @@
 <thead>
 <tr>
 <th></th>
-<th>耦合性</th>
-<th>约束性</th>
-<th>复杂度</th>
-<th>缓存</th>
-<th>可发现性</th>
-<th>版本控制</th>
+<th style="text-align:center">耦合性</th>
+<th style="text-align:center">约束性</th>
+<th style="text-align:center">复杂度</th>
+<th style="text-align:center">缓存</th>
+<th style="text-align:center">可发现性</th>
+<th style="text-align:center">版本控制</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>RPC(Function)</td>
-<td>high</td>
-<td>medium</td>
-<td>low</td>
-<td>custom</td>
-<td>bad</td>
-<td>hard</td>
+<td style="text-align:center">high</td>
+<td style="text-align:center">medium</td>
+<td style="text-align:center">low</td>
+<td style="text-align:center">custom</td>
+<td style="text-align:center">bad</td>
+<td style="text-align:center">hard</td>
 </tr>
 <tr>
 <td>REST(Resource)</td>
-<td>low</td>
-<td>low</td>
-<td>low</td>
-<td>http</td>
-<td>good</td>
-<td>easy</td>
+<td style="text-align:center">low</td>
+<td style="text-align:center">low</td>
+<td style="text-align:center">low</td>
+<td style="text-align:center">http</td>
+<td style="text-align:center">good</td>
+<td style="text-align:center">easy</td>
 </tr>
 <tr>
 <td>GraphQL(Query)</td>
-<td>medium</td>
-<td>high</td>
-<td>medium</td>
-<td>custom</td>
-<td>good</td>
-<td>???</td>
+<td style="text-align:center">medium</td>
+<td style="text-align:center">high</td>
+<td style="text-align:center">medium</td>
+<td style="text-align:center">custom</td>
+<td style="text-align:center">good</td>
+<td style="text-align:center">???</td>
 </tr>
 </tbody>
 </table>

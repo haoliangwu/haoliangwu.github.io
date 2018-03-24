@@ -4,7 +4,7 @@
   <url>
     <loc>http://yoursite.com/2018/03/24/rpc-reset-graphql/</loc>
     
-    <lastmod>2018-03-24T10:44:25.000Z</lastmod>
+    <lastmod>2018-03-24T10:46:27.000Z</lastmod>
     
   </url>
   
@@ -135,13 +135,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/11/28/async-for-js/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2016/08/22/interview-record-20160822/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
@@ -149,7 +142,21 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
+    <loc>http://yoursite.com/2016/11/28/async-for-js/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/06/27/20160627/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/01/20160701/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -163,7 +170,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/06/27/20160627/</loc>
+    <loc>http://yoursite.com/2016/07/26/liferay-portlet-container/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -184,14 +191,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/26/liferay-portlet-container/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/01/20160701/</loc>
+    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -199,6 +199,13 @@
   
   <url>
     <loc>http://yoursite.com/2016/07/15/liferay-smile-face/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -219,7 +226,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
+    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -233,7 +240,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/06/20/%E5%BC%80%E5%A7%8B/</loc>
+    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -254,14 +261,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://yoursite.com/2016/06/20/%E5%BC%80%E5%A7%8B/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -275,14 +275,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/liferay/index.html</loc>
+    <loc>http://yoursite.com/liferay/Fundamentals.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/liferay/Fundamentals.html</loc>
+    <loc>http://yoursite.com/liferay/index.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
