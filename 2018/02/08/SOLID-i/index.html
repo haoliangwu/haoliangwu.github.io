@@ -11,10 +11,12 @@
 
   
   <meta name="description" content="Understanding SOLID Principles: Interface Segregation Principle
+
 这是理解SOLID原则，关于接口隔离原则如何帮助我们创建简单的抽象接口，并使客户端代与接口之间存在的更少的依赖关系。
 
 接口隔离原则是什么
-Clients should n">
+
+Clients should">
   
 
   
@@ -121,10 +123,12 @@ Clients should n">
   <div class="article-content">
     <div class="entry">
       
-          <h1 id="Understanding-SOLID-Principles-Interface-Segregation-Principle"><a href="#Understanding-SOLID-Principles-Interface-Segregation-Principle" class="headerlink" title="Understanding SOLID Principles: Interface Segregation Principle"></a><a href="https://codeburst.io/understanding-solid-principles-interface-segregation-principle-b2d57026cf6c" target="_blank" rel="noopener">Understanding SOLID Principles: Interface Segregation Principle</a></h1><blockquote>
+          <h1><a href="https://codeburst.io/understanding-solid-principles-interface-segregation-principle-b2d57026cf6c" target="_blank" rel="noopener">Understanding SOLID Principles: Interface Segregation Principle</a></h1>
+<blockquote>
 <p>这是理解<code>SOLID</code>原则，关于<strong>接口隔离</strong>原则如何帮助我们创建简单的抽象接口，并使客户端代与接口之间存在的更少的依赖关系。</p>
 </blockquote>
-<h2 id="接口隔离原则是什么"><a href="#接口隔离原则是什么" class="headerlink" title="接口隔离原则是什么"></a>接口隔离原则是什么</h2><blockquote>
+<h2>接口隔离原则是什么</h2>
+<blockquote>
 <p>Clients should not be forced to depend on methods that they do not use.</p>
 </blockquote>
 <blockquote>
@@ -133,19 +137,24 @@ Clients should n">
 <p>这个原则本身与单一职责原则关系十分紧密，它意味着当你在定义你的抽象层代码时，不应当在客户端代码在实现抽象逻辑时，暴露一些客户端代码不需要使用或者关心的方法。</p>
 <p>进一步说明的话，就是当你有意地在抽象层中暴露的方法时，这意味着所有实现这些抽象逻辑的客户端代码都必须要实现所有的抽象方法，尽管这些方法并不一定都对客户端代码有意义。</p>
 <p>将你的接口的保持精简和小颗粒度，并且不要在它们中间增加无用的抽象方法，当你在对新的抽象接口进行命名时，你就会拥有更好的选择，因为你已有了若干小颗粒的命名类型。这样做的意义在于当你在需要提供一个更加大颗粒度的抽象接口时，你可以拥有足够的灵活性来将已有的小颗粒度接口进行组合。</p>
-<h2 id="如何实践接口隔离原则"><a href="#如何实践接口隔离原则" class="headerlink" title="如何实践接口隔离原则"></a>如何实践接口隔离原则</h2><p>这个例子是关于一个ATM用户界面的抽象接口，这个接口会处理诸如存款请求、取款请求等逻辑，从这个例子中我们会了解到，我们如何对这个接口进行隔离，使其进一步划分为多个独立的、更加具体的若干接口。</p>
-<p>首先我们应当有一个工具函数库接口，这个接口会描述我们想要暴露的关于<code>byte</code>操作逻辑的方法，让我们创建这样一个接口，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type ByteUtils interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) // Read into buffer</span><br><span class="line">    Write(b []byte)(n int, err error) // Write into buffer</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte // Trim buffer by removing bytes from the exclusion chars</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2>如何实践接口隔离原则</h2>
+<p>这个例子是关于一个ATM用户界面的抽象接口，这个接口会处理诸如存款请求、取款请求等逻辑，从这个例子中我们会了解到，我们如何对这个接口进行隔离，使其进一步划分为多个独立的、更加具体的若干接口。</p>
+<p>首先我们应当有一个工具函数库接口，这个接口会描述我们想要暴露的关于<code>byte</code>操作逻辑的方法，让我们创建这样一个接口，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type ByteUtils interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) // Read into buffer</span><br><span class="line">    Write(b []byte)(n int, err error) // Write into buffer</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte // Trim buffer by removing bytes from the exclusion chars</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>它可以正常工作一段时间，但是很快我们就会发现以下两个问题：</p>
 <ul>
 <li>它的命名<code>ByteUtils</code>太过于通用，如果我们仅通过命名本身，基本无法获取任何具体的信息</li>
 <li>当使用它时，会有一些古怪的感觉，因为当你根据不同的优化场景来按不同逻辑实现<code>trim</code>方法时，你所实现的<code>read</code>和<code>write</code>几乎没什么差别，但是你却需要重复地实现它们，同时在某些不需要读或者写的场景，仍然需要实现它们。</li>
 </ul>
 <p>所以它虽然能够正常工作，但是却不够好。</p>
-<p>我们可以通过创建三个更精简、更具体的接口来替代原先通用的接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type Reader interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Writer interface &#123;</span><br><span class="line">    Write(b []byte)(n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Trimmer interface &#123;</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以通过创建三个更精简、更具体的接口来替代原先通用的接口：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type Reader interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Writer interface &#123;</span><br><span class="line">    Write(b []byte)(n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Trimmer interface &#123;</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这种颗粒度比较细的接口也可以称为<strong>角色接口</strong>，因为它们更易于重构和改变，甚至对于已经定义好的角色和目的也可以很容易的进行重新部署和定义。</p>
-<p>在这三个基础上，我们可以通过组合它们来获取一个更有关联性的接口列表，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">type ReadWriter interface &#123;</span><br><span class="line">    Reader</span><br><span class="line">    Writer </span><br><span class="line">&#125;</span><br><span class="line">type TrimReader interface &#123;</span><br><span class="line">    Trimmer</span><br><span class="line">    Reader</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这三个基础上，我们可以通过组合它们来获取一个更有关联性的接口列表，比如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">type ReadWriter interface &#123;</span><br><span class="line">    Reader</span><br><span class="line">    Writer </span><br><span class="line">&#125;</span><br><span class="line">type TrimReader interface &#123;</span><br><span class="line">    Trimmer</span><br><span class="line">    Reader</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这意味客户端代码拥有了可以根据它们各自的需求来组合抽象层接口的灵活性，这样就会避免在实现抽象接口时不必要的麻烦（比如必须要实现某些无用的方法），比如上面的<code>TrimReader</code>的实现并未包含多余的<code>Write</code>方法的声明。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如你所看到的，通用的接口往往会无意识的将自己和类的实现耦合在了一起，所以你应当尽量的避免这种情况的发生。在设计接口时，你应当时刻提醒自己，我是否需要使用所有在接口中声明的方法呢？如果不是的话，将接口细分为更多个更精简、更具体的接口。</p>
+<h2>总结</h2>
+<p>正如你所看到的，通用的接口往往会无意识的将自己和类的实现耦合在了一起，所以你应当尽量的避免这种情况的发生。在设计接口时，你应当时刻提醒自己，我是否需要使用所有在接口中声明的方法呢？如果不是的话，将接口细分为更多个更精简、更具体的接口。</p>
 <p>正如甘地曾经说过：</p>
 <blockquote>
 <p>你的行动决定你的习惯，你的习惯决定你的价值，你的价值会决定你的命运。</p>
@@ -153,7 +162,8 @@ Clients should n">
 <p>如果在架构中，你每次都会经过仔细思考，会按照好的模式来进行设计，它将会成为一种习惯，自然慢慢会转变为你的价值或者原则，最终则会成为你的命运，比如成为了一个始终给予完善解决方案的软件架构师。</p>
 <p>我的观点是，始终通过挑战自己来变的更好，在某些时刻，你可能会遇到问题，但是往往你可能已经拥有了答案。</p>
 <p>Happy coding!</p>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>对于接口隔离原则的理解，我一直觉的它本身其实是单一职责原则的一个扩展，但是它们之间也有细微的不同：</p>
+<h2>译者注</h2>
+<p>对于接口隔离原则的理解，我一直觉的它本身其实是单一职责原则的一个扩展，但是它们之间也有细微的不同：</p>
 <ul>
 <li>单一职责原则往往面向实现层，比如具体的类或者某个方法</li>
 <li>接口隔离原则往往面向抽象层，比如一些抽象类或者抽象方法</li>
@@ -200,7 +210,7 @@ Clients should n">
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Understanding-SOLID-Principles-Interface-Segregation-Principle"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Interface Segregation Principle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#接口隔离原则是什么"><span class="toc-number">1.1.</span> <span class="toc-text">接口隔离原则是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何实践接口隔离原则"><span class="toc-number">1.2.</span> <span class="toc-text">如何实践接口隔离原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">1.4.</span> <span class="toc-text">译者注</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Interface Segregation Principle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">接口隔离原则是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">如何实践接口隔离原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">译者注</span></a></li></ol></li></ol>
 </div>
 
 
