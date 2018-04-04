@@ -109,19 +109,15 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2>写在前面</h2>
-<p>最近正好在看web worker相关的东西，今天无意中就看到了github一周最热项目的推送中，有这么一个项目<a href="https://github.com/developit/workerize" target="_blank" rel="noopener">workerize</a>，repo里的文档的描述如下：</p>
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近正好在看web worker相关的东西，今天无意中就看到了github一周最热项目的推送中，有这么一个项目<a href="https://github.com/developit/workerize" target="_blank" rel="noopener">workerize</a>，repo里的文档的描述如下：</p>
 <blockquote>
 <p>Moves a module into a Web Worker, automatically reflecting exported functions as asynchronous proxies.</p>
 </blockquote>
-<h2>例子</h2>
-<p>关于README很简单，包含一个类似hello world的例子就没其他什么了。但是从例子本身可以看出这个库要解决的问题，是想通过模块化的方式编写运行在web worker中的脚本，因为通常情况下，web worker每加载一个脚本文件是需要通过一个符合同源策略的URL的，这样会对服务端发送一个额外的请求。同时对于web worker本身加载的js文件的执行环境，与主线程是隔离的（这也是它在进行复杂运算时不会阻塞主线程的原因），与主线程的通讯靠<code>postMessage</code>api和<code>onmessage</code>回调事件来通讯，这样我们在编写一些通信代码时，需要同时在两个不同的环境中分别编写发送消息和接受消息的逻辑，比较繁琐，同时这些代码也不能以模块化的形式存在。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>关于README很简单，包含一个类似hello world的例子就没其他什么了。但是从例子本身可以看出这个库要解决的问题，是想通过模块化的方式编写运行在web worker中的脚本，因为通常情况下，web worker每加载一个脚本文件是需要通过一个符合同源策略的URL的，这样会对服务端发送一个额外的请求。同时对于web worker本身加载的js文件的执行环境，与主线程是隔离的（这也是它在进行复杂运算时不会阻塞主线程的原因），与主线程的通讯靠<code>postMessage</code>api和<code>onmessage</code>回调事件来通讯，这样我们在编写一些通信代码时，需要同时在两个不同的环境中分别编写发送消息和接受消息的逻辑，比较繁琐，同时这些代码也不能以模块化的形式存在。</p>
 <p>如果存在一种方式，我们可以以模块化的方式来编写代码，注入web worker，之后还能通过类似Promsie机制来处理等异步，那便是极好的。</p>
-<p>先来看看例子：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import workerize from &apos;workerize&apos;</span><br><span class="line"></span><br><span class="line">let worker1 = workerize(`</span><br><span class="line">	export function add(a, b) &#123;</span><br><span class="line">		let start = Date.now();</span><br><span class="line">		while (Date.now()-start &lt; 500);</span><br><span class="line">		return a + b;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  export default function minus(a, b)&#123;</span><br><span class="line">    let start = Date.now();</span><br><span class="line">		while (Date.now()-start &lt; 500);</span><br><span class="line">    return a - b</span><br><span class="line">  &#125;</span><br><span class="line">`)</span><br><span class="line"></span><br><span class="line">let worker2 = workerize(function (m) &#123;</span><br><span class="line">  m.add = function (a, b) &#123;</span><br><span class="line">    let start = Date.now()</span><br><span class="line">    while (Date.now() - start &lt; 500);</span><br><span class="line">    return a + b</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">(async () =&gt; &#123;</span><br><span class="line">  console.log(&apos;1 + 2 = &apos;, await worker1.add(1, 2))</span><br><span class="line">  console.log(&apos;3 + 9 = &apos;, await worker2.call(&apos;add&apos;, [3, 9]))</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure></p>
+<p>先来看看例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import workerize from &apos;workerize&apos;</span><br><span class="line"></span><br><span class="line">let worker1 = workerize(`</span><br><span class="line">	export function add(a, b) &#123;</span><br><span class="line">		let start = Date.now();</span><br><span class="line">		while (Date.now()-start &lt; 500);</span><br><span class="line">		return a + b;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  export default function minus(a, b)&#123;</span><br><span class="line">    let start = Date.now();</span><br><span class="line">		while (Date.now()-start &lt; 500);</span><br><span class="line">    return a - b</span><br><span class="line">  &#125;</span><br><span class="line">`)</span><br><span class="line"></span><br><span class="line">let worker2 = workerize(function (m) &#123;</span><br><span class="line">  m.add = function (a, b) &#123;</span><br><span class="line">    let start = Date.now()</span><br><span class="line">    while (Date.now() - start &lt; 500);</span><br><span class="line">    return a + b</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">(async () =&gt; &#123;</span><br><span class="line">  console.log(&apos;1 + 2 = &apos;, await worker1.add(1, 2))</span><br><span class="line">  console.log(&apos;3 + 9 = &apos;, await worker2.call(&apos;add&apos;, [3, 9]))</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure></p>
 <p>worker1和worker2是两种不同的使用方式，一种是以字符串的形式声明模块，一种以函数的形式声明模块。但是无论哪种，最后的结果都是一样的，我们可以通过worker实例显示的调用我们想要调用的方法，每个方法的调用结果均是一个Promise，因此它还可以完美的适配async/await语法。</p>
-<h2>源码</h2>
-<p>那么问题来了，这种模块的加载机制和调用方式是怎样实现的呢？我在运行demo代码的时候心中也默默想到，我去，看了好几天的web worker原来还能这么玩，所以一定要研究研究它的源码和它的实现原理。</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>那么问题来了，这种模块的加载机制和调用方式是怎样实现的呢？我在运行demo代码的时候心中也默默想到，我去，看了好几天的web worker原来还能这么玩，所以一定要研究研究它的源码和它的实现原理。</p>
 <p>打开源代码才发现其实并没有多少代码，官文文档也通过一句话强调了这一点：</p>
 <blockquote>
 <p>Just 900 bytes of gzipped ES3</p>
@@ -131,39 +127,27 @@
 <li>如何实现按内容模块化加载脚本而不是通过URL</li>
 <li>如何通过Promise来代理主线程与worker线程的通讯过程</li>
 </ul>
-<h3>使用Blob动态生成加载脚本资源</h3>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let blob = new Blob([code], &#123;</span><br><span class="line">      type: &apos;application/javascript&apos;</span><br><span class="line">    &#125;),</span><br><span class="line">    url = URL.createObjectURL(blob),</span><br><span class="line">    worker = new Worker(url)</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用Blob动态生成加载脚本资源"><a href="#使用Blob动态生成加载脚本资源" class="headerlink" title="使用Blob动态生成加载脚本资源"></a>使用Blob动态生成加载脚本资源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let blob = new Blob([code], &#123;</span><br><span class="line">      type: &apos;application/javascript&apos;</span><br><span class="line">    &#125;),</span><br><span class="line">    url = URL.createObjectURL(blob),</span><br><span class="line">    worker = new Worker(url)</span><br></pre></td></tr></table></figure>
 <p>这其实不是什么新鲜的东西，就是将代码的内容转化为Blob对象，之后再通过<code>URL.createObjectURL</code>将Blob对象转化为URL的形式，之后再用worker加载它，仅此而已。但是这里的问题是，这个<code>code</code>是哪里从哪里来的呢？</p>
-<h3>将加载代码模块化</h3>
-<p>在加载代码之前，还有重要的一步，就是需要将加载的代码转变为模块，模板本身只对外暴露统一的接口，这样不论对于主线程还是worker线程，就有了统一的约束条件。源码中作者把上一步中的<code>code</code>转化为了类似commonjs的形式，主要涉及的代码有:
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let exportsObjName = `__EXPORTS_$&#123;Math.random().toString().substring(2)&#125;__`</span><br><span class="line">  if (typeof code === &apos;function&apos;) code = `($&#123;toCode(code)&#125;)($&#123;exportsObjName&#125;)`</span><br><span class="line">  code = toCjs(code, exportsObjName, exports)</span><br><span class="line">  code += `\n($&#123;toCode(setup)&#125;)(self, $&#123;exportsObjName&#125;, &#123;&#125;)`</span><br></pre></td></tr></table></figure></p>
-<p>和<code>toCjs</code>方法
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function toCjs (code, exportsObjName, exports) &#123;</span><br><span class="line">  exportsObjName = exportsObjName || &apos;exports&apos;</span><br><span class="line">  exports = exports || &#123;&#125;</span><br><span class="line">  code = code.replace(/^(\s*)export\s+default\s+/m, (s, before) =&gt; &#123;</span><br><span class="line">    exports.default = true</span><br><span class="line">    return `$&#123;before&#125;$&#123;exportsObjName&#125;.default = `</span><br><span class="line">  &#125;)</span><br><span class="line">  code = code.replace(/^(\s*)export\s+(function|const|let|var)(\s+)([a-zA-Z$_][a-zA-Z0-9$_]*)/m, (s, before, type, ws, name) =&gt; &#123;</span><br><span class="line">    exports[name] = true</span><br><span class="line">    return `$&#123;before&#125;$&#123;exportsObjName&#125;.$&#123;name&#125; = $&#123;type&#125;$&#123;ws&#125;$&#123;name&#125;`</span><br><span class="line">  &#125;)</span><br><span class="line">  return `var $&#123;exportsObjName&#125; = &#123;&#125;;\n$&#123;code&#125;\n$&#123;exportsObjName&#125;;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>关于toCjs方法，如果你的正则知识比较扎实的话，可以发现，它做了一件事，就是将字符串类型的code中的所有导出方法的声明，使用commonjs的导出语法替换掉(中间会涉及一些具体的语法规则)，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 如果 exportsObjName 使用默认值 exports, ...代表省略代码</span><br><span class="line">export function foo()&#123; ... &#125; =&gt; exports.foo = function foo()&#123; ... &#125;</span><br><span class="line">export default ... =&gt; exports.default = ...</span><br></pre></td></tr></table></figure></p>
-<p>如果code是函数类型，则首先使用<code>toCode</code>函数将code转化为string类型，之后再将它转化为IIFE的形式，如下
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 如果 exportsObjName 使用默认值 exports, ...代表省略代码</span><br><span class="line">// 传入的code是如下形式：</span><br><span class="line">function( m )&#123; </span><br><span class="line">  ... </span><br><span class="line">&#125;</span><br><span class="line">// 转化为</span><br><span class="line">(function( m )&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;)(exports)</span><br></pre></td></tr></table></figure></p>
-<p>这里的<code>exportsObjName</code>代表模块的名字，默认值是<code>exports</code>(联想commonjs)，不过这里会在一开始就随机生成一个模块名字，生成代码如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let exportsObjName = `__EXPORTS_$&#123;Math.random().toString().substring(2)&#125;__`</span><br></pre></td></tr></table></figure></p>
+<h3 id="将加载代码模块化"><a href="#将加载代码模块化" class="headerlink" title="将加载代码模块化"></a>将加载代码模块化</h3><p>在加载代码之前，还有重要的一步，就是需要将加载的代码转变为模块，模板本身只对外暴露统一的接口，这样不论对于主线程还是worker线程，就有了统一的约束条件。源码中作者把上一步中的<code>code</code>转化为了类似commonjs的形式，主要涉及的代码有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let exportsObjName = `__EXPORTS_$&#123;Math.random().toString().substring(2)&#125;__`</span><br><span class="line">  if (typeof code === &apos;function&apos;) code = `($&#123;toCode(code)&#125;)($&#123;exportsObjName&#125;)`</span><br><span class="line">  code = toCjs(code, exportsObjName, exports)</span><br><span class="line">  code += `\n($&#123;toCode(setup)&#125;)(self, $&#123;exportsObjName&#125;, &#123;&#125;)`</span><br></pre></td></tr></table></figure></p>
+<p>和<code>toCjs</code>方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function toCjs (code, exportsObjName, exports) &#123;</span><br><span class="line">  exportsObjName = exportsObjName || &apos;exports&apos;</span><br><span class="line">  exports = exports || &#123;&#125;</span><br><span class="line">  code = code.replace(/^(\s*)export\s+default\s+/m, (s, before) =&gt; &#123;</span><br><span class="line">    exports.default = true</span><br><span class="line">    return `$&#123;before&#125;$&#123;exportsObjName&#125;.default = `</span><br><span class="line">  &#125;)</span><br><span class="line">  code = code.replace(/^(\s*)export\s+(function|const|let|var)(\s+)([a-zA-Z$_][a-zA-Z0-9$_]*)/m, (s, before, type, ws, name) =&gt; &#123;</span><br><span class="line">    exports[name] = true</span><br><span class="line">    return `$&#123;before&#125;$&#123;exportsObjName&#125;.$&#123;name&#125; = $&#123;type&#125;$&#123;ws&#125;$&#123;name&#125;`</span><br><span class="line">  &#125;)</span><br><span class="line">  return `var $&#123;exportsObjName&#125; = &#123;&#125;;\n$&#123;code&#125;\n$&#123;exportsObjName&#125;;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>关于toCjs方法，如果你的正则知识比较扎实的话，可以发现，它做了一件事，就是将字符串类型的code中的所有导出方法的声明，使用commonjs的导出语法替换掉(中间会涉及一些具体的语法规则)，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 如果 exportsObjName 使用默认值 exports, ...代表省略代码</span><br><span class="line">export function foo()&#123; ... &#125; =&gt; exports.foo = function foo()&#123; ... &#125;</span><br><span class="line">export default ... =&gt; exports.default = ...</span><br></pre></td></tr></table></figure></p>
+<p>如果code是函数类型，则首先使用<code>toCode</code>函数将code转化为string类型，之后再将它转化为IIFE的形式，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 如果 exportsObjName 使用默认值 exports, ...代表省略代码</span><br><span class="line">// 传入的code是如下形式：</span><br><span class="line">function( m )&#123; </span><br><span class="line">  ... </span><br><span class="line">&#125;</span><br><span class="line">// 转化为</span><br><span class="line">(function( m )&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;)(exports)</span><br></pre></td></tr></table></figure></p>
+<p>这里的<code>exportsObjName</code>代表模块的名字，默认值是<code>exports</code>(联想commonjs)，不过这里会在一开始就随机生成一个模块名字，生成代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let exportsObjName = `__EXPORTS_$&#123;Math.random().toString().substring(2)&#125;__`</span><br></pre></td></tr></table></figure></p>
 <p>这样只有我们按照约定的语法来编写web worker加载的代码，它便会加载了一个符合同样约定的commonjs模块。</p>
-<h3>使用 Promise 来做异步代理</h3>
-<p>经过上面两步，web worker加载到了模块化的代码，但是worker线程与主线程进行通讯则是仍然需要通过<code>postMessage</code>方法和<code>onmessage</code>回调事件来进行，如果无法优雅地处理这里的异步逻辑，那么之前所做的工作其实意义并不大。</p>
-<p>workerize针对这里的异步逻辑，设计了一个简单的rpc协议（文档中将这个称作<code>a tiny, purpose-built RPC</code>），先来看一下源码中的<code>setup</code>函数：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">function setup (ctx, rpcMethods, callbacks) &#123;</span><br><span class="line">    ctx.addEventListener(&apos;message&apos;, (&#123; data &#125;) =&gt; &#123;</span><br><span class="line">      // 只捕获满足条件的数据对象</span><br><span class="line">      if (data.type === &apos;RPC&apos;) &#123;</span><br><span class="line">        // 获取数据对象中的 id 属性</span><br><span class="line">        let id = data.id</span><br><span class="line">        if (id != null) &#123;</span><br><span class="line">          // 如果数据对象中存在非空 method 属性，则证明是主线程发送的消息</span><br><span class="line">          if (data.method) &#123;</span><br><span class="line">            // 获取所要调用的方法实例</span><br><span class="line">            let method = rpcMethods[data.method]</span><br><span class="line">            if (method == null) &#123;</span><br><span class="line">              // 如果所调用的方法实例不存在，则发送方法不存在的消息</span><br><span class="line">              ctx.postMessage(&#123; type: &apos;RPC&apos;, id, error: &apos;NO_SUCH_METHOD&apos; &#125;)</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">              // 如果方法存在，则调用它，并将调用结果按不同的类型发送</span><br><span class="line">              Promise.resolve()</span><br><span class="line">                .then(() =&gt; method.apply(null, data.params))</span><br><span class="line">                .then(result =&gt; &#123; ctx.postMessage(&#123; type: &apos;RPC&apos;, id, result &#125;) &#125;)</span><br><span class="line">                .catch(error =&gt; &#123; ctx.postMessage(&#123; type: &apos;RPC&apos;, id, error &#125;) &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">          // 如果 method 属性为空，则证明是 worker 线程发送的消息</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            // 获取每个消息所对应的处于pending状态的Promise实例</span><br><span class="line">            let callback = callbacks[id]</span><br><span class="line">            if (callback == null) throw Error(`Unknown callback $&#123;id&#125;`)</span><br><span class="line">            delete callbacks[id]</span><br><span class="line"></span><br><span class="line">            // 按消息的类型将Promise转化为resolve状态或reject状态。</span><br><span class="line">            if (data.error) callback.reject(Error(data.error))</span><br><span class="line">            else callback.resolve(data.result)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用-Promise-来做异步代理"><a href="#使用-Promise-来做异步代理" class="headerlink" title="使用 Promise 来做异步代理"></a>使用 Promise 来做异步代理</h3><p>经过上面两步，web worker加载到了模块化的代码，但是worker线程与主线程进行通讯则是仍然需要通过<code>postMessage</code>方法和<code>onmessage</code>回调事件来进行，如果无法优雅地处理这里的异步逻辑，那么之前所做的工作其实意义并不大。</p>
+<p>workerize针对这里的异步逻辑，设计了一个简单的rpc协议（文档中将这个称作<code>a tiny, purpose-built RPC</code>），先来看一下源码中的<code>setup</code>函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">function setup (ctx, rpcMethods, callbacks) &#123;</span><br><span class="line">    ctx.addEventListener(&apos;message&apos;, (&#123; data &#125;) =&gt; &#123;</span><br><span class="line">      // 只捕获满足条件的数据对象</span><br><span class="line">      if (data.type === &apos;RPC&apos;) &#123;</span><br><span class="line">        // 获取数据对象中的 id 属性</span><br><span class="line">        let id = data.id</span><br><span class="line">        if (id != null) &#123;</span><br><span class="line">          // 如果数据对象中存在非空 method 属性，则证明是主线程发送的消息</span><br><span class="line">          if (data.method) &#123;</span><br><span class="line">            // 获取所要调用的方法实例</span><br><span class="line">            let method = rpcMethods[data.method]</span><br><span class="line">            if (method == null) &#123;</span><br><span class="line">              // 如果所调用的方法实例不存在，则发送方法不存在的消息</span><br><span class="line">              ctx.postMessage(&#123; type: &apos;RPC&apos;, id, error: &apos;NO_SUCH_METHOD&apos; &#125;)</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">              // 如果方法存在，则调用它，并将调用结果按不同的类型发送</span><br><span class="line">              Promise.resolve()</span><br><span class="line">                .then(() =&gt; method.apply(null, data.params))</span><br><span class="line">                .then(result =&gt; &#123; ctx.postMessage(&#123; type: &apos;RPC&apos;, id, result &#125;) &#125;)</span><br><span class="line">                .catch(error =&gt; &#123; ctx.postMessage(&#123; type: &apos;RPC&apos;, id, error &#125;) &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">          // 如果 method 属性为空，则证明是 worker 线程发送的消息</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            // 获取每个消息所对应的处于pending状态的Promise实例</span><br><span class="line">            let callback = callbacks[id]</span><br><span class="line">            if (callback == null) throw Error(`Unknown callback $&#123;id&#125;`)</span><br><span class="line">            delete callbacks[id]</span><br><span class="line"></span><br><span class="line">            // 按消息的类型将Promise转化为resolve状态或reject状态。</span><br><span class="line">            if (data.error) callback.reject(Error(data.error))</span><br><span class="line">            else callback.resolve(data.result)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
 <p>根据注释我们可以知道，这里的setup函数包含了rpc协议的解析规则，因此主线程和worker线程对会调用该方法来注册安装这个rpc协议，具体的代码如下：</p>
 <ul>
 <li>主线程: <code>setup(worker, worker.rpcMethods, callbacks)</code></li>
 <li>worker线程: <code>code += `\n(${toCode(setup)})(self, ${exportsObjName}, {})</code></li>
 </ul>
 <p>这两处代码都是在各自的作用域中，将rpc协议与当前加载的模块绑定起来，只不过主进程所传<code>callbacks</code>是有意义的，而worker则使用一个空对象代替。</p>
-<h3>注册调用逻辑</h3>
-<p>在拥有了rpc协议的基础上，只需要实现调用逻辑即可，代码如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">worker.call = (method, params) =&gt; new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">    let id = `rpc$&#123;++counter&#125;`</span><br><span class="line">    callbacks[id] = &#123; method, resolve, reject &#125;</span><br><span class="line">    worker.postMessage(&#123; type: &apos;RPC&apos;, id, method, params &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="注册调用逻辑"><a href="#注册调用逻辑" class="headerlink" title="注册调用逻辑"></a>注册调用逻辑</h3><p>在拥有了rpc协议的基础上，只需要实现调用逻辑即可，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">worker.call = (method, params) =&gt; new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">    let id = `rpc$&#123;++counter&#125;`</span><br><span class="line">    callbacks[id] = &#123; method, resolve, reject &#125;</span><br><span class="line">    worker.postMessage(&#123; type: &apos;RPC&apos;, id, method, params &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 <p>这个<code>call</code>方法，每次会将一次方法的调用，转化为一个<code>pending</code>状态的<code>Promise</code>实例，并存在<code>callbacks</code>变量中，同时向worker线程发送一个格式为调用方法数据格式的消息。</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (let i in exports) &#123;</span><br><span class="line">   if (exports.hasOwnProperty(i) &amp;&amp; !(i in worker)) &#123;</span><br><span class="line">     worker[i] = (...args) =&gt; worker.call(i, args)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (let i in exports) &#123;</span><br><span class="line">   if (exports.hasOwnProperty(i) &amp;&amp; !(i in worker)) &#123;</span><br><span class="line">     worker[i] = (...args) =&gt; worker.call(i, args)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>同时在初始化的过程中，会将主线程加载的模块中的每个方法，都绑定一个快捷方法，其方法名与模块中的函数声明保持一致，内部则使用<code>worker.call</code>来完成调用逻辑。</p>
-<h2>最后</h2>
-<p>关于这个库本身，还存在一些可以探讨的问题，比如：</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>关于这个库本身，还存在一些可以探讨的问题，比如：</p>
 <ul>
 <li>是否支持依赖解析机制</li>
 <li>如果引入外部依赖模块</li>
@@ -239,83 +223,41 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2>03-b Enhance Components with Directives</h2>
-<blockquote>
+          <h2 id="03-b-Enhance-Components-with-Directives"><a href="#03-b-Enhance-Components-with-Directives" class="headerlink" title="03-b Enhance Components with Directives"></a>03-b Enhance Components with Directives</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/enhance-components-with-directives-58f16c4ca1f" target="_blank" rel="noopener">Enhance Components with Directives</a></p>
 </blockquote>
 <p>Kent C. Dodds的第四篇文章中的一个重要元素在上一篇文章中没有涉及，使用<code>withToggle</code>高阶组件(HoC, react中的常用模式)可以将<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>组件中的公用逻辑分离出来。</p>
 <p>虽然上一篇文章中上面提及的三个组件并没有太多的公用逻辑，可以万一它们有公用逻辑呢？如果我们想要提供更加声明式的功能，比如能够显式的声明它们使用的<code>&lt;toggle&gt;</code>组件实例而非最邻近的父实例。</p>
 <p>同时，因为<code>&lt;toggle&gt;</code>组件的模板并不存在任何的变动，我们可以将它转化为一个<strong>指令</strong>，这样我们可以以更加灵活的方式来使用它。</p>
-<h2>目标</h2>
-<ul>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
 <li>允许我们的<code>&lt;toggle&gt;</code>组件能够以<code>tag</code>的形式或者<code>attribute</code>的形式使用，如<code>&lt;toggle&gt;</code>或者<code>&lt;div toggle&gt;&lt;/div&gt;</code></li>
 <li>允许通过`withToggle<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 实现</span><br><span class="line">### 1）将``&lt;toggle&gt;``作为一个指令</span><br><span class="line">将``&lt;toggle&gt;``组件改变为指令十分简单，因为它本身的模板仅仅是``&lt;ng-content&gt;&lt;/ng-content&gt;``，在组件渲染时，``&lt;ng-content&gt;``会被替换为我们当前组件标签内包含的内容，所以我们可以直接移除它，并使用``@Directive``装饰器来描述``&lt;toggle&gt;``组件，如下：</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p>@Directive({
-exportAs: 'toggle',
-selector: 'toggle, [toggle]',
-})
-export class ToggleDirective {}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">你可能注意到了，指令的选择器允许``toggle``指令可以以**标签名**和**属性名**的形式来使用。对于``exportAs``关键字是必须要提供的，因为这是当我们需要在别的指令或者组件能够获取``toggle``指令引用的名字，会在这个系列文章的第5章详细删除``exportAs``（Handle Template Reference Variables with Directives）。</span><br><span class="line"></span><br><span class="line">### 2）``withToggle``指令</span><br><span class="line">在这个新的指令中，我们将会封装关于如何选取需要绑定某个``toggle``指令实例的逻辑。</span><br><span class="line"></span><br><span class="line">首先，我们的设想是这样的，每一个组件注入``withToggle``指令，而不是直接注入最邻近的父``toggle``指令。同时每个使用``withToggle``指令的组件通过使用``withToggle.toggle``来访问它所绑定的``toggle``指令的实例，如下：</span><br></pre></td></tr></table></figure></p>
-<p>@Component({
-selector: 'toggle-off',
-template: <code>&lt;ng-content *ngIf=&quot;!withToggle.toggle?.on&quot;&gt;&lt;/ng-content&gt;</code>,
-})
-export class ToggleOffComponent {
-constructor(public withToggle: WithToggleDirective) {}
-}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">其次，``withToggle``指令将它自身与``toggle``指令的选择器绑定（就是两个指令的选择器是相同的），同时增加一个额外的选择器``[withToggle]``，如下：</span><br></pre></td></tr></table></figure></p>
-<p>@Directive({
-exportAs: 'withToggle',
-selector: 'toggle, [toggle], [withToggle]',
-})
-export class WithToggleDirective //...
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">现在``withToggle``指令为它的子组件们提供所绑定的``toggle``指令实例，无论这个实例是显示绑定的，还是默认的父``toggle``指令。关于其中实现的具体细节，可以参考文章最后的[附录部分](#附录)。</span><br><span class="line"></span><br><span class="line">## 成果</span><br><span class="line">我们的``app.component.html``现在可以通过三种不同的使用方式来展现内容。</span><br><span class="line"></span><br><span class="line">### 1）基本</span><br></pre></td></tr></table></figure></p>
-<p>&lt;div toggle #firstToggle=&quot;toggle&quot;&gt;
-...
-&lt;toggle #secondToggle=&quot;toggle&quot;&gt;
-...
-&lt;/toggle&gt;
-&lt;/div&gt;
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">注意``#firstToggle``和``#secondToggle``视图变量是如何使用``toggle``组件的，前者使用属性声明的方式，后者使用标签名声明方式，无论怎样，它们都按理想中那样运行。</span><br><span class="line"></span><br><span class="line">而且，``#secondToggle``是嵌套在``#firstToggle``中的，所以它的子组件使用的是它本身的开关状态，而非``#firstToggle``中的，这符合我们的预期。</span><br><span class="line"></span><br><span class="line">### 2）显式引用</span><br></pre></td></tr></table></figure></p>
-<p>&lt;p [withToggle]=&quot;firstToggle&quot;&gt;
-First:
-&lt;toggle-on&gt;On&lt;/toggle-on&gt;
-&lt;toggle-off&gt;Off&lt;/toggle-off&gt;
-&lt;toggle-button&gt;&lt;/toggle-button&gt;
-&lt;/p&gt;
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这里没有任何``toggle``指令是当前``p``标签的子组件的祖先，但是通过``withToggle``指令，我们可以让所有的子组件使用``#firstToggle``的``toggle``指令实例。</span><br><span class="line"></span><br><span class="line">### 3）自定义组件</span><br></pre></td></tr></table></figure></p>
-<p>&lt;div [withToggle]=&quot;firstToggle&quot;&gt;
-&lt;labelled-state toggleName=&quot;First&quot;&gt;&lt;/labelled-state&gt;
-&lt;labelled-button toggleName=&quot;First&quot;&gt;&lt;/labelled-button&gt;
-&lt;/div&gt;
-&lt;labelled-state toggleName=&quot;Second&quot; [withToggle]=&quot;secondToggle&quot;&gt; &lt;/labelled-state&gt;
-&lt;labelled-button toggleName=&quot;Second&quot; [withToggle]=&quot;secondToggle&quot;&gt; &lt;/labelled-button&gt;
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">``withToggle``指令甚至可以通过DI机制注入到内部的任何自定义组件中，如``&lt;labelled-state&gt;``组件和``&lt;labelled-button&gt;``都没有任何关于``withToggle``或者``toggle``的引用声明。它们无需关心这个开关状态的来源，它们仅仅需要知道的是，根据这个开关状态，如何与它们的子组件进行交互。</span><br><span class="line"></span><br><span class="line">## 附录</span><br><span class="line">``withToggle``的实现，是一个标准的指令声明方式，除了它的构造方法，如下：</span><br></pre></td></tr></table></figure></p>
-<p>constructor(
-@Host() @Optional() private toggleDirective: ToggleDirective,
-) {}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">值得注意的有两点：</span><br><span class="line">* ``@Host()``：这个装饰器的作用是，可以限制从属于当前指令的DI注入器，仅注入**绑定到某个满足特定条件指定或者组件上的**``toggle``指令实例，而不是从它的祖先组件们中注入。（这里选择器为空，则为宿主对象）</span><br><span class="line">* ``@Optional()``：这个装饰器会告诉编译器，当注入器没有找到任何可注入的``toggle``指令时，不要抛出错误（如果我们手动的指定某个引用），这样在它无法被注入时，使它保持``undefined``即可。</span><br><span class="line"></span><br><span class="line">现在我们可以很容易的理解在``ngOnChanges``生命周期钩子函数中的代码的作用，</span><br></pre></td></tr></table></figure></p>
-<p>this.toggle = this.withToggle || this.toggleDirective;</p>
-<pre><code>
-* 如果我们的``@Input()``被指定，那么使用它的值
-* 如果没有，则尝试去使用在当前宿主对象上注入的``toggle``指令实例
-* 如果没有，则使用``undefined``
-
-当前的``this``指定``withToggle``本身，所以拥有它引用的子组件都可以访问它。
-
-https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
-
-## 译者注
-在这一节中，主要进行了以下几方面的改进：
-* 简化``toggle``本身，因为它一直是作为一个容器组件使用的，所以完全可以以指令（可以理解为没有模板的组件）的形式存在
-* 依赖注入（DI）的机制虽然很强大，但是受限于它的运作原理（关于具体的运作原理可以参考[官方文档](https://angular.cn/guide/dependency-injection)）。这里原作者使用一个额外的``withToggle``指令作为中间件，来作为``toggle``指令的托管容器。这部分理解起来可能需要先了解一下视图变量和``exportAs``的相关的知识
-* 对于``toggle``指令实例的获取逻辑，采用平稳退化的策略，就好比人在实际生活中思考问题的方式一样。
-
-这种开发模式，在实际工作中，我有一次在重构公司项目中一个关于表单组件的过程中曾使用过，之所以使用这种方式，是因为在表单组件中，会存在一些关于联动校验或者分组的需求，如果将这部门逻辑封装为``service``或者直接写在``controller``内部，越到后面会发现逻辑复杂度越高，从而越来越难维护。
-
-使用这种模式，将复杂的逻辑划分成小的颗粒，再封装为独立的指令，在需要用到这些逻辑的组件中注入这些指令即可，指令的特点就是一般都会比较简洁，只会做一些简单的事情，相比之下，维护一个十分复杂的service和维护若干简单的指令，我更倾向于后者。
-</code></pre>
+<p>@Directive({<br>  exportAs: ‘toggle’,<br>  selector: ‘toggle, [toggle]’,<br>})<br>export class ToggleDirective {}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">你可能注意到了，指令的选择器允许``toggle``指令可以以**标签名**和**属性名**的形式来使用。对于``exportAs``关键字是必须要提供的，因为这是当我们需要在别的指令或者组件能够获取``toggle``指令引用的名字，会在这个系列文章的第5章详细删除``exportAs``（Handle Template Reference Variables with Directives）。</span><br><span class="line"></span><br><span class="line">### 2）``withToggle``指令</span><br><span class="line">在这个新的指令中，我们将会封装关于如何选取需要绑定某个``toggle``指令实例的逻辑。</span><br><span class="line"></span><br><span class="line">首先，我们的设想是这样的，每一个组件注入``withToggle``指令，而不是直接注入最邻近的父``toggle``指令。同时每个使用``withToggle``指令的组件通过使用``withToggle.toggle``来访问它所绑定的``toggle``指令的实例，如下：</span><br></pre></td></tr></table></figure></p>
+<p>@Component({<br>  selector: ‘toggle-off’,<br>  template: <code>&lt;ng-content *ngIf=&quot;!withToggle.toggle?.on&quot;&gt;&lt;/ng-content&gt;</code>,<br>})<br>export class ToggleOffComponent {<br>  constructor(public withToggle: WithToggleDirective) {}<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">其次，``withToggle``指令将它自身与``toggle``指令的选择器绑定（就是两个指令的选择器是相同的），同时增加一个额外的选择器``[withToggle]``，如下：</span><br></pre></td></tr></table></figure></p>
+<p>@Directive({<br>  exportAs: ‘withToggle’,<br>  selector: ‘toggle, [toggle], [withToggle]’,<br>})<br>export class WithToggleDirective //…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">现在``withToggle``指令为它的子组件们提供所绑定的``toggle``指令实例，无论这个实例是显示绑定的，还是默认的父``toggle``指令。关于其中实现的具体细节，可以参考文章最后的[附录部分](#附录)。</span><br><span class="line"></span><br><span class="line">## 成果</span><br><span class="line">我们的``app.component.html``现在可以通过三种不同的使用方式来展现内容。</span><br><span class="line"></span><br><span class="line">### 1）基本</span><br></pre></td></tr></table></figure></p>
+<p><div toggle="" #firsttoggle="toggle"><br>  …<br>  <toggle #secondtoggle="toggle"><br>    …<br>  </toggle><br></div><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">注意``#firstToggle``和``#secondToggle``视图变量是如何使用``toggle``组件的，前者使用属性声明的方式，后者使用标签名声明方式，无论怎样，它们都按理想中那样运行。</span><br><span class="line"></span><br><span class="line">而且，``#secondToggle``是嵌套在``#firstToggle``中的，所以它的子组件使用的是它本身的开关状态，而非``#firstToggle``中的，这符合我们的预期。</span><br><span class="line"></span><br><span class="line">### 2）显式引用</span><br></pre></td></tr></table></figure></p>
+<p></p><p [withtoggle]="firstToggle"><br>  First:<br>  <toggle-on>On</toggle-on><br>  <toggle-off>Off</toggle-off><br>  <toggle-button></toggle-button><br></p><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这里没有任何``toggle``指令是当前``p``标签的子组件的祖先，但是通过``withToggle``指令，我们可以让所有的子组件使用``#firstToggle``的``toggle``指令实例。</span><br><span class="line"></span><br><span class="line">### 3）自定义组件</span><br></pre></td></tr></table></figure><p></p>
+<p><div [withtoggle]="firstToggle"><br>  <labelled-state togglename="First"></labelled-state><br>  <labelled-button togglename="First"></labelled-button><br></div></p>
+<p><labelled-state togglename="Second" [withtoggle]="secondToggle"> </labelled-state></p>
+<p><labelled-button togglename="Second" [withtoggle]="secondToggle"> </labelled-button><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">``withToggle``指令甚至可以通过DI机制注入到内部的任何自定义组件中，如``&lt;labelled-state&gt;``组件和``&lt;labelled-button&gt;``都没有任何关于``withToggle``或者``toggle``的引用声明。它们无需关心这个开关状态的来源，它们仅仅需要知道的是，根据这个开关状态，如何与它们的子组件进行交互。</span><br><span class="line"></span><br><span class="line">## 附录</span><br><span class="line">``withToggle``的实现，是一个标准的指令声明方式，除了它的构造方法，如下：</span><br></pre></td></tr></table></figure></p>
+<p>constructor(<br>  @Host() @Optional() private toggleDirective: ToggleDirective,<br>) {}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">值得注意的有两点：</span><br><span class="line">* ``@Host()``：这个装饰器的作用是，可以限制从属于当前指令的DI注入器，仅注入**绑定到某个满足特定条件指定或者组件上的**``toggle``指令实例，而不是从它的祖先组件们中注入。（这里选择器为空，则为宿主对象）</span><br><span class="line">* ``@Optional()``：这个装饰器会告诉编译器，当注入器没有找到任何可注入的``toggle``指令时，不要抛出错误（如果我们手动的指定某个引用），这样在它无法被注入时，使它保持``undefined``即可。</span><br><span class="line"></span><br><span class="line">现在我们可以很容易的理解在``ngOnChanges``生命周期钩子函数中的代码的作用，</span><br></pre></td></tr></table></figure></p>
+<p>this.toggle = this.withToggle || this.toggleDirective;<br><code>`</code></p>
+<ul>
+<li>如果我们的<code>@Input()</code>被指定，那么使用它的值</li>
+<li>如果没有，则尝试去使用在当前宿主对象上注入的<code>toggle</code>指令实例</li>
+<li>如果没有，则使用<code>undefined</code></li>
+</ul>
+<p>当前的<code>this</code>指定<code>withToggle</code>本身，所以拥有它引用的子组件都可以访问它。</p>
+<p><a href="https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives" target="_blank" rel="noopener">https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives</a></p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>在这一节中，主要进行了以下几方面的改进：</p>
+<ul>
+<li>简化<code>toggle</code>本身，因为它一直是作为一个容器组件使用的，所以完全可以以指令（可以理解为没有模板的组件）的形式存在</li>
+<li>依赖注入（DI）的机制虽然很强大，但是受限于它的运作原理（关于具体的运作原理可以参考<a href="https://angular.cn/guide/dependency-injection" target="_blank" rel="noopener">官方文档</a>）。这里原作者使用一个额外的<code>withToggle</code>指令作为中间件，来作为<code>toggle</code>指令的托管容器。这部分理解起来可能需要先了解一下视图变量和<code>exportAs</code>的相关的知识</li>
+<li>对于<code>toggle</code>指令实例的获取逻辑，采用平稳退化的策略，就好比人在实际生活中思考问题的方式一样。</li>
+</ul>
+<p>这种开发模式，在实际工作中，我有一次在重构公司项目中一个关于表单组件的过程中曾使用过，之所以使用这种方式，是因为在表单组件中，会存在一些关于联动校验或者分组的需求，如果将这部门逻辑封装为<code>service</code>或者直接写在<code>controller</code>内部，越到后面会发现逻辑复杂度越高，从而越来越难维护。</p>
+<p>使用这种模式，将复杂的逻辑划分成小的颗粒，再封装为独立的指令，在需要用到这些逻辑的组件中注入这些指令即可，指令的特点就是一般都会比较简洁，只会做一些简单的事情，相比之下，维护一个十分复杂的service和维护若干简单的指令，我更倾向于后者。</p>
 
       
     </div>
@@ -384,8 +326,7 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
   <div class="article-content">
     <div class="entry">
       
-          <h2>03-a Communicate Between Components Using Dependency Injection</h2>
-<blockquote>
+          <h2 id="03-a-Communicate-Between-Components-Using-Dependency-Injection"><a href="#03-a-Communicate-Between-Components-Using-Dependency-Injection" class="headerlink" title="03-a Communicate Between Components Using Dependency Injection"></a>03-a Communicate Between Components Using Dependency Injection</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/communicate-between-components-using-dependency-injection-d7280567faa7" target="_blank" rel="noopener">Communicate Between Components Using Dependency Injection</a></p>
 </blockquote>
 <p>当前的<code>&lt;toggle&gt;</code>组件仍然存在其他的问题，比如：</p>
@@ -393,25 +334,20 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
 <li>我们无法在其中方式多个<code>&lt;toggle-on&gt;</code>或者是<code>&lt;toggle-button&gt;</code>在同一个<code>&lt;toggle&gt;</code>中</li>
 <li>如果一个<code>&lt;toggle-on&gt;</code>作为另外一个自定义组件的内容的话，我们无法是使用<code>@ContentChild</code>装饰器获取它</li>
 </ul>
-<h2>目标</h2>
-<p>我们需要将这两个问题作为新的目标：</p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们需要将这两个问题作为新的目标：</p>
 <ul>
 <li>我们可以增加多个相同类型的子组件(<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>)</li>
 <li>并且可以使这些子组件放置在任意的自定义容器的视图模板(<code>views</code>)中</li>
 </ul>
-<h2>实现</h2>
-<p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>针对第一个问题，我们使用<code>@ContentChildren</code>装饰器（因为它获取所有的子组件引用），但是它无法解决第二个问题。</p>
 <p>为了同时解决这两个问题，我们可以使用Angular提供的DI机制(<code>dependency injection mechanism</code>)。你可以将一个组件的祖先组件通过DI机制注入到子组件的构造方法中，这样你就可以通过祖先组件的引用来访问它们的方法和属性。</p>
 <p>所以，<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>都可以通过DI机制来获得最相近的<code>&lt;toggle&gt;</code>组件的引用，从而共享它的开关状态。</p>
 <blockquote>
-<p>Note:
-这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
+<p>Note:<br>这里也可以使用<code>service</code>来共享状态，也许还会更便捷，但是我们可以通过DI来达到目的，我们可以在之后的章节（第十二章）来阐述<code>service</code>相关的内容，这部分内容会与<code>React Context Provider</code>的内容对应。</p>
 </blockquote>
-<h2>成果</h2>
-<p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>你可以在在线代码仓库看到，有两个<code>&lt;toggle-off&gt;</code>组件如我们预期的那样被渲染，并且有一个<code>&lt;other-component&gt;</code>组件，其中有<code>&lt;toggle-off&gt;</code>和<code>&lt;toggle-on&gt;</code>两个组件。</p>
 <p>这些子组件都会监听同一个<code>&lt;toggle&gt;</code>组件的开关状态。</p>
-<h2>译者注</h2>
-<p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>依赖注入是Angular中提供的很强大的功能，在<code>angularjs</code>中就表现出色并作为卖点。</p>
 <p>如果仔细思考的话，我们可以发现，在这一版的实现中，对于<code>&lt;toggle&gt;</code>组件的引用获取方式，从命令式转变为了声明式，因为我们不再关心获取<code>&lt;toggle&gt;</code>引用的细节（比如具体使用<code>@ContentChild</code>还是<code>@ContentChildren</code>）。</p>
 <p>同时，依赖注入机制是依附于组件本身存在的，并不依附于模板的层级关系，因此不会面临问题二的困扰。</p>
 <p>对于木偶组件本身，往往作为消费者存在，这种情况下使用DI机制可能会达到更好的效果。</p>
@@ -483,14 +419,11 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
   <div class="article-content">
     <div class="entry">
       
-          <h2>02 Write Compound Components</h2>
-<blockquote>
+          <h2 id="02-Write-Compound-Components"><a href="#02-Write-Compound-Components" class="headerlink" title="02 Write Compound Components"></a>02 Write Compound Components</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/write-compound-components-1001449c67f0" target="_blank" rel="noopener">Write Compound Components</a></p>
 </blockquote>
-<h3>目标</h3>
-<p>我们需要实现的需求是能够使使用者通过<code>&lt;toggle&gt;</code>组件动态的改变包含在它内部的内容。</p>
-<h3>实现</h3>
-<p>我们可以把toggle抽象为一个复合组件，由三个新的组件<code>&lt;toggle-button&gt;</code>、<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>构成。</p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>我们需要实现的需求是能够使使用者通过<code>&lt;toggle&gt;</code>组件动态的改变包含在它内部的内容。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们可以把toggle抽象为一个复合组件，由三个新的组件<code>&lt;toggle-button&gt;</code>、<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>构成。</p>
 <p>每一个组件的职能与它们的父组件保持一致，它们各自的职能如下：</p>
 <ul>
 <li><code>toggle-button</code>: 代表开关，用来渲染父组件的开关状态</li>
@@ -498,19 +431,14 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
 <li><code>toggle-off</code>: 根据父组件的开关状态，渲染当状态为<strong>关</strong>时的内容</li>
 </ul>
 <p><code>&lt;toggle&gt;</code>组件可以实现<code>@ContentChild</code>装饰器获取这三个子组件的引用，从而可以根据开关状态的变化调整它们之间的关联逻辑。</p>
-<h2>成果</h2>
-<p>经过这样的调整，我们可以使用户通过使用<code>&lt;toggle&gt;</code>组件去自定义包含在它其中内容的显示逻辑，内容中会有一个按钮负责切换开关的状态。可以尝试在在线代码库中调整子组件的顺序，你可以在它们中间嵌套任何的<code>html</code>字符串，只要这三个组件是作为<code>&lt;toggle&gt;</code>的子组件存在的，一切都将正常的运行。</p>
-<h2>相关话题</h2>
-<ul>
-<li>
-<p><code>@ContentChild</code>装饰器将会返回在组件标签包含的内容中，第一个符合选择器的子组件或者子指令的引用，比如<code>&lt;toggle&gt; This is the content &lt;/toggle&gt;</code>。如果想获取所有的子组件或者子指令，使用<code>@ContentChildren</code>。</p>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>经过这样的调整，我们可以使用户通过使用<code>&lt;toggle&gt;</code>组件去自定义包含在它其中内容的显示逻辑，内容中会有一个按钮负责切换开关的状态。可以尝试在在线代码库中调整子组件的顺序，你可以在它们中间嵌套任何的<code>html</code>字符串，只要这三个组件是作为<code>&lt;toggle&gt;</code>的子组件存在的，一切都将正常的运行。</p>
+<h2 id="相关话题"><a href="#相关话题" class="headerlink" title="相关话题"></a>相关话题</h2><ul>
+<li><p><code>@ContentChild</code>装饰器将会返回在组件标签包含的内容中，第一个符合选择器的子组件或者子指令的引用，比如<code>&lt;toggle&gt; This is the content &lt;/toggle&gt;</code>。如果想获取所有的子组件或者子指令，使用<code>@ContentChildren</code>。</p>
 </li>
-<li>
-<p><code>@ViewChild</code>或者<code>@ViewChildren</code>装饰器是用来获取在组件内部模板中使用的单个或者多个组件的。比如<code>template: 'This is the view'</code>或者<code>templateUrl: './my.component.html'</code></p>
+<li><p><code>@ViewChild</code>或者<code>@ViewChildren</code>装饰器是用来获取在组件内部模板中使用的单个或者多个组件的。比如<code>template: &#39;This is the view&#39;</code>或者<code>templateUrl: &#39;./my.component.html&#39;</code></p>
 </li>
 </ul>
-<h2>译者注</h2>
-<p>这里组件架构方式是标准的<code>Smart Component（智能组件）</code>和<code>Dump Component（木偶组件）</code>组件架构方式。</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这里组件架构方式是标准的<code>Smart Component（智能组件）</code>和<code>Dump Component（木偶组件）</code>组件架构方式。</p>
 <p>以上的需求完全是可以在<code>&lt;toggle&gt;</code>内部实现的，但是这样会使它的内部充满逻辑代码，反之我们可以将一些职能划分为成更小的碎片，并委托到它的子组件中，本身作为容器组件存在，负责协作子组件从而达到目的。</p>
 <p>对于<code>@ContentChild</code>和<code>@ViewChild</code>的使用场景，我认为通过看装饰器前缀的寓意是最后的方式。</p>
 <ul>
@@ -586,22 +514,19 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
   <div class="article-content">
     <div class="entry">
       
-          <h2>写在前头</h2>
-<p>Angular到现在已经到5.x的版本了，对于MVVM框架我首先接触的是angularjs后来又转为react，之后换了工作因项目技术栈的原因又转换到之前的angularjs，在实际工作中实施了公司几个比较重要项目中前端的重构工作，这个过程逐步意识到，对于MVVM框架本身，在使用层面讲，掌握一些通用的模式是很有必要的，尤其现在已经很流行的组件化开发。这样我们在实际工作中就可以无缝（或者花很少的时间成本）转化到任何的MVVM框架，并把节省下来的时间去学习新的知识。</p>
+          <h2 id="写在前头"><a href="#写在前头" class="headerlink" title="写在前头"></a>写在前头</h2><p>Angular到现在已经到5.x的版本了，对于MVVM框架我首先接触的是angularjs后来又转为react，之后换了工作因项目技术栈的原因又转换到之前的angularjs，在实际工作中实施了公司几个比较重要项目中前端的重构工作，这个过程逐步意识到，对于MVVM框架本身，在使用层面讲，掌握一些通用的模式是很有必要的，尤其现在已经很流行的组件化开发。这样我们在实际工作中就可以无缝（或者花很少的时间成本）转化到任何的MVVM框架，并把节省下来的时间去学习新的知识。</p>
 <p>最近一直在关注<code>Angular In Depth</code>的博客，偶尔看到这个系列的文章，觉的质量还挺高，所以抽空余时间翻译并分享给大家，并在每个文章后面加了一点自己的拙见，希望可以达到抛砖引玉的效果，如果观点有误，还望各位看官轻喷。</p>
-<h2>01 Build a Toggle Component</h2>
-<blockquote>
+<h2 id="01-Build-a-Toggle-Component"><a href="#01-Build-a-Toggle-Component" class="headerlink" title="01 Build a Toggle Component"></a>01 Build a Toggle Component</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/build-a-toggle-component-6e8f44889c2c" target="_blank" rel="noopener">Build a Toggle Component</a></p>
 </blockquote>
 <p>如<a href="https://egghead.io/lessons/react-introducing-advanced-react-component-patterns" target="_blank" rel="noopener">Kent C. Dodds Advanced React Component Patterns</a>那样，我们将使用一个相对简单的<code>&lt;toggle&gt;</code>组件来说明这些模式。<code>&lt;toggole&gt;</code>组件的职责是仅仅是管理一个简单的布尔值状态属性: <code>on</code>。使用如此简单的组件进行说明的目的，是因为我们可以将更多的注意力投入到相对组件本身而言较复杂的模式中。</p>
 <p>经过这一系列文章，我将提供包含完整功能的、可运行的演示代码链接。你仅仅需要将注意力集中到<code>app</code>文件夹和<code>toggle</code>文件夹。<code>toggle</code>文件夹包含一些可复用的库（一系列组件），当然这个库会随着文章的深入而改变。<code>app</code>文件夹并且特别是<code>app.component.html</code>，将针对库在不同的情形下的使用做出相应的改变。</p>
 <p>我们将从最原始的<code>toggle</code>组件版本开始。它仅仅有一个使用了<code>@Input()</code>装饰器的<code>on</code>属性，这个属性所控制的状态代表组件本身的开关状态，同时它还有一个是使用了<code>@Output()</code>装饰器的<code>toggle</code>事件发射器，这个事件发射器会在组件开关状态改变的情况下，通知父组件。</p>
 <p>在我们开始下一个话题<a href="http://littlelyon.com/2018/01/10/aacp-2/" target="_blank" rel="noopener">02 Write Compound Components</a>之前，可以在<a href="https://stackblitz.com/edit/adv-ng-patterns-01-build-toggle-component" target="_blank" rel="noopener">在线代码仓库</a>看看这个组件的实现以及演示。</p>
-<h2>译者注</h2>
-<p><code>toggle</code>组件的实现是一个很典型的利用单向数据流作为数据源的简单组件：</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p><code>toggle</code>组件的实现是一个很典型的利用单向数据流作为数据源的简单组件：</p>
 <ul>
 <li><code>on</code>是单向数据源，同时代表组件内部的开关状态</li>
-<li><code>toggle`是事件发射器`，以回调的方式将</code>on``状态的变化传递给父组件</li>
+<li><code>toggle`是事件发射器`，以回调的方式将</code>on<code></code>状态的变化传递给父组件</li>
 </ul>
 
       
@@ -671,9 +596,7 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
   <div class="article-content">
     <div class="entry">
       
-          <h2>问题简述</h2>
-<p>给予一个多维数组和一个描述取值路径的一维数组, 通过调用函数<code>f</code>返回取值路径描述的值，如
-<code>f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&gt; 1</code></p>
+          <h2 id="问题简述"><a href="#问题简述" class="headerlink" title="问题简述"></a>问题简述</h2><p>给予一个多维数组和一个描述取值路径的一维数组, 通过调用函数<code>f</code>返回取值路径描述的值，如<br><code>f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&gt; 1</code></p>
 <p><a href="https://www.codewars.com/kata/multidimensional-array/train/javascript" target="_blank" rel="noopener">原问题传送门</a></p>
 <p>之所以想记录一下是因为之前有在<code>codewars</code>刷题的习惯，后来工作忙就怠慢了，今天闲来无事就准备刷几道玩玩，然后就挑了一个比较简单的<code>7kyu</code>（<code>codewars</code>中的难度评级）的题。</p>
 <p>因为这题比较简单，我也没多想，上来就干，仔细想了下，很容易嘛，不就是递归吗？按大学老师教的来一套：</p>
@@ -681,13 +604,11 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
 <li>先找递归退出的条件，<code>当路径取到最后</code>或者<code>目标数组已经取尽</code>（这里似乎题目没有说清楚，暂定不对取值路径做限定吧）</li>
 <li>再找递归的模式, <code>如果不满足递归退出的条件，则将目标数组缩小一维，传递新的取值路径并递归</code></li>
 </ul>
-<p>然后就有了第一版代码
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后就有了第一版代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>然后跑了跑作者提供的简单测试用例，<code>all passed</code>，我就说嘛，这么简单的题目不一把过岂不是有点丢脸，然后就直接点了提交，然后就蹦了一大片的<code>failed</code>测试用例出来，仔细看了看失败的测试用例，并没有看懂，因为都是很多莫名奇妙的数据，并且每次返回的结果都不一致（后来才知道是随机的用例）。</p>
 <p>之后一直以为是自己有一些边界情况没有考虑到，就前前后后又看了几次自己的答案，并没有发现什么大的问题，但是无论怎么提交都是失败。之后前前后后大概看了15分钟左右，突然就觉得是我自己把问题想简单了。</p>
 <p>因为最近一直在看函数式的东西，突然就联想到，自己写的这个函数，并不<code>纯</code>。关于纯函数是函数式编程中最基本的概念之一，所谓纯既是要求函数没有副作用，我这里的<code>getElement</code>使用了<code>Array.shift</code>方法，会对原数组进行修改，从而产生副作用。这么一想一下就和之前每次跑用例总是产生意想不到的结果的情况联系上了，随机用例的失败原因一定是因为测试路径会有很多个，但是测试目标数组只有一个，因此有副作用的话，只有第一次测试的结果是正确的，后面都会因副作用产生不同的结果。</p>
-<p>既然是因为数组是<code>引用类型</code>而产生的问题，那么直接来一个<code>深拷贝</code>就可以了。因为这里只是答题，所以使用一个最简单粗暴的深拷贝大法<code>x =&gt; JSON.parse(JSON.stringify(x))</code>，然后代码就有了第二版代码
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  array = JSON.parse(JSON.stringify(array))</span><br><span class="line">  indexes = JSON.parse(JSON.stringify(indexes))</span><br><span class="line">  </span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>既然是因为数组是<code>引用类型</code>而产生的问题，那么直接来一个<code>深拷贝</code>就可以了。因为这里只是答题，所以使用一个最简单粗暴的深拷贝大法<code>x =&gt; JSON.parse(JSON.stringify(x))</code>，然后代码就有了第二版代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  array = JSON.parse(JSON.stringify(array))</span><br><span class="line">  indexes = JSON.parse(JSON.stringify(indexes))</span><br><span class="line">  </span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>之后提交，所有的用例都通过了。但是还没有结束，因为自己的代码在实现上还是挺啰嗦的，同时还使用了深拷贝大法，有没有更简单的方法呢？</p>
 <p>有的。如果仔细思考一下，这里的解题的思路其实和<code>Array.reduce</code>的模式很像</p>
 <ul>
@@ -695,13 +616,10 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
 <li>每次遍历返回一个值，并作为参数传入下一次遍历（对目标函数的降维）</li>
 <li>在遍历完成后，返回一个结果（取值路径对应的值）</li>
 </ul>
-<p>因此利用<code>Array.reduce</code>，这个问题一行代码就可以解决，如下
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return indexes.reduce((a, i) =&gt; a[i], array);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因此利用<code>Array.reduce</code>，这个问题一行代码就可以解决，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return indexes.reduce((a, i) =&gt; a[i], array);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>同样多考虑一下，它是<code>纯函数</code>吗？是的，它是纯的。因为这里只做了取值的操作（<code>a[i]</code>），并不涉及任何的修改原数组的操作。这个答案也是在我提交后，所有答案中实现方案最好的一个。</p>
-<p>当然还有其他的暴力破解法，我觉的想法也不错，比如
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return eval(`array[$&#123;indexes.join(&quot;][&quot;)&#125;]`);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>还有利用<code>spread</code>运算符的方法，如
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const getElement = (array,[index,...moreIndices]) =&gt; moreIndices.length ? getElement( array[index], moreIndices ) : array[index]</span><br></pre></td></tr></table></figure></p>
+<p>当然还有其他的暴力破解法，我觉的想法也不错，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return eval(`array[$&#123;indexes.join(&quot;][&quot;)&#125;]`);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>还有利用<code>spread</code>运算符的方法，如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const getElement = (array,[index,...moreIndices]) =&gt; moreIndices.length ? getElement( array[index], moreIndices ) : array[index]</span><br></pre></td></tr></table></figure></p>
 <p>所以工作累了，或者闲来无事，刷刷题还是挺有意思的，可以看见一些自己平时很熟悉但是在需要用时又难以想起的知识。</p>
 
       
@@ -764,40 +682,28 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
   <div class="article-content">
     <div class="entry">
       
-          <h2>写在前面</h2>
-<p>最近开始折腾<a href="https://angular.io/" target="_blank" rel="noopener">ng2</a>，其实说是ng2，到目前为止，它已经发布了4.3版，就是这么的高产，高产似**，我连2都还木有完整的看完它竟然发布了4.*的版本（鄙视脸）。</p>
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近开始折腾<a href="https://angular.io/" target="_blank" rel="noopener">ng2</a>，其实说是ng2，到目前为止，它已经发布了4.3版，就是这么的高产，高产似*<em>，我连2都还木有完整的看完它竟然发布了4.</em>的版本（鄙视脸）。</p>
 <p>不过话说回来，之前工作不忙的时候，想看看ng2的东西，我的天，又是ts，又是observable的，吓的我硬是没有上来就直接去看它的入门文档，而是买了本typescript的入门开始看，后来书看了一半，工作又忙了，就想着可否重构历史代码加顺带学习rxjs的姿势去做需求，后来我也是这么做的，庆幸的是，这么做效果是挺好的，不仅实际开发效率高了不少，同时也入门了rxjs。</p>
 <p>最近工作又闲了下来，就想着赶紧带着半吊子的ts和rxjs水平看看ng2的文档吧，虽然ng2在国内似乎热度不如react和vue流行，但是在全世界还是劲头还是比较强劲的，毕竟有谷歌爸爸和微软爸爸做东，强强联合。</p>
 <p>而且我是个遵守规则的人，一向喜欢大而全的东西，ng这种框架我觉的真的是很对我的胃口。不过这ng2的文档不看不要紧，一看真的是有些蛋疼，随便看个啥，连码代码加理解，估计一下午也就能看一个简单的概念，就比如今天想归纳的<code>NgModule</code>这部分东西，前后大概有30几页的东西，所以我觉的如果不写点东西总结一下，必然是看了就忘，忘了再看的节奏。</p>
-<h2>ng1中的module回顾</h2>
-<p>其实熟悉ng1的话，对于这ng2中的module的理解是很有帮助的。从ng1开始，就一直再提倡一个module的概念，比如
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">angular.module(&apos;baz&apos;, [])</span><br><span class="line">angular.module(&apos;bar&apos;, [])</span><br><span class="line">angular.module(&apos;foo&apos;, [&apos;bar&apos;, &apos;baz&apos;])</span><br><span class="line">       .factory(&apos;fooFactory&apos;, function()&#123; ... &#125;)</span><br><span class="line">       .service(&apos;fooService&apos;, function()&#123; ... &#125;)</span><br><span class="line">       .component(&apos;fooComponent1&apos;, &#123; ... &#125;)</span><br><span class="line">       .directive(&apos;fooDirective&apos;, function()&#123; ... &#125;)</span><br></pre></td></tr></table></figure></p>
+<h2 id="ng1中的module回顾"><a href="#ng1中的module回顾" class="headerlink" title="ng1中的module回顾"></a>ng1中的module回顾</h2><p>其实熟悉ng1的话，对于这ng2中的module的理解是很有帮助的。从ng1开始，就一直再提倡一个module的概念，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">angular.module(&apos;baz&apos;, [])</span><br><span class="line">angular.module(&apos;bar&apos;, [])</span><br><span class="line">angular.module(&apos;foo&apos;, [&apos;bar&apos;, &apos;baz&apos;])</span><br><span class="line">       .factory(&apos;fooFactory&apos;, function()&#123; ... &#125;)</span><br><span class="line">       .service(&apos;fooService&apos;, function()&#123; ... &#125;)</span><br><span class="line">       .component(&apos;fooComponent1&apos;, &#123; ... &#125;)</span><br><span class="line">       .directive(&apos;fooDirective&apos;, function()&#123; ... &#125;)</span><br></pre></td></tr></table></figure></p>
 <p>这么的我就分别声明了<code>foo</code>、<code>bar</code>和<code>baz</code>的module，同时<code>foo</code>依赖于<code>baz</code>和<code>bar</code>，然后就没有然后了，之后你就可以在这个这些module中做一切你想做的任何事情。通过这种module的划分，我们可以在各个维度中，抽象我们的代码，比如从业务上、从代码类别上等等。</p>
-<h2>ng2中的module简述</h2>
-<p>ng2将这种概念更推进了一步，虽然我们可以使用module的方法来改变我们编程的思维，但是代码本身并不具有module的含义，这么说可能有点难理解，举个例子，就上面的例子，对于<code>bar</code>和<code>baz</code>模块，我们很难简单的从代码层面来区分它们分别的职能是什么。因此ng2改用了以<a href="https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841#.x5c2ndtx0" target="_blank" rel="noopener">Decorator</a>的方式来使代码具有语意性，如下
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  imports:      [ ... ],</span><br><span class="line">  declarations: [ ... ],</span><br><span class="line">  providers:    [ ... ],</span><br><span class="line">  exports:      [ ... ]</span><br><span class="line">&#125;)</span><br><span class="line">export class FooModule &#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="ng2中的module简述"><a href="#ng2中的module简述" class="headerlink" title="ng2中的module简述"></a>ng2中的module简述</h2><p>ng2将这种概念更推进了一步，虽然我们可以使用module的方法来改变我们编程的思维，但是代码本身并不具有module的含义，这么说可能有点难理解，举个例子，就上面的例子，对于<code>bar</code>和<code>baz</code>模块，我们很难简单的从代码层面来区分它们分别的职能是什么。因此ng2改用了以<a href="https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841#.x5c2ndtx0" target="_blank" rel="noopener">Decorator</a>的方式来使代码具有语意性，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  imports:      [ ... ],</span><br><span class="line">  declarations: [ ... ],</span><br><span class="line">  providers:    [ ... ],</span><br><span class="line">  exports:      [ ... ]</span><br><span class="line">&#125;)</span><br><span class="line">export class FooModule &#123; &#125;</span><br></pre></td></tr></table></figure></p>
 <p>通过<code>NgModule</code>这个装饰器来对一个class进行描述。如果直接和ng1对比的话，装饰器的参数对象中的几个属性分别对应ng1中的：</p>
 <ul>
-<li><code>imports</code>: 对应ng1声明中的模块依赖数组<code>['bar', 'baz']</code>，进行一些依赖模块的声明</li>
-<li><code>declarations</code>: 对应ng1中的<code>.component('fooComponent1', { ... })</code>和<code>.directive('fooDirective', function(){ ... })</code>，进行一些声明式类的声明</li>
-<li><code>providers</code>: 对应ng1中的<code>.service('fooService', function(){ ... })</code>和<code>.factory('fooFactory', function(){ ... })</code>，进行一些服务类的声明</li>
+<li><code>imports</code>: 对应ng1声明中的模块依赖数组<code>[&#39;bar&#39;, &#39;baz&#39;]</code>，进行一些依赖模块的声明</li>
+<li><code>declarations</code>: 对应ng1中的<code>.component(&#39;fooComponent1&#39;, { ... })</code>和<code>.directive(&#39;fooDirective&#39;, function(){ ... })</code>，进行一些声明式类的声明</li>
+<li><code>providers</code>: 对应ng1中的<code>.service(&#39;fooService&#39;, function(){ ... })</code>和<code>.factory(&#39;fooFactory&#39;, function(){ ... })</code>，进行一些服务类的声明</li>
 <li><code>exports</code>: ng1中没有独立的exports语法，因此不做对比，在ng1中只有依赖模块中提供的服务、模块，加载模块均可使用。</li>
 </ul>
-<h2>ng2中module分类</h2>
-<p>ng2对不同的module提供了不同的语意性描述方式，可以通过装饰器属性来描述它们。</p>
-<h3>root-module（根模块）</h3>
-<p>所谓根模块，即一个应用的最上层的模块，即应用的入口模块，有时候也会称作app-module（这也是文档中指出的最佳实践）。这个概念在ng1中同样有，但是和上面指出的问题一样，就是没有代码层面的语意性描述，为了更好的描述它，ng2中的root-module会提供额外的装饰器属性来修饰它
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  ...,</span><br><span class="line">  bootstrap:      [ ... ]</span><br><span class="line">&#125;)</span><br><span class="line">export class AppModule &#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="ng2中module分类"><a href="#ng2中module分类" class="headerlink" title="ng2中module分类"></a>ng2中module分类</h2><p>ng2对不同的module提供了不同的语意性描述方式，可以通过装饰器属性来描述它们。</p>
+<h3 id="root-module（根模块）"><a href="#root-module（根模块）" class="headerlink" title="root-module（根模块）"></a>root-module（根模块）</h3><p>所谓根模块，即一个应用的最上层的模块，即应用的入口模块，有时候也会称作app-module（这也是文档中指出的最佳实践）。这个概念在ng1中同样有，但是和上面指出的问题一样，就是没有代码层面的语意性描述，为了更好的描述它，ng2中的root-module会提供额外的装饰器属性来修饰它<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  ...,</span><br><span class="line">  bootstrap:      [ ... ]</span><br><span class="line">&#125;)</span><br><span class="line">export class AppModule &#123; &#125;</span><br></pre></td></tr></table></figure></p>
 <p>这个<code>bootstrap</code>代表这个模块会在应用初始化阶段被引导和加载，一般来讲，ng2都会有一个独立的<code>main.ts</code>文件来引导加载根模块，这个过程对于根模块是透明的，因为它并不知道它如何被加载，有可能是在浏览器加载，有可能是在移动端加载等等，有可能使用JIT做动态加载，有可能提前编译好做静态加载，这些都是未知的，它仅仅需要表达的是，这个模块是可被引导加载的。通常情况下，一个应用只有一个root-module（这不是废话吗），但是在一些大型的应用中，可能会存在多个独立的子项目，那么就有可能存在多个root-module。</p>
-<h3>sub-module（子模块）</h3>
-<p>所谓子模块，即一个应用从属于根模块的模块，即应用按各个维度划分形成的颗粒，比如从功能划分、代码架构划分等等，有时候也会称作feature-module（这也是文档中指出的最佳实践），ng1同样无法在代码层面进行语意性描述。</p>
+<h3 id="sub-module（子模块）"><a href="#sub-module（子模块）" class="headerlink" title="sub-module（子模块）"></a>sub-module（子模块）</h3><p>所谓子模块，即一个应用从属于根模块的模块，即应用按各个维度划分形成的颗粒，比如从功能划分、代码架构划分等等，有时候也会称作feature-module（这也是文档中指出的最佳实践），ng1同样无法在代码层面进行语意性描述。</p>
 <p>一般来讲，只要符合<strong>ng2中的module简述</strong>中的模块声明方式声明的模块，就是一个feature-module，它具有什么样的feature，完全取决于它提供什么样的声明式组件和服务。对于不同的feature，如服务、指令和组件会以其他的装饰器进行修饰和声明，这不是本篇文章的内容，我们只需要知道，一个feature-module负责声明和管理它提供的服务和声明式组件。值得一提的是，和ng1不同，ng2中的feature-module可以声明一些私有的组件和服务，这一点在ng1中时做不到的。</p>
-<h3>core-module（核心模块）</h3>
-<p>核心模块其实本质上讲，即是feature-module，只不过它提供的声明式组件和服务，是基于app本身构建的。言外之意，就是它必须是单例的，比如像登录验证这种服务，就是一种全局性的、app级别的服务，再入导航、顶部条等组件，也是app级别的组件，这些东西应该归并到core-module中，并在app-module中加载它，而坚决不要在feature-module中加载它。</p>
-<h3>share-module（共享模块）</h3>
-<p>共享模块也是feature-module，只不过它提供的声明式组件和服务，是从各个feature-module中提取出的公共组件和服务，在官方的例子中，高亮这个指令，就是一个公用的指令，并不依赖于任何独立的业务逻辑。这些东西应该归并到share-module中，并在各个feature-module中加载它，从而使得我们的代码尽可能的保持简洁。</p>
-<h3>lazy-load-module（懒加载模块）</h3>
-<p>对于SPA来讲，路由是必不可少的东西。那么对于一些未使用页面所加载的模块，我们没有必要从一开始就加载它们，很自然的，它们就成为了懒加载模块，这些模块本质上讲均是feature-module，因为core-module和share-module从职能来讲，在整个的应用生命周期，尤其初始化必不可少，因此它们很少成为懒加载模块。</p>
+<h3 id="core-module（核心模块）"><a href="#core-module（核心模块）" class="headerlink" title="core-module（核心模块）"></a>core-module（核心模块）</h3><p>核心模块其实本质上讲，即是feature-module，只不过它提供的声明式组件和服务，是基于app本身构建的。言外之意，就是它必须是单例的，比如像登录验证这种服务，就是一种全局性的、app级别的服务，再入导航、顶部条等组件，也是app级别的组件，这些东西应该归并到core-module中，并在app-module中加载它，而坚决不要在feature-module中加载它。</p>
+<h3 id="share-module（共享模块）"><a href="#share-module（共享模块）" class="headerlink" title="share-module（共享模块）"></a>share-module（共享模块）</h3><p>共享模块也是feature-module，只不过它提供的声明式组件和服务，是从各个feature-module中提取出的公共组件和服务，在官方的例子中，高亮这个指令，就是一个公用的指令，并不依赖于任何独立的业务逻辑。这些东西应该归并到share-module中，并在各个feature-module中加载它，从而使得我们的代码尽可能的保持简洁。</p>
+<h3 id="lazy-load-module（懒加载模块）"><a href="#lazy-load-module（懒加载模块）" class="headerlink" title="lazy-load-module（懒加载模块）"></a>lazy-load-module（懒加载模块）</h3><p>对于SPA来讲，路由是必不可少的东西。那么对于一些未使用页面所加载的模块，我们没有必要从一开始就加载它们，很自然的，它们就成为了懒加载模块，这些模块本质上讲均是feature-module，因为core-module和share-module从职能来讲，在整个的应用生命周期，尤其初始化必不可少，因此它们很少成为懒加载模块。</p>
 
       
     </div>
@@ -874,20 +780,17 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
 <p>那么我们如何来解决这个问题呢？</p>
 <p>一种简单粗暴的方法就是，完全摒弃angular的di机制，使用外部的模块来解决问题。比如发请求，难道我们非要使用<code>$http</code>服务吗？我们完全可以直接使用像<code>superagent</code>这样的第三方库来代替它。但是随之而来的问题就是，对于angular已经使用<code>$http</code>服务的代码，你必须考虑是否重构它们，如果不重构，你则会在代码中拥有两套发送请求的逻辑，代码冗余了，如果重构呢，工作量又会很大，没准折腾redux不成，又给全改回去，得不偿失，因此这种方法不是完美的解决方案。最完美的方法应当是，既不摒弃angular的di机制，又可以兼顾redux框架，可是redux没有di机制这怎么破呢？</p>
 <p>这个问题费了我不少时间去搜索网上的资料，类似如何在action使用angular di机制，如果在action获取service实例等等，虽然能查到的资料都没有完美的给出解决方案，但是都把问题的解决方向，指向了同一处，即redux的中间件机制。</p>
-<p>第二种方法则通过redux中间件的机制来实现
-什么是中间件机制呢？这个可是个大概念，简单的理解的话，我只引用一个计算机常用的用来调侃的话解释。</p>
+<p>第二种方法则通过redux中间件的机制来实现<br>什么是中间件机制呢？这个可是个大概念，简单的理解的话，我只引用一个计算机常用的用来调侃的话解释。</p>
 <blockquote>
 <p>计算机科学中，没有什么问题是不能通过增加一个中间件来解决的。</p>
 </blockquote>
 <p>话虽然这么说，但是它是很有道理的，对于redux的中间件机制呢，它是对于action来设计的，即一个action，在最终转移到到处理它的reducer之前，会经过若干大大小小的中间件，这些中间件做的事情十分的简单，即输入一个action，按自己的处理逻辑加工它，再交到下一个中间件手中，直到没有下一个中间件为止。</p>
 <p>明白了redux的中间件机制，那么上面的问题就好解决了，对于想在action中使用的通过angular di机制来实例化的服务，我们没有必要在action中实例化，我们完全可以仅仅在action中声明，之后呢，将实例化的过程交由中间件处理即可，那么可能你又会问，action没有办法集成di机制，中间件难道能集成吗，如果不能岂不是又回到了问题的原点？是的，但是中间件它的确可以集成di功能，为什么呢，因为中间件的实例化逻辑是通过ng-redux在angular内部进行的，而中间件本身呢，有仅仅是一个函数而已，那么我们完全可以把中间件的实现，声明成一个angular中的factory或者service，之后在其中使用angular的di机制，动态的实例化action中依赖服务的实例，关于这一点呢，在ng-redux的文档中有提及，但是没有说的特别的清楚。</p>
 <p>talk is cheap, show me the code. 下面贴一下关于实现解决以上问题的中间件实现源码。</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">import angular from &apos;angular&apos;</span><br><span class="line">import R from &apos;ramda&apos;</span><br><span class="line"></span><br><span class="line">export default function thunkWithDepsMiddleware () &#123;</span><br><span class="line">  const injector = angular.element(document.body).injector()</span><br><span class="line"></span><br><span class="line">  return (&#123;dispatch, getState&#125;) =&gt; next =&gt; action =&gt; &#123;</span><br><span class="line">    const isNotNil = R.complement(R.isNil)</span><br><span class="line">    const isFSA = R.both(R.has(&apos;payload&apos;), R.has(&apos;type&apos;))</span><br><span class="line">    const isLastItemIsFunction = R.compose(R.is(Function), R.last)</span><br><span class="line">    const isAngularInlineArrayAnnotation = R.both(R.is(Array), isLastItemIsFunction)</span><br><span class="line">    let annotation</span><br><span class="line"></span><br><span class="line">    // FSA 处理逻辑</span><br><span class="line">    if (isFSA(action)) annotation = R.prop(&apos;payload&apos;, action)</span><br><span class="line">    // 普通 action 处理逻辑</span><br><span class="line">    else annotation = action</span><br><span class="line"></span><br><span class="line">    if (isAngularInlineArrayAnnotation(annotation)) &#123;</span><br><span class="line">      const locals = &#123;dispatch: dispatch, getState: getState&#125;</span><br><span class="line">      const payload = injector.invoke(annotation, this, locals)</span><br><span class="line">      if (isNotNil(payload)) return dispatch(&#123;...action, payload&#125;)</span><br><span class="line">    &#125; else if (R.is(Function, annotation)) &#123;</span><br><span class="line">      const payload = annotation(dispatch, getState)</span><br><span class="line">      if (isNotNil(payload)) return dispatch(&#123;...action, payload&#125;)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return next(action)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">import angular from &apos;angular&apos;</span><br><span class="line">import R from &apos;ramda&apos;</span><br><span class="line"></span><br><span class="line">export default function thunkWithDepsMiddleware () &#123;</span><br><span class="line">  const injector = angular.element(document.body).injector()</span><br><span class="line"></span><br><span class="line">  return (&#123;dispatch, getState&#125;) =&gt; next =&gt; action =&gt; &#123;</span><br><span class="line">    const isNotNil = R.complement(R.isNil)</span><br><span class="line">    const isFSA = R.both(R.has(&apos;payload&apos;), R.has(&apos;type&apos;))</span><br><span class="line">    const isLastItemIsFunction = R.compose(R.is(Function), R.last)</span><br><span class="line">    const isAngularInlineArrayAnnotation = R.both(R.is(Array), isLastItemIsFunction)</span><br><span class="line">    let annotation</span><br><span class="line"></span><br><span class="line">    // FSA 处理逻辑</span><br><span class="line">    if (isFSA(action)) annotation = R.prop(&apos;payload&apos;, action)</span><br><span class="line">    // 普通 action 处理逻辑</span><br><span class="line">    else annotation = action</span><br><span class="line"></span><br><span class="line">    if (isAngularInlineArrayAnnotation(annotation)) &#123;</span><br><span class="line">      const locals = &#123;dispatch: dispatch, getState: getState&#125;</span><br><span class="line">      const payload = injector.invoke(annotation, this, locals)</span><br><span class="line">      if (isNotNil(payload)) return dispatch(&#123;...action, payload&#125;)</span><br><span class="line">    &#125; else if (R.is(Function, annotation)) &#123;</span><br><span class="line">      const payload = annotation(dispatch, getState)</span><br><span class="line">      if (isNotNil(payload)) return dispatch(&#123;...action, payload&#125;)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return next(action)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>大体逻辑呢，就是通过angular中$injector服务来解决问题，抽离出action中的关于di的声明逻辑，该中间间仅支持<code>inline array annotation</code>语法来声明依赖，对于符合<code>FSA(Flux Standard Action)</code>的action, 如果传入的action中的payload符合该语法，则通过injector.invoke来解析它，如果不是，则简单的按redux-thunk的处理逻辑进行处理，对于一般action同理，只不过是对于它本身进行处理。</p>
-<p>实现之后呢，通过ng-redux的语法注册它，
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ngReduxProvider.createStoreWith(reducers, [&apos;thunkWithDepsMiddleware&apos;, promiseMiddleware])</span><br></pre></td></tr></table></figure></p>
-<p>之后我们的action即可直接返回符合<code>inline array annotation</code>语法的数组声明依赖，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export const fetchRoles = createAction(FETCH_ROLES, () =&gt; &#123;</span><br><span class="line">  return [&apos;$q&apos;, &apos;dispatch&apos;, ($q, dispatch) =&gt; &#123;</span><br><span class="line">    // do something ...</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>实现之后呢，通过ng-redux的语法注册它，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ngReduxProvider.createStoreWith(reducers, [&apos;thunkWithDepsMiddleware&apos;, promiseMiddleware])</span><br></pre></td></tr></table></figure></p>
+<p>之后我们的action即可直接返回符合<code>inline array annotation</code>语法的数组声明依赖，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export const fetchRoles = createAction(FETCH_ROLES, () =&gt; &#123;</span><br><span class="line">  return [&apos;$q&apos;, &apos;dispatch&apos;, ($q, dispatch) =&gt; &#123;</span><br><span class="line">    // do something ...</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -963,18 +866,14 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
 <li>类的继承所扩展的方法或属性是静态的，既你无法为一个已有的类的实例扩展某些方法。</li>
 <li>类的继承会继承父类中的所有可继承的方法和属性，但是你只想继承其中的某个或某几个方法。</li>
 </ul>
-<p>在es6中，加入了<code>装饰器(Decorator)</code>语法，提供了对于装饰器模式的原生支持。这里对于语法不再进行详细的阐述，可以点击<a href="http://es6.ruanyifeng.com/#docs/decorator#%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0" target="_blank" rel="noopener">这里</a>进行了解或学习。</p>
+<p>在es6中，加入了<code>装饰器(Decorator)</code>语法，提供了对于装饰器模式的原生支持。这里对于语法不再进行详细的阐述，可以点击<a href="http://es6.ruanyifeng.com/#docs/decorator#类的修饰" target="_blank" rel="noopener">这里</a>进行了解或学习。</p>
 <p>在这种模式下，我们可以动态的来为一个类增加某个方法或属性，你可能会问，这样听起来似乎和继承没什么不同？你错了，它的优势体现在<code>动态</code>二字，其含义即为可以动态的为类的实例增加某种行为，也许你又会说，在js中，它本身就是动态语言，这种动态性也失去了优势了吧。</p>
 <p>是的，但是在js中想要实现继承绝非易事，因为它的继承机制是通过原型链进行描述的，对于js新手的话，理解起来其实是有点晦涩的，有些时候我们仅仅想通过更清晰的手段使用另一个类中的某些方法。</p>
 <p>举个例子，在SPA开发中，经常会遇到处理分页数据的需求，对于分页逻辑的处理，很显然是一块需要抽象为公共方法的逻辑，但是如果你按继承的角度去考虑，就会发现，有些时候你继承了这些处理分页逻辑的方法反而是多余了，因为并不是每个页面都需要分页，这种情况下，使用混合器模式来实现则可以更好的解决问题。</p>
-<p>我们先来实现一个分页逻辑的混合器，它其实是个函数，函数的参数是一个类，之后会动态的在这个类上增加一些方法，从而达到在<strong>一个类中混入另一个类的某些方法的目的</strong>。
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">export const PaginationMixin = (superClass) =&gt; class extends superClass &#123;</span><br><span class="line">  nextPage (url, callback) &#123;</span><br><span class="line">    this.handlePaginationResolve(url, callback)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  previousPage (url, callback) &#123;</span><br><span class="line">    this.handlePaginationResolve(url, callback)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handlePaginationResolve (url, callback) &#123;</span><br><span class="line">    if (!url) return</span><br><span class="line"></span><br><span class="line">    customAPIComposer(url, &apos;get&apos;).then(callback)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后，只需要按如下进行代码，对需要扩展的类进行扩展，
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class AttendanceManageCtrl extends PaginationMixin(MixinBase)</span><br></pre></td></tr></table></figure></p>
-<p>扩展后就可以使用混合器中混入的方法了，如下
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;oa-list-table list-data=&apos;$ctrl.listData&apos; on-next=&apos;$ctrl.nextPage($ctrl.listData.next, $ctrl.render)&apos; on-previous=&apos;$ctrl.previousPage($ctrl.listData.previous, $ctrl.render)&apos;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这样做似乎和继承没什么区别，但是不妨看看如下代码
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class PeopleCtrl extends R.compose(PaginationMixin, StateManageMixin)(MixinBase)</span><br></pre></td></tr></table></figure></p>
+<p>我们先来实现一个分页逻辑的混合器，它其实是个函数，函数的参数是一个类，之后会动态的在这个类上增加一些方法，从而达到在<strong>一个类中混入另一个类的某些方法的目的</strong>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">export const PaginationMixin = (superClass) =&gt; class extends superClass &#123;</span><br><span class="line">  nextPage (url, callback) &#123;</span><br><span class="line">    this.handlePaginationResolve(url, callback)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  previousPage (url, callback) &#123;</span><br><span class="line">    this.handlePaginationResolve(url, callback)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handlePaginationResolve (url, callback) &#123;</span><br><span class="line">    if (!url) return</span><br><span class="line"></span><br><span class="line">    customAPIComposer(url, &apos;get&apos;).then(callback)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后，只需要按如下进行代码，对需要扩展的类进行扩展，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class AttendanceManageCtrl extends PaginationMixin(MixinBase)</span><br></pre></td></tr></table></figure></p>
+<p>扩展后就可以使用混合器中混入的方法了，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;oa-list-table list-data=&apos;$ctrl.listData&apos; on-next=&apos;$ctrl.nextPage($ctrl.listData.next, $ctrl.render)&apos; on-previous=&apos;$ctrl.previousPage($ctrl.listData.previous, $ctrl.render)&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这样做似乎和继承没什么区别，但是不妨看看如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class PeopleCtrl extends R.compose(PaginationMixin, StateManageMixin)(MixinBase)</span><br></pre></td></tr></table></figure></p>
 <p>没错，你可以对一个类同时使用多个混合器，但是你却无法使一个类同时继承与多个类，虽然你可以通过多重继承实现，但显然比前者繁琐很多。</p>
 <p>尽情混入吧。</p>
 
@@ -1045,65 +944,45 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
   <div class="article-content">
     <div class="entry">
       
-          <h2>当元素间存在父子关系时，留意事件冒泡机制所引发的连锁反应</h2>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;tr style=&quot;cursor: pointer;&quot; ng-repeat=&quot;row in $ctrl.efficiencyTable.bodyData&quot; ng-click=&quot;$ctrl.stepView(row)&quot;&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;td class=&quot;text-left&quot;&gt;</span><br><span class="line">        &lt;a ng-click=&quot;$ctrl.efficiencyView(row)&quot; class=&quot;hover-link&quot;&gt;查看流程&lt;/a&gt;</span><br><span class="line">    &lt;/td&gt;</span><br><span class="line">&lt;/tr&gt;</span><br></pre></td></tr></table></figure></p>
+          <h2 id="当元素间存在父子关系时，留意事件冒泡机制所引发的连锁反应"><a href="#当元素间存在父子关系时，留意事件冒泡机制所引发的连锁反应" class="headerlink" title="当元素间存在父子关系时，留意事件冒泡机制所引发的连锁反应"></a>当元素间存在父子关系时，留意事件冒泡机制所引发的连锁反应</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;tr style=&quot;cursor: pointer;&quot; ng-repeat=&quot;row in $ctrl.efficiencyTable.bodyData&quot; ng-click=&quot;$ctrl.stepView(row)&quot;&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;td class=&quot;text-left&quot;&gt;</span><br><span class="line">        &lt;a ng-click=&quot;$ctrl.efficiencyView(row)&quot; class=&quot;hover-link&quot;&gt;查看流程&lt;/a&gt;</span><br><span class="line">    &lt;/td&gt;</span><br><span class="line">&lt;/tr&gt;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>a元素的点击事件会<code>efficiencyView</code>方法，但因为事件冒泡机制，也会间接的调用<code>stepView</code>方法</p>
 </blockquote>
-<h3>最佳实践</h3>
-<blockquote>
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><blockquote>
 <p>angular中可以使用内置的 $event 对象来解决相应问题</p>
 </blockquote>
-<p>首先声明使用<code>$event</code>对象并传参
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a ng-click=&quot;$ctrl.efficiencyView(row, $event)&quot; class=&quot;hover-link&quot;&gt;查看流程&lt;/a&gt;</span><br></pre></td></tr></table></figure></p>
-<p>之后再<code>efficiencyView</code>方法中调用<code>stopPropagation</code>方法阻止事件冒泡
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">efficiencyView (workflow, $event) &#123;</span><br><span class="line">    ...</span><br><span class="line">    $event.stopPropagation()</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<p>也可以对比<code>$event</code>对象中的<code>target</code>和<code>currentTarget</code>属性是否相同，因为这两个属性分别代表触发事件的dom节点与响应事件的当前节点
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if($event.target === $event.currentTarget) ...</span><br></pre></td></tr></table></figure></p>
-<h3>扩展</h3>
-<ul>
+<p>首先声明使用<code>$event</code>对象并传参<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a ng-click=&quot;$ctrl.efficiencyView(row, $event)&quot; class=&quot;hover-link&quot;&gt;查看流程&lt;/a&gt;</span><br></pre></td></tr></table></figure></p>
+<p>之后再<code>efficiencyView</code>方法中调用<code>stopPropagation</code>方法阻止事件冒泡<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">efficiencyView (workflow, $event) &#123;</span><br><span class="line">    ...</span><br><span class="line">    $event.stopPropagation()</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>也可以对比<code>$event</code>对象中的<code>target</code>和<code>currentTarget</code>属性是否相同，因为这两个属性分别代表触发事件的dom节点与响应事件的当前节点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if($event.target === $event.currentTarget) ...</span><br></pre></td></tr></table></figure></p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener" target="_blank" rel="noopener">EventTarget.addEventListener 方法及其参数的含义</a></li>
 <li><a href="http://blog.csdn.net/luanlouis/article/details/23927347" target="_blank" rel="noopener">解析Javascript事件冒泡机制</a></li>
 </ul>
-<h2>z-index 常见问题</h2>
-<p>关于<code>z-index</code>本身用法我是了解的，但是最近在做下拉框组件和datepicker时，踩了一些坑，如下：</p>
+<h2 id="z-index-常见问题"><a href="#z-index-常见问题" class="headerlink" title="z-index 常见问题"></a>z-index 常见问题</h2><p>关于<code>z-index</code>本身用法我是了解的，但是最近在做下拉框组件和datepicker时，踩了一些坑，如下：</p>
 <ul>
 <li>只有设置了<code>position</code>属性的元素的<code>z-index</code>才会生效</li>
 <li>当父容器的<code>z-index</code>小于元素A时，其子容器的<code>z-index</code>无论多大都无法覆盖元素A</li>
 </ul>
-<h3>最佳实践</h3>
-<p>实现具有下拉菜单展开特效的组件时，一般会套用一下结构
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;dropdown-wrapper&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;dropdown-toggle&quot;&gt;</span><br><span class="line">        ...</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;dropdown-list&quot;&gt;</span><br><span class="line">        ...</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
-<p>当两个下拉菜单处于垂直布局时，如果没有设置<code>z-index</code>属性，因为<code>dropdown-toggle</code>比<code>dropdown-list</code>先出现，因此默认的图层顺序是前者高于后者，所以当上面的下拉菜单出现的时候，并不会覆盖下面的<code>toggle</code>,为了解决这个问题，必须做如下处理
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.dropdown-list&#123;</span><br><span class="line">    ...</span><br><span class="line">    z-index: 1000;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="最佳实践-1"><a href="#最佳实践-1" class="headerlink" title="最佳实践"></a>最佳实践</h3><p>实现具有下拉菜单展开特效的组件时，一般会套用一下结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;dropdown-wrapper&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;dropdown-toggle&quot;&gt;</span><br><span class="line">        ...</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;dropdown-list&quot;&gt;</span><br><span class="line">        ...</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>当两个下拉菜单处于垂直布局时，如果没有设置<code>z-index</code>属性，因为<code>dropdown-toggle</code>比<code>dropdown-list</code>先出现，因此默认的图层顺序是前者高于后者，所以当上面的下拉菜单出现的时候，并不会覆盖下面的<code>toggle</code>,为了解决这个问题，必须做如下处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.dropdown-list&#123;</span><br><span class="line">    ...</span><br><span class="line">    z-index: 1000;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>最后附上<a href="https://jsbin.com/suyojovino/edit?html,css,output" target="_blank" rel="noopener">DEMO</a></p>
-<h3>扩展</h3>
-<ul>
+<h3 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h3><ul>
 <li><a href="https://css-tricks.com/almanac/properties/z/z-index/" target="_blank" rel="noopener">z-index</a></li>
 </ul>
-<h2>对表格中的单元格增加一个hover高亮效果</h2>
-<p>对于表格中<code>td</code>增加<code>hover</code>高亮时可能会遇到一个问题，就是当你使用常规的<code>border</code>属性对边框进行设置时，可能会发现，每个单元格的上边框和左边框都没有达到理想的效果，但是下边框和右边框却是正常的。
-这种问题会出现在对<code>table</code>增加<code>border-collapse: collapse</code>属性或是引用一些第三方的css库，比如bootstrap，具体现象参考<a href="https://jsbin.com/hivukumosu/edit?html,css,output" target="_blank" rel="noopener">DEMO</a>。</p>
-<h3>最佳实践</h3>
-<p>解决方法其实很简单，就是将<code>td</code>边框的样式从<code>solid</code>改为<code>double</code>，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">table tr td &#123;</span><br><span class="line">    border-style: double;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="对表格中的单元格增加一个hover高亮效果"><a href="#对表格中的单元格增加一个hover高亮效果" class="headerlink" title="对表格中的单元格增加一个hover高亮效果"></a>对表格中的单元格增加一个hover高亮效果</h2><p>对于表格中<code>td</code>增加<code>hover</code>高亮时可能会遇到一个问题，就是当你使用常规的<code>border</code>属性对边框进行设置时，可能会发现，每个单元格的上边框和左边框都没有达到理想的效果，但是下边框和右边框却是正常的。<br>这种问题会出现在对<code>table</code>增加<code>border-collapse: collapse</code>属性或是引用一些第三方的css库，比如bootstrap，具体现象参考<a href="https://jsbin.com/hivukumosu/edit?html,css,output" target="_blank" rel="noopener">DEMO</a>。</p>
+<h3 id="最佳实践-2"><a href="#最佳实践-2" class="headerlink" title="最佳实践"></a>最佳实践</h3><p>解决方法其实很简单，就是将<code>td</code>边框的样式从<code>solid</code>改为<code>double</code>，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">table tr td &#123;</span><br><span class="line">    border-style: double;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>原因如下：</p>
 <blockquote>
-<p>Since double is &quot;more distinct&quot; then solid, its colour takes precedence over cells around it, and looks identical to solid anyway ;)</p>
+<p>Since double is “more distinct” then solid, its colour takes precedence over cells around it, and looks identical to solid anyway ;)</p>
 </blockquote>
-<h3>扩展</h3>
-<ul>
+<h3 id="扩展-2"><a href="#扩展-2" class="headerlink" title="扩展"></a>扩展</h3><ul>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/border-style" target="_blank" rel="noopener">border-style各属性值及赋值语法</a></li>
 </ul>
-<h2>angular中遭遇的一个奇葩<a href="https://github.com/angular/angular.js/issues/4558" target="_blank" rel="noopener">问题</a></h2>
-<p>这个问题是我在本期开发排班器组件时遇到的一个很奇葩的问题，大体描述就是如上面github链接中描述的一样，就是当父组件的一个数据采用双向绑定时，并且需要已事件回调的方法更新其内部的某个属性值，然后使用签名为<code>onChange</code>的<code>scope</code>属性传给子组件，比如:
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scope:&#123;</span><br><span class="line">    ...</span><br><span class="line">    onChange: &apos;&amp;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="angular中遭遇的一个奇葩问题"><a href="#angular中遭遇的一个奇葩问题" class="headerlink" title="angular中遭遇的一个奇葩问题"></a>angular中遭遇的一个奇葩<a href="https://github.com/angular/angular.js/issues/4558" target="_blank" rel="noopener">问题</a></h2><p>这个问题是我在本期开发排班器组件时遇到的一个很奇葩的问题，大体描述就是如上面github链接中描述的一样，就是当父组件的一个数据采用双向绑定时，并且需要已事件回调的方法更新其内部的某个属性值，然后使用签名为<code>onChange</code>的<code>scope</code>属性传给子组件，比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scope:&#123;</span><br><span class="line">    ...</span><br><span class="line">    onChange: &apos;&amp;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>那么这个<code>onChange</code>的调用在父组件进行更新某条以双向绑定方式进行绑定的属性时，会先于子组件的更新前自动调用，这么说有点抽象，大体的问题我简单描述下。</p>
 <p>本来<code>onChange</code>的调用时机应当是自下而上的，也就是当子组件发生更新时，调用父组件通过<code>onChange</code>属性传递的事件回调方法，这个方法会更具子组件的当前状态来对父组件进行更新，这就是理想中的单向数据流子组件通知父组件进行更新的机制。但是在angular中遇到的奇葩现象现象就是，在父组件进行更新时，不知道是因为签名的缘故还是双向绑定的缘故，这个<code>onChange</code>都会先于子组件运行一次，那么问题来了，这个方法本来的调用时机是子组件更新后需要通知父组件进行相应更新时调用的，然而现在子组件还未更新则先调用了该方法，那么回调函数中的参数必为空，除非<code>onChange</code>中加入了空校验代码，不然就会报错，其实加了空校验也没有什么意义，因为这个方法都会调用的，但是却不会进行任何的改变，相当于浪费了一部分性能。</p>
-<h3>最佳实践</h3>
-<p>解决方法在<a href="http://plnkr.co/edit/fs7S6yX1a5aeo1Ese522?p=preview" target="_blank" rel="noopener">这里</a>，这种解决方法算是一种<code>workaround</code>，即在组件中使用另一个对象来储存父组件需要更新的那个值，算是做了一种类似中间件的处理，之后因为双向绑定自动更新机制对于对象的更新时更具<code>reference</code>来进行的，那么在父组件或子组件中对于这一个数据的引用均是相同的，而不会像基本数据类型存在一个新旧值的差异，不过这终究是一个<code>workaround</code>。</p>
-<h2>限制上传文件的类型</h2>
-<p>现在通过<code>type</code>为文件类型的<code>input</code>上传文件已经很普遍了，并且对于表单的校验，通常我们会在提交时进行，文件类型的表单也不例外，一般校验的内容有文件大小、文件类型（扩展名）等等。今天遇到一个需求很有意思，大体意思是想在用户进行文件上传时，就有偏向性的屏蔽掉一些不支持的文件格式，比如上传图片，那么在文件选择对话框就不要出现文本类型的文件。</p>
+<h3 id="最佳实践-3"><a href="#最佳实践-3" class="headerlink" title="最佳实践"></a>最佳实践</h3><p>解决方法在<a href="http://plnkr.co/edit/fs7S6yX1a5aeo1Ese522?p=preview" target="_blank" rel="noopener">这里</a>，这种解决方法算是一种<code>workaround</code>，即在组件中使用另一个对象来储存父组件需要更新的那个值，算是做了一种类似中间件的处理，之后因为双向绑定自动更新机制对于对象的更新时更具<code>reference</code>来进行的，那么在父组件或子组件中对于这一个数据的引用均是相同的，而不会像基本数据类型存在一个新旧值的差异，不过这终究是一个<code>workaround</code>。</p>
+<h2 id="限制上传文件的类型"><a href="#限制上传文件的类型" class="headerlink" title="限制上传文件的类型"></a>限制上传文件的类型</h2><p>现在通过<code>type</code>为文件类型的<code>input</code>上传文件已经很普遍了，并且对于表单的校验，通常我们会在提交时进行，文件类型的表单也不例外，一般校验的内容有文件大小、文件类型（扩展名）等等。今天遇到一个需求很有意思，大体意思是想在用户进行文件上传时，就有偏向性的屏蔽掉一些不支持的文件格式，比如上传图片，那么在文件选择对话框就不要出现文本类型的文件。</p>
 <p>这个问题我一开始是不知道怎么解决的，因为浏览器对于操作系统是一个沙盒，因此对于文件显示的控制应当没有权限控制，去网上google了下，答案也是这样的，没有方式可以实现百分之百屏蔽某种文件类型的方式。但是却发现了另一个很有意思的属性，也可以达到类型的效果。</p>
 <p>这个属性就是<code>input</code>标签的<code>accept</code>属性：</p>
 <blockquote>
@@ -1117,13 +996,10 @@ https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives
 <li>video/* representing video files. HTML5</li>
 <li>image/* representing image files. HTML5</li>
 </ul>
-<h3>最佳实践</h3>
-<p>比如我们想要限制上传文件类型为excel文件类型，只需要创建如下标签:
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&quot;file&quot; accept=&quot;.xls,.xlsx&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="最佳实践-4"><a href="#最佳实践-4" class="headerlink" title="最佳实践"></a>最佳实践</h3><p>比如我们想要限制上传文件类型为excel文件类型，只需要创建如下标签:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&quot;file&quot; accept=&quot;.xls,.xlsx&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
 <p>这样这个文件表单对话框被激活时，默认会选取以.xls和.xlsx结尾的文件。</p>
 <p>虽然这个属性可以达到类似的效果，但是是无法完全替代对于文件扩展名的校验的。因为只要用户想要上传别的类型的文件，通过切换文件对话框中的选取文件类型选项（比如显示全部文件类型），就可以选取别的类型的文件了，因此在提交时，也别忘了添加校验逻辑，防止因为上传了一些不支持的类型造成服务器内部错误。</p>
-<h3>扩展</h3>
-<ul>
+<h3 id="扩展-3"><a href="#扩展-3" class="headerlink" title="扩展"></a>扩展</h3><ul>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/Input" target="_blank" rel="noopener">input</a></li>
 </ul>
 
@@ -1222,9 +1098,9 @@ inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
             
                 <a href="/categories/设计模式/前端/后端/" title="后端" rel="6">后端</a>
             
-                <a href="/categories/其他/心情/" title="心情" rel="3">心情</a>
-            
                 <a href="/categories/心情/" title="心情" rel="1">心情</a>
+            
+                <a href="/categories/其他/心情/" title="心情" rel="3">心情</a>
             
                 <a href="/categories/前端/源码分析/" title="源码分析" rel="1">源码分析</a>
             
@@ -1234,11 +1110,11 @@ inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
             
                 <a href="/categories/设计模式/前端/后端/翻译/" title="翻译" rel="5">翻译</a>
             
+                <a href="/categories/前端/设计模式/" title="设计模式" rel="1">设计模式</a>
+            
                 <a href="/categories/翻译/设计模式/" title="设计模式" rel="6">设计模式</a>
             
                 <a href="/categories/设计模式/" title="设计模式" rel="6">设计模式</a>
-            
-                <a href="/categories/前端/设计模式/" title="设计模式" rel="1">设计模式</a>
             
     </div>
 

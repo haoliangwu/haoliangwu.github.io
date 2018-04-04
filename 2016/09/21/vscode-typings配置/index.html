@@ -10,7 +10,7 @@
   
 
   
-  <meta name="description" content="vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提">
+  <meta name="description" content="vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提供的，但是js作为ts的编译对象，同样可以享受这个compiler提供的便利。">
   
 
   
@@ -118,15 +118,14 @@
     <div class="entry">
       
           <p>vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提供的，但是js作为ts的编译对象，同样可以享受这个compiler提供的便利。</p>
-<p>&lt;!--more--&gt;</p>
+<a id="more"></a>
 <p>大体步骤分为：</p>
 <ul>
-<li><a href="#%E8%BF%9B%E8%A1%8Cvscode%E7%9A%84js%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE">配置typings</a></li>
-<li><a href="#%E5%AE%89%E8%A3%85typings%E7%9A%84%E4%BE%9D%E8%B5%96%E8%B5%84%E6%BA%90">安装typings的依赖资源</a></li>
-<li><a href="#%E8%BF%9B%E8%A1%8Cvscode%E7%9A%84js%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE">进行vscode的js项目配置</a></li>
+<li><a href="#进行vscode的js项目配置">配置typings</a> </li>
+<li><a href="#安装typings的依赖资源">安装typings的依赖资源</a></li>
+<li><a href="#进行vscode的js项目配置">进行vscode的js项目配置</a></li>
 </ul>
-<h2>配置typings</h2>
-<p>首先你需要安装nodejs环境，这里不赘述了。之后</p>
+<h2 id="配置typings"><a href="#配置typings" class="headerlink" title="配置typings"></a>配置typings</h2><p>首先你需要安装nodejs环境，这里不赘述了。之后</p>
 <blockquote>
 <p>npm i typings -g</p>
 </blockquote>
@@ -135,10 +134,9 @@
 <p>typings init</p>
 </blockquote>
 <p>这样会生成一个typings.json文件，这个文件的功能和package.json类似。</p>
-<h2>安装typings的依赖资源</h2>
-<p>安装依赖就容易多了，比如你需要angular的资源，只需要执行</p>
+<h2 id="安装typings的依赖资源"><a href="#安装typings的依赖资源" class="headerlink" title="安装typings的依赖资源"></a>安装typings的依赖资源</h2><p>安装依赖就容易多了，比如你需要angular的资源，只需要执行</p>
 <blockquote>
-<p>typings i dt~angular --save --global</p>
+<p>typings i dt~angular –save –global</p>
 </blockquote>
 <p>这里的dt~是指资源的registry，这个可以在typings的帮助信息中查看。</p>
 <p>如果你不确定某个资源的registry，比如你想要react的资源，你可以执行</p>
@@ -146,15 +144,12 @@
 <p>typings search react</p>
 </blockquote>
 <p>之后console会列出已知的所有资源的registry。</p>
-<h2>进行vscode的js项目配置</h2>
-<p>最后一步，需要为vscode指定js项目配置，这个配置文件叫做jsconfig.json，如果你只需要提供智能提示的功能话，这个文件可以为空。</p>
+<h2 id="进行vscode的js项目配置"><a href="#进行vscode的js项目配置" class="headerlink" title="进行vscode的js项目配置"></a>进行vscode的js项目配置</h2><p>最后一步，需要为vscode指定js项目配置，这个配置文件叫做jsconfig.json，如果你只需要提供智能提示的功能话，这个文件可以为空。</p>
 <p>这个文件的位置表示以当前位置为项目根目录。</p>
 <p>并行的项目可以提供多个jsconfig在不同的项目中，以此来表示它们是彼此区分的。</p>
 <p>对于嵌套的项目，配置多个jsconfig并不会区分父子关系，不是很建议这么做，因为这个智能提示功能是基于vscode extension的language server实现的，如果一个项目文件过多，可能导致解析超时而导致无法提供正确的提示信息（我遇过n次这种情况，开始还以为是vscode的bug），最好还是采用并行的方式。</p>
-<h2>效果</h2>
-<p>上图一张</p>
-<p><img src="/img/vscode_typings_angular.png" width="566" height="312"></p>
-
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>上图一张</p>
+<img src="/img/vscode_typings_angular.png" width="566" height="312">
       
     </div>
     
@@ -193,7 +188,7 @@
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">配置typings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">安装typings的依赖资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">进行vscode的js项目配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">效果</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#配置typings"><span class="toc-number">1.</span> <span class="toc-text">配置typings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装typings的依赖资源"><span class="toc-number">2.</span> <span class="toc-text">安装typings的依赖资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进行vscode的js项目配置"><span class="toc-number">3.</span> <span class="toc-text">进行vscode的js项目配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#效果"><span class="toc-number">4.</span> <span class="toc-text">效果</span></a></li></ol>
 </div>
 
 
