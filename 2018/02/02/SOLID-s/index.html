@@ -11,11 +11,9 @@
 
   
   <meta name="description" content="Understanding SOLID Principles: Single Responsibility
-
 这是理解SOLID原则中，关于单一职责原则如何帮助我们编写低耦合和高内聚的第二篇文章。
 
-单一职责原则是什么
-之前的第一篇文章阐述了**依赖倒置原则（DIP）**能够使我们编写的代码变得低耦">
+单一职责原则是什么之前的第一篇文章阐述了依赖倒置原则（DIP）能够使我们编写的代码变得低耦合，同时具有">
   
 
   
@@ -122,12 +120,10 @@
   <div class="article-content">
     <div class="entry">
       
-          <h1><a href="https://codeburst.io/understanding-solid-principles-single-responsibility-b7c7ec0bf80" target="_blank" rel="noopener">Understanding SOLID Principles: Single Responsibility</a></h1>
-<blockquote>
+          <h1 id="Understanding-SOLID-Principles-Single-Responsibility"><a href="#Understanding-SOLID-Principles-Single-Responsibility" class="headerlink" title="Understanding SOLID Principles: Single Responsibility"></a><a href="https://codeburst.io/understanding-solid-principles-single-responsibility-b7c7ec0bf80" target="_blank" rel="noopener">Understanding SOLID Principles: Single Responsibility</a></h1><blockquote>
 <p>这是理解<code>SOLID</code>原则中，关于<strong>单一职责原则</strong>如何帮助我们编写低耦合和高内聚的第二篇文章。</p>
 </blockquote>
-<h2>单一职责原则是什么</h2>
-<p>之前的第一篇文章阐述了**依赖倒置原则（DIP）**能够使我们编写的代码变得低耦合，同时具有很好的可测试性，接下来我们来简单了解下单一职责原则的基本概念：</p>
+<h2 id="单一职责原则是什么"><a href="#单一职责原则是什么" class="headerlink" title="单一职责原则是什么"></a>单一职责原则是什么</h2><p>之前的第一篇文章阐述了<strong>依赖倒置原则（DIP）</strong>能够使我们编写的代码变得低耦合，同时具有很好的可测试性，接下来我们来简单了解下单一职责原则的基本概念：</p>
 <blockquote>
 <p>Every module or class should have responsibility over a single part of the functionality provided by the software, and that responsibility should be entirely encapsulated by the class.</p>
 </blockquote>
@@ -147,8 +143,7 @@
 <li>Responsibility: 职责</li>
 <li>Change: 改变</li>
 </ul>
-<h2>什么是<code>单一</code></h2>
-<blockquote>
+<h2 id="什么是单一"><a href="#什么是单一" class="headerlink" title="什么是单一"></a>什么是<code>单一</code></h2><blockquote>
 <p>Only one; not one of several.</p>
 </blockquote>
 <blockquote>
@@ -160,8 +155,7 @@
 <blockquote>
 <p>同义词：一，仅有的一个，唯一，独个，独自存在的，孤立的，仅自己。</p>
 </blockquote>
-<p><strong>单一</strong>意味着某些工作是独立的。比如，在类中，类方法仅完成某家独立的事情，而不是两件，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class UserComponent &#123; </span><br><span class="line">  // 这是第一件事情，获取用户详情数据</span><br><span class="line">  getUserInfo(id) &#123;</span><br><span class="line">    this.api.getUserInfo(id).then(saveToState)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 这是第二件事情，渲染视图的逻辑</span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123; userInfo &#125; = this.state;</span><br><span class="line">    return &lt;div&gt;</span><br><span class="line">      &lt;ul&gt;</span><br><span class="line">        &lt;li&gt;Name: &#123; userInfo.name &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Surname: &#123; userInfo.surname &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Email: &#123; userInfo.email &#125;&lt;/li&gt;</span><br><span class="line">      &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>单一</strong>意味着某些工作是独立的。比如，在类中，类方法仅完成某家独立的事情，而不是两件，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class UserComponent &#123; </span><br><span class="line">  // 这是第一件事情，获取用户详情数据</span><br><span class="line">  getUserInfo(id) &#123;</span><br><span class="line">    this.api.getUserInfo(id).then(saveToState)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 这是第二件事情，渲染视图的逻辑</span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123; userInfo &#125; = this.state;</span><br><span class="line">    return &lt;div&gt;</span><br><span class="line">      &lt;ul&gt;</span><br><span class="line">        &lt;li&gt;Name: &#123; userInfo.name &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Surname: &#123; userInfo.surname &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Email: &#123; userInfo.email &#125;&lt;/li&gt;</span><br><span class="line">      &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>看了上面的代码，你可能很快就会联想到，这些代码基本存在于所有的<code>React</code>组件中。</p>
 <p>确实，对于一些小型的项目或者演示型项目，这样编写代码不会产生太大的问题。但是如果在大型或者复杂度很高的项目中，仍然按照这样的风格，则是一件比较糟糕的事情，因为一个组件往往做了它本不应当做的事情（承担了过多的职责）。</p>
 <p>这样会带来什么坏处呢？比如对于以上的<code>api</code>服务，在将来的某天你做出了一些修改，增加了一些额外的逻辑，那么为了使代码能够正常工作，你至少需要修改项目中的两个地方以适应这个修改，一处修改是在<code>API</code>服务中，而另一处则在你的组件中。如果进一步思考的，我们会发现，修改次数与在项目直接使用<code>API</code>服务的次数成正比，如果项目足够复杂，足够大，一处简单的逻辑修改，就需要做出一次贯穿整个系统的适配工作。</p>
@@ -180,8 +174,7 @@
 <blockquote>
 <p>在面向对象编程中，上帝对象指一个了解太情或者做太多事情的对象。上帝对象是反模式的一个典型。</p>
 </blockquote>
-<h2>什么是<code>职责</code></h2>
-<p>职责指软件系统中，每一个指派给特定方法、类、包和模块所完成的工作或者动作。</p>
+<h2 id="什么是职责"><a href="#什么是职责" class="headerlink" title="什么是职责"></a>什么是<code>职责</code></h2><p>职责指软件系统中，每一个指派给特定方法、类、包和模块所完成的工作或者动作。</p>
 <blockquote>
 <p>Too much responsibility leads to coupling.</p>
 </blockquote>
@@ -195,15 +188,11 @@
 <li>如何测量每个组件的预期任务</li>
 <li>组件如何专注于任务本身</li>
 </ul>
-<p>低内聚性的组件在完成任务时，和它们本身的职责关联并不紧密。比如，我们现在有一个<code>User</code>类，这个类中我们保存了一些基本信息：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>对于属性本身，如果对于每个属性声明一些<code>getter</code>或者<code>setter</code>方法是没什么问题的。但是如果我们加一些别的方法，比如：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">  // 我们为什么要有以下这些方法？</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>低内聚性的组件在完成任务时，和它们本身的职责关联并不紧密。比如，我们现在有一个<code>User</code>类，这个类中我们保存了一些基本信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于属性本身，如果对于每个属性声明一些<code>getter</code>或者<code>setter</code>方法是没什么问题的。但是如果我们加一些别的方法，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">  // 我们为什么要有以下这些方法？</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>对于<code>checkAge</code>、<code>validateEmail</code>、<code>slugifyName</code>的职责，与<code>User</code>class本身关系并不紧密，因此就会这些方法就会使<code>User</code>的内聚性变低。</p>
-<p>仔细思考的话，这些方法的职责和校验和格式化用户信息的关系更紧密，因此，它们应当从<code>User</code>中被抽离出来，放入到另一个独立的<code>UserFieldValidation</code>类中，比如：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class UserFieldValidation &#123;</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2>什么是<code>变更</code></h2>
-<p>变更指对于已存在代码的修改或者改变。</p>
+<p>仔细思考的话，这些方法的职责和校验和格式化用户信息的关系更紧密，因此，它们应当从<code>User</code>中被抽离出来，放入到另一个独立的<code>UserFieldValidation</code>类中，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class UserFieldValidation &#123;</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="什么是变更"><a href="#什么是变更" class="headerlink" title="什么是变更"></a>什么是<code>变更</code></h2><p>变更指对于已存在代码的修改或者改变。</p>
 <p>那么问题来了，什么原因迫使我们需要对源码进行变更？从众多过期的软件系统的历史数据的研究来看，大体有三方面原因促使我们需要作出变更：</p>
 <ul>
 <li>增加新功能</li>
@@ -211,44 +200,37 @@
 <li>重构代码以适配将来作出的变更</li>
 </ul>
 <p>做为一个程序员，我们天天不都在做这三件事情吗？让我们来用一个例子完整的看一下什么是变更，比方说我们完成了一个组件，现在这个组件性能非常好，而且可读性也非常好，也许是你整个职业生涯中写的最好的一个组件了，所以我们给它一个炫酷的名字叫作<code>SuperDuper</code>（译者注：这个名字的意思是<strong>超级大骗子</strong>）</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">    // Super readable and efficient code</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">    // Super readable and efficient code</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>之后过了一段时间，在某一天，你的经理要求你增加一个新功能，比如说去调用别的<code>class</code>中的每个函数，从而可以使当前这个组件完成更多的工作。你决定将这个类以参数的形式传入构造方法，并在你的方法调用它。</p>
-<p>这个需求很简单，只需要增加一行调用的代码即可，然后你做了以下<strong>变更(增加新功能)</strong>：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    this.notDuper.invokeSomeMethod()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个需求很简单，只需要增加一行调用的代码即可，然后你做了以下<strong>变更(增加新功能)</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    this.notDuper.invokeSomeMethod()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>好了，之后你针对你做的变更代码运行了单元测试，然后你突然发现这条简单的代码使<code>100</code>多条的测试用例失败了。具体原因是因为在调用<code>notDuper</code>方法之前，你需要针对一些额外的业务逻辑增加条件判断来决定是否调用它。</p>
-<p>于是你针对这个问题又进行了一次<strong>变更(修复缺陷或者bug)</strong>，或许还会针对一些别的边界条件进行一些额外的修复和改动：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    </span><br><span class="line">    if (someCondition) &#123;</span><br><span class="line">      this.notDuper.invokeSomeMethod()</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      this.callInternalMethod()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>于是你针对这个问题又进行了一次<strong>变更(修复缺陷或者bug)</strong>，或许还会针对一些别的边界条件进行一些额外的修复和改动：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    </span><br><span class="line">    if (someCondition) &#123;</span><br><span class="line">      this.notDuper.invokeSomeMethod()</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      this.callInternalMethod()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>又过了一段时间，因为这个<code>SuperDuper</code>毕竟是你职业生涯完成的最棒的类，但是当前调用<code>noDuper</code>的方法实在是有点不够逼格，于是你决定引入事件驱动的理念来达到不在<code>SuperDuper</code>内部直接调用<code>noDuper</code>方法的目的。</p>
-<p>这次实际是对已经代码的一次重构工作，你引入了事件驱动模型，并对已有的代码做出了<strong>变更(重构代码以适配将来作出的变更)</strong>:
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line"> </span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">     ...</span><br><span class="line">     dispatcher.send(actionForTheNotDuper(payload)) // Send a signal</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这次实际是对已经代码的一次重构工作，你引入了事件驱动模型，并对已有的代码做出了<strong>变更(重构代码以适配将来作出的变更)</strong>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line"> </span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">     ...</span><br><span class="line">     dispatcher.send(actionForTheNotDuper(payload)) // Send a signal</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>现在再来看我们的<code>SuperDuper</code>类，已经和最原始的样子完全不一样了，因为你必须针对新的需求、存在的缺陷和bug或者适配新的软件架构而做出变更。</p>
 <p>因此为了便于我们做出变更，在代码的组织方式上，我们需要用心，这样才会使我们在做出变更时更加容易。</p>
-<h2>如何才能使代码贴近这些原则</h2>
-<p>很简单，只需要牢记，使代码保持足够简单。</p>
+<h2 id="如何才能使代码贴近这些原则"><a href="#如何才能使代码贴近这些原则" class="headerlink" title="如何才能使代码贴近这些原则"></a>如何才能使代码贴近这些原则</h2><p>很简单，只需要牢记，使代码保持足够简单。</p>
 <blockquote>
 <p>Gather together the things that change for the same reasons. Separate those things that change for different reasons.</p>
 </blockquote>
 <blockquote>
 <p>将由于相同原因而做出改变的东西聚集在一起，将由于不同原因而做出改变的东西彼此分离。</p>
 </blockquote>
-<h3>孤立变化</h3>
-<p>对于所编写的做出变更的代码，你需要仔细的检查它们，无论是从整体检查，还是有逻辑的分而治之，都可以达到孤立变化的目的。你需要更多的了解你所编写的代码，比如，为什么这样写，代码到底做了什么等等，并且，对于一些特别长的方法和类要格外关注。</p>
+<h3 id="孤立变化"><a href="#孤立变化" class="headerlink" title="孤立变化"></a>孤立变化</h3><p>对于所编写的做出变更的代码，你需要仔细的检查它们，无论是从整体检查，还是有逻辑的分而治之，都可以达到孤立变化的目的。你需要更多的了解你所编写的代码，比如，为什么这样写，代码到底做了什么等等，并且，对于一些特别长的方法和类要格外关注。</p>
 <blockquote>
 <p>Big is bad, small is good…</p>
 </blockquote>
 <blockquote>
 <p>大即是坏，小即是好。</p>
 </blockquote>
-<h3>追踪依赖</h3>
-<p>对于一个类，检查它的构造方法是否包含了太多的参数，因为每一个参数都作为这个类的依赖存在，同时这些参数也拥有自身的依赖。如果可能的话，使用<code>DI</code>机制来动态的注入它们。</p>
+<h3 id="追踪依赖"><a href="#追踪依赖" class="headerlink" title="追踪依赖"></a>追踪依赖</h3><p>对于一个类，检查它的构造方法是否包含了太多的参数，因为每一个参数都作为这个类的依赖存在，同时这些参数也拥有自身的依赖。如果可能的话，使用<code>DI</code>机制来动态的注入它们。</p>
 <blockquote>
 <p>Use Dependency Injection</p>
 </blockquote>
 <blockquote>
 <p>使用依赖注入</p>
 </blockquote>
-<h3>追踪方法参数</h3>
-<p>对于一个方法，检查它是否包含了太多参数，一般来讲，一个方法的参数个数往往代表了其内部所实现的职能。</p>
+<h3 id="追踪方法参数"><a href="#追踪方法参数" class="headerlink" title="追踪方法参数"></a>追踪方法参数</h3><p>对于一个方法，检查它是否包含了太多参数，一般来讲，一个方法的参数个数往往代表了其内部所实现的职能。</p>
 <p>同时，在方法命名上也投入一精力，尽可能地使方法名保持简单，它将帮助你在重构代码时，更好的达到单一职责。长的函数名称往往意味着其内部有糟糕的味道。</p>
 <blockquote>
 <p>Name things descriptively</p>
@@ -256,24 +238,21 @@
 <blockquote>
 <p>描述性命名。</p>
 </blockquote>
-<h3>尽早重构</h3>
-<p>尽可能早的重构代码，当你看到一些代码可以以更简明的方式进行时，重构它。这将帮助你在项目进行的整个周期不断的整理代码以便于更好的重构。</p>
+<h3 id="尽早重构"><a href="#尽早重构" class="headerlink" title="尽早重构"></a>尽早重构</h3><p>尽可能早的重构代码，当你看到一些代码可以以更简明的方式进行时，重构它。这将帮助你在项目进行的整个周期不断的整理代码以便于更好的重构。</p>
 <blockquote>
 <p>Refactor to Design Patterns</p>
 </blockquote>
 <blockquote>
 <p>按设计模式重构代码</p>
 </blockquote>
-<h3>善于做出改变</h3>
-<p>最后，在需要做出改变时，果断地去做。当然这些改变会使系统的耦合性更低，内聚性更高，而不是往相反的方向，这样你的代码会一直建立在这些原则之上。</p>
+<h3 id="善于做出改变"><a href="#善于做出改变" class="headerlink" title="善于做出改变"></a>善于做出改变</h3><p>最后，在需要做出改变时，果断地去做。当然这些改变会使系统的耦合性更低，内聚性更高，而不是往相反的方向，这样你的代码会一直建立在这些原则之上。</p>
 <blockquote>
 <p>Introduce change where it matters. Keep things simple but not simpler.</p>
 </blockquote>
 <blockquote>
 <p>在重要的地方介绍改变。保持事情的简单性，但不是一味追求简单。</p>
 </blockquote>
-<h2>译者注</h2>
-<p>单一职责原则其实在我们日常工作中经常会接触到，比方说</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>单一职责原则其实在我们日常工作中经常会接触到，比方说</p>
 <ul>
 <li>我们经常会听到<code>DIY（dont repeat yourself）</code>原则，其本身就是单一职责的一个缩影，为了达到<code>DIY</code>，对于代码中的一些通用方法，我们经常会抽离到独立的<code>utils</code>目录甚至编写为独立的工具函数库, 比如<code>lodash</code>和<code>ramda</code>等等</li>
 <li><code>OAOO</code>, 指<code>Once And Only Once</code>, 原则本身的含义可以自行搜索，实际工作中我们对于相同只能模块的代码应当尽可能去在抽象层合并它们，提供抽象类，之后通过继承的方式来满足不同的需求</li>
@@ -297,7 +276,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>
+        <a href="/categories/翻译/">翻译</a>
     </span>
     
 
@@ -322,7 +301,7 @@
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Single Responsibility</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">单一职责原则是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">什么是单一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">什么是职责</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">什么是变更</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.</span> <span class="toc-text">如何才能使代码贴近这些原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.1.</span> <span class="toc-text">孤立变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.2.</span> <span class="toc-text">追踪依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.3.</span> <span class="toc-text">追踪方法参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.4.</span> <span class="toc-text">尽早重构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.5.</span> <span class="toc-text">善于做出改变</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.6.</span> <span class="toc-text">译者注</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Understanding-SOLID-Principles-Single-Responsibility"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Single Responsibility</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#单一职责原则是什么"><span class="toc-number">1.1.</span> <span class="toc-text">单一职责原则是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是单一"><span class="toc-number">1.2.</span> <span class="toc-text">什么是单一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是职责"><span class="toc-number">1.3.</span> <span class="toc-text">什么是职责</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是变更"><span class="toc-number">1.4.</span> <span class="toc-text">什么是变更</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何才能使代码贴近这些原则"><span class="toc-number">1.5.</span> <span class="toc-text">如何才能使代码贴近这些原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#孤立变化"><span class="toc-number">1.5.1.</span> <span class="toc-text">孤立变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#追踪依赖"><span class="toc-number">1.5.2.</span> <span class="toc-text">追踪依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#追踪方法参数"><span class="toc-number">1.5.3.</span> <span class="toc-text">追踪方法参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#尽早重构"><span class="toc-number">1.5.4.</span> <span class="toc-text">尽早重构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#善于做出改变"><span class="toc-number">1.5.5.</span> <span class="toc-text">善于做出改变</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">1.6.</span> <span class="toc-text">译者注</span></a></li></ol></li></ol>
 </div>
 
 

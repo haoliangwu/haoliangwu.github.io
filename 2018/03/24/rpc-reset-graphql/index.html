@@ -10,8 +10,7 @@
   
 
   
-  <meta name="description" content="写在前面
-最近2周的时间由于工作不忙，一直在看有关GraphQL的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合RPC风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属REST风格的接口。因此在这段学习GraphQL的过程中，并且也尝试使用它以全栈">
+  <meta name="description" content="写在前面最近2周的时间由于工作不忙，一直在看有关GraphQL的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合RPC风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属REST风格的接口。因此在这段学习GraphQL的过程中，并且也尝试使用它以全栈的">
   
 
   
@@ -118,23 +117,19 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2>写在前面</h2>
-<p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
 <p>其实在使用和学习的过程中，有很多文章都对比过它们的异同，但是大部分文章并没有从一个相对客观的角度来对比，更多是为了突显一个的优点而刻意指出另外一个的缺点。这让我想到一句话，脱离业务情景谈技术就是耍流氓。</p>
 <p>昨天订阅的<code>GraphQL Weekly</code>中推送的一个视频正好是讲关于它们这三者的，于是就点进去看了看，发现质量还是不错的，于是就想整理出来，分享给大家。</p>
 <p>原视频地址(油管地址，自备梯子)：<a href="https://www.youtube.com/watch?v=IvsANO0qZEg" target="_blank" rel="noopener">这里</a></p>
 <p>如果没有梯子的话直接看我整理的东西也可以，我觉的应该都覆盖到视频中所讲的重点内容了。</p>
 <p>当然，这些内容如果分开来讲，每一块内容所涉及的东西都够写一本书了，这里仅仅是简单归纳和整理，从宏观的角度来对比它们的异同，从而能够在日后面临技术选型时，有一个更佳明确的决策方向。</p>
-<h2>RPC</h2>
-<p>先简单介绍下<code>RPC</code>，它是<code>Remote Procedure Call(远程过程调用)</code>的简称。一般基于<code>RPC</code>协议所设计的接口，是基于网络采用客户端/服务端的模式完成调用接口的。</p>
-<h3>优点</h3>
-<ul>
+<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><p>先简单介绍下<code>RPC</code>，它是<code>Remote Procedure Call(远程过程调用)</code>的简称。一般基于<code>RPC</code>协议所设计的接口，是基于网络采用客户端/服务端的模式完成调用接口的。</p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>简单并且易于理解（面向开发者）</li>
 <li>轻量级的数据载体</li>
 <li>高性能</li>
 </ul>
-<h3>缺点</h3>
-<ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
 <li>对于系统本身耦合性高</li>
 <li>因为RPC本身很简单、轻量，因此很容易造成 <code>function explosion</code></li>
 </ul>
@@ -146,36 +141,30 @@
 <li>一般<code>RPC</code>所暴露接口仅仅会暴露函数的名称和参数等信息，对于函数之间的调用关系无法提供，这意味着调用者必须足够了解系统，从能够知道如何正确的调用这些接口，但是对于接口调用者往往不需要了解过多系统内部实现细节</li>
 </ul>
 <p>关于上面的第二点，为了减少<code>breaking change</code>，我之前实现接口的时候一般都会引入版本的概念，就是在暴露接口的方法名中加入版本号，一开始效果确实不错，但是随后就不知不觉的形成了<code>function explosion</code>，和视频中主讲人所举例的例子差不多，贴一下视频中的截图感受一波：</p>
-<p><img src="/img/func_explosion.png"></p>
-<h1>REST</h1>
-<p>当前REST风格的API架构方式已经成了主流解决方案了，相比较RPC，它的主要不同之处在于，它是对于资源(Resource)的模型化而非步骤(Procedure)。</p>
-<h3>优点</h3>
-<ul>
+<img src="/img/func_explosion.png">
+<h1 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h1><p>当前REST风格的API架构方式已经成了主流解决方案了，相比较RPC，它的主要不同之处在于，它是对于资源(Resource)的模型化而非步骤(Procedure)。</p>
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>对于系统本身耦合性低，调用者不再需要了解接口内部处理和实现细节</li>
 <li>重复使用了一些 http 协议中的已定义好的部分状态动词，增强语义表现力</li>
 <li>API可以随着时间而不断演进</li>
 </ul>
-<h3>缺点</h3>
-<ul>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ul>
 <li>缺少约束，缺少简单、统一的规范</li>
-<li>有时候 payload 会变的冗余(overload)，有时候调用api会比较繁琐(chattiness)</li>
+<li>有时候 payload 会变的冗余(overload)，有时候调用api会比较繁琐(chattiness) </li>
 <li>有时候需要发送多条请求已获取数据，在网络带宽较低的场景，往往会造成不好的影响</li>
 </ul>
 <p>REST的优点基本解决了RPC中存在的问题，就是解耦，从而使得前后端分离成为可能。接口提供者在修改接口时，不容易造成breaking-change，接口调用者在调用接口时，往往面向数据模型编程，而省去了了解接口本身的时间成本。</p>
 <p>但是，我认为REST当前最大的问题在于虽然它利用<code>http</code>的动词约束了接口的暴露方式，同时增强了语义，但是却没有约束接口如何返回数据的最佳实践，总让人感觉只要是返回json格式的接口都可以称作REST。</p>
 <p>我在实际工作中，经常会遇到第二条缺点所指出的问题，就是接口返回的数据冗余度很高，但是却缺少我真正需要的数据，因此不得已只能调用其他接口或者直接和后端商议修改接口，并且这种问题会在web端和移动端共用一套接口中被放大。</p>
 <p>当前比较好的解决方案就是规范化返回数据的格式，比如json-schema或者自己制定的规范。</p>
-<h1>GraphQL</h1>
-<p>GraphQL是近来比较热门的一个技术话题，相比REST和RPC，它汲取了两者的优点，即不面向资源，也不面向过程，而是面向数据查询(ask for exactly what you want)。</p>
+<h1 id="GraphQL"><a href="#GraphQL" class="headerlink" title="GraphQL"></a>GraphQL</h1><p>GraphQL是近来比较热门的一个技术话题，相比REST和RPC，它汲取了两者的优点，即不面向资源，也不面向过程，而是面向数据查询(ask for exactly what you want)。</p>
 <p>同时GraphQL本身需要使用强类型的Schema来对数据模型进行定义，因此相比REST它的约束性更强。</p>
-<h3>优点</h3>
-<ul>
+<h3 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>网络开销低，可以在单一请求中获取REST中使用多条请求获取的资源</li>
 <li>强类型Schema（约束意味着可以根据规范形成文档、IDE、错误提示等生态工具）</li>
 <li>特别适合<em>图</em>状数据结构的业务场景（比如好友、流程、组织架构等系统）</li>
 </ul>
-<h3>缺点</h3>
-<ul>
+<h3 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h3><ul>
 <li>本身的语法相比较REST和RPC均复杂一些</li>
 <li>实现方面需要配套 Caching 以解决性能瓶颈</li>
 <li>对于 API 的版本控制当前没有完善解决方案（社区的建议是不要使API版本化）</li>
@@ -186,8 +175,7 @@
 <p>但是这个看起来很好的东西为什么没有火起来呢？我觉的最主要的原因是因为GraphQL所带来的好处，大部分是对于接口调用者而言的，但是实现这部分的工作却需要接口提供者来完成。</p>
 <p>同时GraphQL的最佳实践场景应当是类似像Facebook这样的网站，业务逻辑模型是图状数据结构，比如社交。如果在一些业务逻辑模型相对简单的场景，使用GraphQL确实不如使用REST来得简单明了、直截了当。</p>
 <p>另外一方面是GraphQL的使用场景相当灵活，在我自己的调研项目中，我是把它当做一个类似ORM的框架来使用的，在别人的一些文章中，会把它当做一个中间层来做渐进式开发和系统升级。这应当算是另外一个优点。</p>
-<h3>到底用哪个</h3>
-<p>下面根据要设计的API类型给予一些技术选型建议。</p>
+<h3 id="到底用哪个"><a href="#到底用哪个" class="headerlink" title="到底用哪个"></a>到底用哪个</h3><p>下面根据要设计的API类型给予一些技术选型建议。</p>
 <p>如果是<code>Management API</code>，这类API的特点如下：</p>
 <ul>
 <li>关注于对象与资源</li>
@@ -219,8 +207,7 @@
 <li>希望对于高延迟场景可以有更好的优化</li>
 </ul>
 <p>这种场景无疑<code>GraphQL</code>是最好的选择。</p>
-<h3>写在最后</h3>
-<p>提供一张表格来总览它们之间在不同指标下的表现：</p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>提供一张表格来总览它们之间在不同指标下的表现：</p>
 <table>
 <thead>
 <tr>
@@ -278,7 +265,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/原创/">原创</a>, <a href="/categories/原创/软件架构/">软件架构</a>
+        <a href="/categories/原创/">原创</a>
     </span>
     
 
@@ -303,7 +290,7 @@
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">RPC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number"></span> <span class="toc-text">REST</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">0.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">0.2.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number"></span> <span class="toc-text">GraphQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">0.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">0.2.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">0.3.</span> <span class="toc-text">到底用哪个</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">0.4.</span> <span class="toc-text">写在最后</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC"><span class="toc-number">2.</span> <span class="toc-text">RPC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#优点"><span class="toc-number">2.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺点"><span class="toc-number">2.2.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#REST"><span class="toc-number"></span> <span class="toc-text">REST</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#优点-1"><span class="toc-number">0.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺点-1"><span class="toc-number">0.2.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GraphQL"><span class="toc-number"></span> <span class="toc-text">GraphQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#优点-2"><span class="toc-number">0.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺点-2"><span class="toc-number">0.2.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#到底用哪个"><span class="toc-number">0.3.</span> <span class="toc-text">到底用哪个</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写在最后"><span class="toc-number">0.4.</span> <span class="toc-text">写在最后</span></a></li></ol></li></ol>
 </div>
 
 

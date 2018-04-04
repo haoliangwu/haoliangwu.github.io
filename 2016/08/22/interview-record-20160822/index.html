@@ -10,20 +10,12 @@
   
 
   
-  <meta name="description" content="面试公司
-大连云匠软件
-&amp;lt;!--more--&amp;gt;
-面试职位
-Web前端开发
-面试方式
-电话面试
-总结
-问了一些列范围超级广的问题，不过我感觉大部分问题的答案，面试官还是比较满意的，有一些小问题没有答上来，我觉的并不是因为自己没有能力，其实就是所谓的“约书亚树”道理，当你不明白或者不知道一个">
+  <meta name="description" content="面试公司大连云匠软件">
   
 
   
   
-  <meta name="keywords" content="html,css,interview">
+  <meta name="keywords" content="html,interview,css">
   
 
   <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
@@ -125,21 +117,17 @@ Web前端开发
   <div class="article-content">
     <div class="entry">
       
-          <h2>面试公司</h2>
-<p>大连云匠软件</p>
-<p>&lt;!--more--&gt;</p>
-<h2>面试职位</h2>
-<p>Web前端开发</p>
-<h2>面试方式</h2>
-<p>电话面试</p>
-<h2>总结</h2>
-<p>问了一些列范围超级广的问题，不过我感觉大部分问题的答案，面试官还是比较满意的，有一些小问题没有答上来，我觉的并不是因为自己没有能力，其实就是所谓的“约书亚树”道理，当你不明白或者不知道一个事情的时候，如果没有机会去了解它，确实可能永远不可能了解了。就好比这次面试，如果面试官不问我，而我项目经验又比较匮乏，确实真的不知道啊。</p>
+          <h2 id="面试公司"><a href="#面试公司" class="headerlink" title="面试公司"></a>面试公司</h2><p>大连云匠软件</p>
+<a id="more"></a>
+<h2 id="面试职位"><a href="#面试职位" class="headerlink" title="面试职位"></a>面试职位</h2><p>Web前端开发</p>
+<h2 id="面试方式"><a href="#面试方式" class="headerlink" title="面试方式"></a>面试方式</h2><p>电话面试</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>问了一些列范围超级广的问题，不过我感觉大部分问题的答案，面试官还是比较满意的，有一些小问题没有答上来，我觉的并不是因为自己没有能力，其实就是所谓的“约书亚树”道理，当你不明白或者不知道一个事情的时候，如果没有机会去了解它，确实可能永远不可能了解了。就好比这次面试，如果面试官不问我，而我项目经验又比较匮乏，确实真的不知道啊。</p>
 <p>有两个问题我特意去网上查了一下，因此这里特意记录下来，知道的就无视吧，不知道的共勉吧。</p>
 <blockquote>
 <p>display:inline-block为默认样式的标签有哪些？</p>
 </blockquote>
 <p>这个问题我去网上查了一圈，最终按我的理解，这个问题答案的起点应该始于，HTML中有哪些替代标签?</p>
-<p>那么就来查概念吧，<strong>替换标签</strong>是浏览器根据其标签的元素与属性来判断具体显示内容的标签。比如常见的input，根据type属性的值会生成不同功能及样式的标签。所以举一反三咯，a也是，img也是，textarea也是，select也是，因为这些标签本身并没有内容，它们的内容依赖于属性，因此是可&quot;替换&quot;的。</p>
+<p>那么就来查概念吧，<strong>替换标签</strong>是浏览器根据其标签的元素与属性来判断具体显示内容的标签。比如常见的input，根据type属性的值会生成不同功能及样式的标签。所以举一反三咯，a也是，img也是，textarea也是，select也是，因为这些标签本身并没有内容，它们的内容依赖于属性，因此是可”替换”的。</p>
 <p>值得一提的是，替换标签均可以增加行高(line-height)，还可以调整baseline（vertical-align），废话，因为人家是inline嘛。</p>
 <blockquote>
 <p>内容区高度值 = padding-top + padding-bottom + margin-top + margin-bottom + height</p>
@@ -147,11 +135,11 @@ Web前端开发
 <p>那么反过来，<strong>非替换标签</strong>就是浏览器根据其标签内容直接判断具体显示内容的标签。这个就很常见了，因为浏览器中的标签大部分都是非替换的，比如div, p等等。非替换元素添加padding-top或padding-bottom，不影响行框高度，但内容区高度会变化，margin-top，margin- bottom对行框没有任何影响。添加左右边距会影响非替换元素水平位置。要使非替换元素在父元素框内居中，可以设定line-height = 父元素框的高度。</p>
 <p>参考: <a href="http://www.cnblogs.com/huangyin1213/p/5566192.html" target="_blank" rel="noopener">html中label宽度设置、非替换元素和替换元素</a></p>
 <blockquote>
-<p>使用display:inline-block时，标签之间的空格如何解决（非margin）？</p>
+<p>使用display:inline-block时，标签之间的空格如何解决（非margin）？ </p>
 </blockquote>
 <p>这个问题是面试官连着上面的问题问的，当时直接就蒙逼了。后来挂了电话之后，回到电脑上试了一下，这个问题其实以前也确实遇到过，只不过没有在意罢了。</p>
 <p>这个问题的表现类似于这样：</p>
-<p><iframe src="http://jsbin.com/cabetumewu/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe></p>
+<iframe src="http://jsbin.com/cabetumewu/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe>
 <p>其中第一行中的input之间有一个小小的空格，然后呢，源码中并没有类似的的空格，然而真的没有吗，并不是的，这里的空格其实是input后跟着的那个换行符，要解决这个问题，下边的大神博客给了Ｎ种方法，我并没有挨个试，因为我没有额外的ie浏览器进行验证，只挑了几个简单易行的。</p>
 <ul>
 <li>可以不写换行符，直接把元素写到一行，如果觉的可读性不行，那就把换行符写到块级注释中。</li>
@@ -184,7 +172,7 @@ Web前端开发
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/html/">html</a><a href="/tags/css/">css</a><a href="/tags/interview/">interview</a>
+        <a href="/tags/html/">html</a><a href="/tags/interview/">interview</a><a href="/tags/css/">css</a>
     </span>
     
 
@@ -200,7 +188,7 @@ Web前端开发
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">面试公司</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">面试职位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">面试方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#面试公司"><span class="toc-number">1.</span> <span class="toc-text">面试公司</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#面试职位"><span class="toc-number">2.</span> <span class="toc-text">面试职位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#面试方式"><span class="toc-number">3.</span> <span class="toc-text">面试方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
 </div>
 
 
