@@ -11,12 +11,10 @@
 
   
   <meta name="description" content="Understanding SOLID Principles: Open Closed Principle
-
 这是理解SOLID原则，介绍什么是开闭原则以及它为什么能够在对已有的软件系统或者模块提供新功能时，避免不必要的更改（重复劳动）。
 
 开闭原则是什么
-
-Software entities (c">
+Software entities (cla">
   
 
   
@@ -47,11 +45,23 @@ Software entities (c">
 </head>
 
 
-<body>
-<div class="blog">
-  <div class="content">
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
 
-    
+        
 
     <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
 
@@ -86,14 +96,14 @@ Software entities (c">
  </div>
 </header>
 
-        
+          
 
-          <div class="container ">
-          <div class="row">
-            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container" style="position: inherit;">
-            <article class="article-container ">
+                    <article class="article-container ">
 
   
     
@@ -123,12 +133,10 @@ Software entities (c">
   <div class="article-content">
     <div class="entry">
       
-          <h1><a href="https://codeburst.io/understanding-solid-principles-open-closed-principle-e2b588b6491f" target="_blank" rel="noopener">Understanding SOLID Principles: Open Closed Principle</a></h1>
-<blockquote>
+          <h1 id="Understanding-SOLID-Principles-Open-Closed-Principle"><a href="#Understanding-SOLID-Principles-Open-Closed-Principle" class="headerlink" title="Understanding SOLID Principles: Open Closed Principle"></a><a href="https://codeburst.io/understanding-solid-principles-open-closed-principle-e2b588b6491f" target="_blank" rel="noopener">Understanding SOLID Principles: Open Closed Principle</a></h1><blockquote>
 <p>这是理解<code>SOLID</code>原则，介绍什么是<strong>开闭原则</strong>以及它为什么能够在对已有的软件系统或者模块提供新功能时，避免不必要的更改（重复劳动）。</p>
 </blockquote>
-<h2>开闭原则是什么</h2>
-<blockquote>
+<h2 id="开闭原则是什么"><a href="#开闭原则是什么" class="headerlink" title="开闭原则是什么"></a>开闭原则是什么</h2><blockquote>
 <p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.</p>
 </blockquote>
 <blockquote>
@@ -138,40 +146,31 @@ Software entities (c">
 <p>但是另一方面，我们还是会面临改变，这些改变包含范围（译者注：应当是指抽象模块的职责范围）的改变，新功能的增加请求还有新的业务逻辑需求。</p>
 <p>所以对于上面我们所拥有的抽象层代码，在长期想让它处于一成不变的状态是不现实的，你不可避免的会针对以上的需要作出改变的需求，增加更多的功能，增加更多的逻辑和交互。在上一篇文章，我们知道，改变会使系统复杂，复杂会促使模块间的耦合性上升，所以我们迫切地需要寻找一种方法能够使我们的抽象模块不仅可以扩大它的职责范围，同时还能够保持当前良好的状态（简洁、高内聚、好用）。</p>
 <p>这便是<strong>开闭原则</strong>存在的意义，它能够帮助我们完美地实现这一切。</p>
-<h2>如何实践开闭原则</h2>
-<p>当你需要对已有代码作出一些修改时，请切记以下两点：</p>
+<h2 id="如何实践开闭原则"><a href="#如何实践开闭原则" class="headerlink" title="如何实践开闭原则"></a>如何实践开闭原则</h2><p>当你需要对已有代码作出一些修改时，请切记以下两点：</p>
 <ul>
 <li>保持函数、类、模块当前它们本身的状态，或者是近似于它们一般情况下的状态（即不可修改性）</li>
 <li>使用组合的方式（避免使用继承方式）来扩展现有的类，函数或模块，以使它们可能以不同的名称来暴露新的特性或功能</li>
 </ul>
 <p>这里关于继承，我们特意增加了一个注释，在这种情况下使用继承可能会使模块之间耦合在一起，同时这种耦合是可避免的，我们通常在一些预先有着良好定义的结构上使用继承。（译者注：这里应该是指，对于我们预先设计好的功能，推荐使用继承方式，对于后续新增的变更需求，推荐使用组合方式）</p>
-<p>举个例子（译者注：我对这里的例子做了一些修改，原文中并没有详细的说明）
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">interface IRunner &#123;</span><br><span class="line">  run: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Runner implements IRunner &#123;</span><br><span class="line">  run(): void &#123;</span><br><span class="line">    console.log(&quot;9.78s&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface IJumper &#123;</span><br><span class="line">  jump: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Jumper implements IJumper &#123;</span><br><span class="line">  jump(): void &#123;</span><br><span class="line">    console.log(&quot;8.95,&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>举个例子（译者注：我对这里的例子做了一些修改，原文中并没有详细的说明）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">interface IRunner &#123;</span><br><span class="line">  run: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Runner implements IRunner &#123;</span><br><span class="line">  run(): void &#123;</span><br><span class="line">    console.log(&quot;9.78s&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface IJumper &#123;</span><br><span class="line">  jump: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Jumper implements IJumper &#123;</span><br><span class="line">  jump(): void &#123;</span><br><span class="line">    console.log(&quot;8.95,&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>例子中，我们首先声明了一个<code>IRunner</code>接口，之后又声明了<code>IJumper</code>，并分别实现了它们，并且实现类的职能都是单一的。</p>
-<p>假如现在我们需要提供一个既会跑又会跳的对象，如果我们使用继承的方式，可以这么写
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Runner &#123;</span><br><span class="line">  jump: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>或者
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Jumper &#123;</span><br><span class="line">  run: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>但是使用继承的方式会使这个<code>RunnerAndJumper</code>与<code>Runner</code>（或者<code>Jumper</code>）耦合在一起（耦合在一起的原因是因为它的职责不再单一），我们再来用组合的方式试试看，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper &#123;</span><br><span class="line">  private runnerClass: IRunner;</span><br><span class="line">  private jumperClass: IJumper;</span><br><span class="line">  constructor(runner: IRunner, jumper: IJumper) &#123;</span><br><span class="line">    this.runnerClass = new runner();</span><br><span class="line">    this.jumperClass = new jumper();</span><br><span class="line">  &#125;</span><br><span class="line">  run() &#123;</span><br><span class="line">    this.runnerClass.run();</span><br><span class="line">  &#125;</span><br><span class="line">  jump() &#123;</span><br><span class="line">    this.jumperClass.jump();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>假如现在我们需要提供一个既会跑又会跳的对象，如果我们使用继承的方式，可以这么写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Runner &#123;</span><br><span class="line">  jump: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Jumper &#123;</span><br><span class="line">  run: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是使用继承的方式会使这个<code>RunnerAndJumper</code>与<code>Runner</code>（或者<code>Jumper</code>）耦合在一起（耦合在一起的原因是因为它的职责不再单一），我们再来用组合的方式试试看，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper &#123;</span><br><span class="line">  private runnerClass: IRunner;</span><br><span class="line">  private jumperClass: IJumper;</span><br><span class="line">  constructor(runner: IRunner, jumper: IJumper) &#123;</span><br><span class="line">    this.runnerClass = new runner();</span><br><span class="line">    this.jumperClass = new jumper();</span><br><span class="line">  &#125;</span><br><span class="line">  run() &#123;</span><br><span class="line">    this.runnerClass.run();</span><br><span class="line">  &#125;</span><br><span class="line">  jump() &#123;</span><br><span class="line">    this.jumperClass.jump();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>我们在<code>RunnerAndJumper</code>的构造函数中声明两个依赖，一个是<code>IRunner</code>类型，一个是<code>IJumper</code>类型。</p>
 <p>最终的代码其实和<strong>依赖倒置原则</strong>中的例子很像，而且你会发现，<code>RunnerAndJumper</code>类本身并没有与任何别的类耦合在一起，它的职能同样是单一的，它是对一个即会跑又会跳的实体的抽象，并且这里我们还可以使用<code>DI（依赖注入）</code>技术进一步的优化我们的代码，降低它的耦合度。</p>
-<h2>反思</h2>
-<p><strong>开闭原则</strong>所带来最有用的好处就是，当我们在实现我们的抽象层代码时，我们就可以对未来可能需要作出改变的地方拥有一个比较完整的设想，这样当我们真正面临改变时，我们所对原有代码的修改，更贴近于改变本身，而不是一味的修改我们已有的抽象代码。</p>
+<h2 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h2><p><strong>开闭原则</strong>所带来最有用的好处就是，当我们在实现我们的抽象层代码时，我们就可以对未来可能需要作出改变的地方拥有一个比较完整的设想，这样当我们真正面临改变时，我们所对原有代码的修改，更贴近于改变本身，而不是一味的修改我们已有的抽象代码。</p>
 <p>在这种情况下，由于我们节省了不必要的劳动和时间，我们就可以将更多的精力投入到关于更加长远的事宜计划上面，而且可以针对这些事宜需要作出的改变，提前和团队沟通，最终给予一套更加健壮、更符合系统模块本身的解决方案。</p>
 <p>在整个软件开发周期中（比如一个敏捷开发周期），你对于整个周期中的事情了解的越透彻、越多，则越好。身为一个工程师，在一个开发冲刺中，为了在冲刺截止日期结束前，实现一个高效的、可靠的系统，你不会期望作出太多的改变，因此往往你可能会“偷工减料”。</p>
 <p>从另一个角度来讲，我们也应当致力于在每一次面临需求变更的情况下，不需要一而再，再而三的更改我们已有的代码。所有新的功能都应当通过增加一个新的组合类或方法实现，或者通过复用已有的代码来实现。</p>
-<h2>插件与中间件</h2>
-<p>充分贯彻开闭原则的另一个例子，便是<strong>插件与中间件</strong>架构，我们可以从三个角度来简单分析这种架构是如何运作的：</p>
+<h2 id="插件与中间件"><a href="#插件与中间件" class="headerlink" title="插件与中间件"></a>插件与中间件</h2><p>充分贯彻开闭原则的另一个例子，便是<strong>插件与中间件</strong>架构，我们可以从三个角度来简单分析这种架构是如何运作的：</p>
 <ul>
 <li>内核或者容器：往往是核心功能的实现的前提，一般会成为整个系统最核心的部分</li>
 <li>插件：在实现容器的基础上，往往一些核心功能都是以内置的插件实现的，并且，通过实现一套通用的网关类接口，我们可以使插件具有可插拔性，这样在需要新增特性和功能时，只需要实现新的插件并添加到容器即可，比如支持插件扩展功能的浏览器<code>Chrome</code>。</li>
 <li>中间件：中间件我们可以通过一个例子来说明，比如我们拥有一个请求 - 响应周期，我们可以通过中间件，在周期中添加中间业务逻辑，以便为应用程序提供额外的服务或横切关注点，比如<code>Redux</code>、<code>express</code>还有很多框架都支持这样的功能。</li>
 </ul>
-<h2>总结</h2>
-<p>希望这篇文章能够帮助你学会如何应用<strong>开闭原则</strong>并且从中收益。设计一个具有可组合性的系统，同时提供具有良好定义的扩展接口，是一种非常有用的技术，这种技术最关键的地方在于，它使我们的系统能够在保持强健的同时，提供新功能、新特性，但是却不会影响它当前的状态。</p>
-<h2>译者注</h2>
-<p>开闭原则是面向对象编程中最重要的原则之一，有多重要呢？这么说吧，很多的设计原则和设计模式所希望达成的最终状态，往往符合开闭原则，因此需要原则也都作为实现开闭原则的一种手段，在原文的例子中，我们可以很明显的体会到，在实现开闭原则所提倡的理念的过程中，我们不经意地使用之前两篇文章中涉及的原则，比如：</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>希望这篇文章能够帮助你学会如何应用<strong>开闭原则</strong>并且从中收益。设计一个具有可组合性的系统，同时提供具有良好定义的扩展接口，是一种非常有用的技术，这种技术最关键的地方在于，它使我们的系统能够在保持强健的同时，提供新功能、新特性，但是却不会影响它当前的状态。</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>开闭原则是面向对象编程中最重要的原则之一，有多重要呢？这么说吧，很多的设计原则和设计模式所希望达成的最终状态，往往符合开闭原则，因此需要原则也都作为实现开闭原则的一种手段，在原文的例子中，我们可以很明显的体会到，在实现开闭原则所提倡的理念的过程中，我们不经意地使用之前两篇文章中涉及的原则，比如：</p>
 <ul>
 <li>保持对象的单一性（单一职责）</li>
 <li>实现依赖于抽象（依赖倒置原则）</li>
@@ -182,8 +181,7 @@ Software entities (c">
 <ul>
 <li>UI组件的表单组件：对于表单本身以容器来实现，表单项以插件来实现，这样对于表单项如何渲染、如何加载、如何布局等功能，均会封闭与表单容器中，而对于表单项如何校验、如何取值、如何格式化等功能，则会开放与表单项容器中。</li>
 <li>API服务：一般我们可能会在项目中提供自定义修改请求头部的工具方法，并在需要的时候调用。但这其实是一种比较笨的方法，如果可能的话，建议使用拦截器来完成这项任务，不仅会提供代码的可读性，同时还会使发接口的业务层代码保持封闭。</li>
-<li>事件驱动模型：对于一些复杂的事件驱动模型，比如拖拽，往往使用开闭原则会达到意想不到的效果。最近有一个比较火的拖拽库<a href="https://github.com/Shopify/draggable" target="_blank" rel="noopener">draggable</a>，提供的拖拽体验相比其他同类型的库简直不是一个级别。我前段时间去读它的源码，发现它之所以强大，是因为在它内部，针对多种拖拽事件，封装了独立的事件发射器（其内部称作<code>Sensor</code>），之后根据这些发射器指定了一套独立的抽象事件驱动模型，在这个模型基础上，针对不同的业务场景提供不同的插件，比如：
-<ul>
+<li>事件驱动模型：对于一些复杂的事件驱动模型，比如拖拽，往往使用开闭原则会达到意想不到的效果。最近有一个比较火的拖拽库<a href="https://github.com/Shopify/draggable" target="_blank" rel="noopener">draggable</a>，提供的拖拽体验相比其他同类型的库简直不是一个级别。我前段时间去读它的源码，发现它之所以强大，是因为在它内部，针对多种拖拽事件，封装了独立的事件发射器（其内部称作<code>Sensor</code>），之后根据这些发射器指定了一套独立的抽象事件驱动模型，在这个模型基础上，针对不同的业务场景提供不同的插件，比如：<ul>
 <li>原生拖拽(Draggable)</li>
 <li>拖拽排序(Sortable)</li>
 <li>拖拽放置(Droppable)</li>
@@ -231,7 +229,7 @@ Software entities (c">
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Open Closed Principle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">开闭原则是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">如何实践开闭原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">反思</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">插件与中间件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.6.</span> <span class="toc-text">译者注</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Understanding-SOLID-Principles-Open-Closed-Principle"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Open Closed Principle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#开闭原则是什么"><span class="toc-number">1.1.</span> <span class="toc-text">开闭原则是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何实践开闭原则"><span class="toc-number">1.2.</span> <span class="toc-text">如何实践开闭原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反思"><span class="toc-number">1.3.</span> <span class="toc-text">反思</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插件与中间件"><span class="toc-number">1.4.</span> <span class="toc-text">插件与中间件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">1.6.</span> <span class="toc-text">译者注</span></a></li></ol></li></ol>
 </div>
 
 
@@ -309,16 +307,16 @@ Software entities (c">
 
 
 
-            </main>
-          </div>
-        </div>
-       
+                  </main>
+                </div>
+              </div>
+              
 
 
 
 
 
-    <footer class="site-footer">
+                <footer class="site-footer">
   <p class="site-info">
     Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
     Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
@@ -333,16 +331,23 @@ Software entities (c">
     
   </p>
 </footer>
-    
-  </div>
+                  
+      </div>
 
-</div>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="/js/index.js"></script>
-<script src="/js/search.js"></script>
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
 
-</body>
+  </body>
+
 </html>

@@ -11,12 +11,10 @@
 
   
   <meta name="description" content="04 Avoid Namespace Clashes with Directives
-
 原文: Avoid Namespace Clashes with Directives
 
-提示
-在同一个html元素上绑定多个指令可能会造成命名冲突。
-命名冲突不仅存在于指令的选择器之间，同时也会存在于指令的In">
+提示在同一个html元素上绑定多个指令可能会造成命名冲突。
+命名冲突不仅存在于指令的选择器之间，同时也会存在于指令的Inpu">
   
 
   
@@ -47,11 +45,23 @@
 </head>
 
 
-<body>
-<div class="blog">
-  <div class="content">
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
 
-    
+        
 
     <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
 
@@ -86,14 +96,14 @@
  </div>
 </header>
 
-        
+          
 
-          <div class="container ">
-          <div class="row">
-            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container" style="position: inherit;">
-            <article class="article-container ">
+                    <article class="article-container ">
 
   
     
@@ -123,29 +133,21 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2>04 Avoid Namespace Clashes with Directives</h2>
-<blockquote>
+          <h2 id="04-Avoid-Namespace-Clashes-with-Directives"><a href="#04-Avoid-Namespace-Clashes-with-Directives" class="headerlink" title="04 Avoid Namespace Clashes with Directives"></a>04 Avoid Namespace Clashes with Directives</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/avoid-namespace-clashes-with-directives-1f00d62de445" target="_blank" rel="noopener">Avoid Namespace Clashes with Directives</a></p>
 </blockquote>
-<h2>提示</h2>
-<p>在同一个<code>html</code>元素上绑定多个指令可能会造成命名冲突。</p>
+<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>在同一个<code>html</code>元素上绑定多个指令可能会造成命名冲突。</p>
 <p>命名冲突不仅存在于指令的选择器之间，同时也会存在于指令的<code>Inputs</code>和<code>Outputs</code>属性，当这些属性名一样时，Angular并不会进行提示，它会按原本的逻辑正常工作。这种情况有时候是我们希望看到的，有些时候却不是。</p>
-<h2>目标</h2>
-<p>避免存在于绑定在相同元素上的多个指令上的命名冲突。</p>
-<h2>实现</h2>
-<p>因为<code>toggle</code>和<code>withToggle</code>指令都绑定于<code>&lt;toggle&gt;</code>元素，我们将通过为它们增加一个<code>label</code>属性来说明问题。</p>
-<p>首先我们设置一个<code>label</code>属性，比如：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;toggle label=&quot;some label&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>避免存在于绑定在相同元素上的多个指令上的命名冲突。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>因为<code>toggle</code>和<code>withToggle</code>指令都绑定于<code>&lt;toggle&gt;</code>元素，我们将通过为它们增加一个<code>label</code>属性来说明问题。</p>
+<p>首先我们设置一个<code>label</code>属性，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;toggle label=&quot;some label&quot;&gt;</span><br></pre></td></tr></table></figure></p>
 <p>这个<code>label</code>属性的值会同时绑定在每个指令上，如果想要为其中的某个指令单独绑定，只能通过使用<code>prefix(前缀)</code>来实现。</p>
 <p>Angular官方提供的规范指南也警示了这一点，当你在使用<code>prefix</code>修饰指令的名称时，也需要注意使用<code>prefix</code>来修饰<code>Input</code>和<code>Output</code>属性的名称。</p>
 <p>Note: 当使用<code>Output</code>属性重写原生<code>DOM</code>元素的事件和使用<code>Input</code>属性重写原生元素的属性时，请额外注意，没有任何方式可以获知别人在他们编写的应用或者库中使用的命名，但是你可以很轻易的知道的具体命名的大体规则是什么，并且不要重写它们，除非你有意为之。</p>
-<p>增加<code>prefix</code>的一种方式是在每个指令的<code>label</code>属性的装饰器内增加一个字符串参数，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// In withToggle.directive.ts</span><br><span class="line">@Input(&apos;withToggleLabel&apos;) label;</span><br><span class="line"></span><br><span class="line">// In toggle.directive.ts</span><br><span class="line">@Input(&apos;toggleLabel&apos;) label;</span><br></pre></td></tr></table></figure></p>
+<p>增加<code>prefix</code>的一种方式是在每个指令的<code>label</code>属性的装饰器内增加一个字符串参数，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// In withToggle.directive.ts</span><br><span class="line">@Input(&apos;withToggleLabel&apos;) label;</span><br><span class="line"></span><br><span class="line">// In toggle.directive.ts</span><br><span class="line">@Input(&apos;toggleLabel&apos;) label;</span><br></pre></td></tr></table></figure></p>
 <p>但是这种解决方案的前提时，你至少能够更改存在命名冲突中的一个或多个指令的源码。如果在两个第三方库中存在命名冲突，这种情况是最棘手的，我们不在这里讨论它们。</p>
-<h2>成果</h2>
-<p>https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes</p>
-<h2>译者注</h2>
-<p>原文中关于最后一段提出的关于在多个第三方库中存在的命名冲突的场景，作者提供做出具体的解决方案，我在这里简单分享一下自己对于这种情况的解决方案：</p>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p><a href="https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes" target="_blank" rel="noopener">https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes</a></p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>原文中关于最后一段提出的关于在多个第三方库中存在的命名冲突的场景，作者提供做出具体的解决方案，我在这里简单分享一下自己对于这种情况的解决方案：</p>
 <p>通常这种情况比较少见，但是万一存在这种情况，我们可以通过创建一个新的<code>wrapper</code>指令来封装第三方指令，<code>wrapper</code>指令提供与第三方指令一样的接口属性，但是因为我们对于<code>wrapper</code>指令有绝对的控制权，我们可以提供统一的<code>prefix</code>来修饰这些接口属性，从而达到解决冲突的效果。</p>
 
       
@@ -186,7 +188,7 @@
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">04 Avoid Namespace Clashes with Directives</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">提示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">成果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">译者注</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#04-Avoid-Namespace-Clashes-with-Directives"><span class="toc-number">1.</span> <span class="toc-text">04 Avoid Namespace Clashes with Directives</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#提示"><span class="toc-number">2.</span> <span class="toc-text">提示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目标"><span class="toc-number">3.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">4.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#成果"><span class="toc-number">5.</span> <span class="toc-text">成果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">6.</span> <span class="toc-text">译者注</span></a></li></ol>
 </div>
 
 
@@ -264,16 +266,16 @@
 
 
 
-            </main>
-          </div>
-        </div>
-       
+                  </main>
+                </div>
+              </div>
+              
 
 
 
 
 
-    <footer class="site-footer">
+                <footer class="site-footer">
   <p class="site-info">
     Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
     Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
@@ -288,16 +290,23 @@
     
   </p>
 </footer>
-    
-  </div>
+                  
+      </div>
 
-</div>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="/js/index.js"></script>
-<script src="/js/search.js"></script>
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
 
-</body>
+  </body>
+
 </html>

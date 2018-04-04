@@ -36,11 +36,23 @@
 </head>
 
 
-<body>
-<div class="blog">
-  <div class="content">
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
 
-    
+        
 
     <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
 
@@ -75,14 +87,14 @@
  </div>
 </header>
 
-        
+          
 
-          <div class="container ">
-          <div class="row">
-            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container" style="position: inherit;">
-            
+                    
 
 <article>
 
@@ -137,10 +149,10 @@
       <div class="post archive">
         <div class="archive-post">
           <time datetime="2018-01-10T14:02:45.000Z">
-            <a href="/2018/01/10/aacp-3b/">2018-01-10</a>
+            <a href="/2018/01/10/aacp-3a/">2018-01-10</a>
           </time>
           
-            <h3 class="archive-title"><a href="/2018/01/10/aacp-3b/"><span>高级 Angular 组件模式 (3b)</span></a></h3>
+            <h3 class="archive-title"><a href="/2018/01/10/aacp-3a/"><span>高级 Angular 组件模式 (3a)</span></a></h3>
           
         </div>
       </div>
@@ -148,10 +160,10 @@
       <div class="post archive">
         <div class="archive-post">
           <time datetime="2018-01-10T14:02:45.000Z">
-            <a href="/2018/01/10/aacp-3a/">2018-01-10</a>
+            <a href="/2018/01/10/aacp-3b/">2018-01-10</a>
           </time>
           
-            <h3 class="archive-title"><a href="/2018/01/10/aacp-3a/"><span>高级 Angular 组件模式 (3a)</span></a></h3>
+            <h3 class="archive-title"><a href="/2018/01/10/aacp-3b/"><span>高级 Angular 组件模式 (3b)</span></a></h3>
           
         </div>
       </div>
@@ -209,16 +221,16 @@
   </div>
 
 </article>
-            </main>
-          </div>
-        </div>
-       
+                  </main>
+                </div>
+              </div>
+              
 
 
 
 
 
-    <footer class="site-footer">
+                <footer class="site-footer">
   <p class="site-info">
     Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
     Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
@@ -233,16 +245,23 @@
     
   </p>
 </footer>
-    
-  </div>
+                  
+      </div>
 
-</div>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="/js/index.js"></script>
-<script src="/js/search.js"></script>
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
 
-</body>
+  </body>
+
 </html>

@@ -11,12 +11,10 @@
 
   
   <meta name="description" content="Understanding SOLID Principles: Liskov Substitution Principle
-
 这是理解SOLID原则，关于里氏替换原则为什么提倡我们面向抽象层编程而不是具体实现层，以及为什么这样可以使代码更具维护性和复用性。
 
 什么是里氏替换原则
-
-Objects s">
+Objects sho">
   
 
   
@@ -47,11 +45,23 @@ Objects s">
 </head>
 
 
-<body>
-<div class="blog">
-  <div class="content">
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
 
-    
+        
 
     <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
 
@@ -86,14 +96,14 @@ Objects s">
  </div>
 </header>
 
-        
+          
 
-          <div class="container ">
-          <div class="row">
-            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container" style="position: inherit;">
-            <article class="article-container ">
+                    <article class="article-container ">
 
   
     
@@ -123,12 +133,10 @@ Objects s">
   <div class="article-content">
     <div class="entry">
       
-          <h1><a href="https://codeburst.io/understanding-solid-principles-liskov-substitution-principle-e7f35277d8d5" target="_blank" rel="noopener">Understanding SOLID Principles: Liskov Substitution Principle</a></h1>
-<blockquote>
+          <h1 id="Understanding-SOLID-Principles-Liskov-Substitution-Principle"><a href="#Understanding-SOLID-Principles-Liskov-Substitution-Principle" class="headerlink" title="Understanding SOLID Principles: Liskov Substitution Principle"></a><a href="https://codeburst.io/understanding-solid-principles-liskov-substitution-principle-e7f35277d8d5" target="_blank" rel="noopener">Understanding SOLID Principles: Liskov Substitution Principle</a></h1><blockquote>
 <p>这是理解<code>SOLID</code>原则，关于<strong>里氏替换原则</strong>为什么提倡我们面向抽象层编程而不是具体实现层，以及为什么这样可以使代码更具维护性和复用性。</p>
 </blockquote>
-<h2>什么是里氏替换原则</h2>
-<blockquote>
+<h2 id="什么是里氏替换原则"><a href="#什么是里氏替换原则" class="headerlink" title="什么是里氏替换原则"></a>什么是里氏替换原则</h2><blockquote>
 <p>Objects should be replaceable with instances of their subtypes without altering the correctness of that program.</p>
 </blockquote>
 <blockquote>
@@ -141,32 +149,25 @@ Objects s">
 <li>对于父类的单元测试对于子类是无效的，因此会降低代码的可测试性和验证程度</li>
 </ul>
 <p>通常打破这条原则的情况发生在修改父类中在其他方法中使用的，与当前子类无关联的内部或者私有变量。这通常算得上是一种对于类本身的一次潜在攻击，而且这种攻击可能是你在不经意间自己发起的，而且不仅在子类中。</p>
-<h2>反面例子</h2>
-<p>让我们通过一个<strong>反面例子</strong>来演示这种修改行为和它所产生的后果。比如，我们有一个关于<code>Store</code>的抽象类和它的实现类<code>BasicStore</code>，这个类会储存一些消息在内存中，直到储存的个数超过每个上限。客户端代码的实现也很简单明了，它期望通过调用<code>retrieveMessages</code>就可以获取到所有储存的消息。</p>
-<p>代码如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">interface Store &#123;</span><br><span class="line">    store(message: string);</span><br><span class="line">    retrieveMessages(): string[];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const STORE_LIMIT = 5;</span><br><span class="line"></span><br><span class="line">class BasicStore implements Store &#123;</span><br><span class="line">   protected stash: string[] = [];</span><br><span class="line">   protected storeLimit: number = STORE_LIMIT;</span><br><span class="line">  </span><br><span class="line">   store(message: string) &#123;</span><br><span class="line">     if (this.storeLimit === this.stash.length) &#123;</span><br><span class="line">         this.makeMoreRoomForStore();</span><br><span class="line">      &#125;</span><br><span class="line">      this.stash.push(message);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    retrieveMessages(): string[] &#123;</span><br><span class="line">      return this.stash;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    makeMoreRoomForStore(): void &#123;</span><br><span class="line">       this.storeLimit += 5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后通过继承<code>BasicStore</code>，我们又创建了一个新的<code>RotatingStore</code>实现类，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class RotatingStore extends BasicStore &#123;</span><br><span class="line">    makeMoreRoomForStore() &#123;</span><br><span class="line">        this.stash = this.stash.slice(1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="反面例子"><a href="#反面例子" class="headerlink" title="反面例子"></a>反面例子</h2><p>让我们通过一个<strong>反面例子</strong>来演示这种修改行为和它所产生的后果。比如，我们有一个关于<code>Store</code>的抽象类和它的实现类<code>BasicStore</code>，这个类会储存一些消息在内存中，直到储存的个数超过每个上限。客户端代码的实现也很简单明了，它期望通过调用<code>retrieveMessages</code>就可以获取到所有储存的消息。</p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">interface Store &#123;</span><br><span class="line">    store(message: string);</span><br><span class="line">    retrieveMessages(): string[];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const STORE_LIMIT = 5;</span><br><span class="line"></span><br><span class="line">class BasicStore implements Store &#123;</span><br><span class="line">   protected stash: string[] = [];</span><br><span class="line">   protected storeLimit: number = STORE_LIMIT;</span><br><span class="line">  </span><br><span class="line">   store(message: string) &#123;</span><br><span class="line">     if (this.storeLimit === this.stash.length) &#123;</span><br><span class="line">         this.makeMoreRoomForStore();</span><br><span class="line">      &#125;</span><br><span class="line">      this.stash.push(message);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    retrieveMessages(): string[] &#123;</span><br><span class="line">      return this.stash;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    makeMoreRoomForStore(): void &#123;</span><br><span class="line">       this.storeLimit += 5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后通过继承<code>BasicStore</code>，我们又创建了一个新的<code>RotatingStore</code>实现类，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class RotatingStore extends BasicStore &#123;</span><br><span class="line">    makeMoreRoomForStore() &#123;</span><br><span class="line">        this.stash = this.stash.slice(1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意<code>RotatingStore</code>中覆盖父类<code>makeMoreRoomForStore</code>方法的代码以及它是如何隐蔽地改变了父类<code>BasicStore</code>关于<code>stash</code>的状态语义的。它不仅修改了<code>stash</code>变量，还销毁了在程序进程中已储存的消息已为将来的消息提供额外的空间。</p>
 <p>在使用<code>RotatingStore</code>的过程中，我们会遇到一些奇怪的现象，这正式由于<code>RotatingStore</code>本身产生的，如下：</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const st: Store = new RotatingStore()</span><br><span class="line"></span><br><span class="line">st.store(&quot;hello&quot;)</span><br><span class="line">st.store(&quot;world&quot;)</span><br><span class="line">st.store(&quot;how&quot;)</span><br><span class="line">st.store(&quot;are&quot;)</span><br><span class="line">st.store(&quot;you&quot;)</span><br><span class="line">st.store(&quot;today&quot;)</span><br><span class="line">st.store(&quot;sir?&quot;)</span><br><span class="line"></span><br><span class="line">st.retrieveMessages() // 一些消息丢失了</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const st: Store = new RotatingStore()</span><br><span class="line"></span><br><span class="line">st.store(&quot;hello&quot;)</span><br><span class="line">st.store(&quot;world&quot;)</span><br><span class="line">st.store(&quot;how&quot;)</span><br><span class="line">st.store(&quot;are&quot;)</span><br><span class="line">st.store(&quot;you&quot;)</span><br><span class="line">st.store(&quot;today&quot;)</span><br><span class="line">st.store(&quot;sir?&quot;)</span><br><span class="line"></span><br><span class="line">st.retrieveMessages() // 一些消息丢失了</span><br></pre></td></tr></table></figure>
 <p>一些消息会无故消失，当前这个类的表现逻辑与所有消息均可以被取出的基本需求不一致。</p>
-<h2>如何实践里氏替换原则</h2>
-<p>为了避免这种奇怪现象的发生，里氏替换原则推荐我们通过在子类中调用父类的公有方法来获取一些内部状态变量，而不是直接使用它。这样我们就可以保证父类抽象中正确的状态语义，从而避免了副作用和非法的状态转变。</p>
+<h2 id="如何实践里氏替换原则"><a href="#如何实践里氏替换原则" class="headerlink" title="如何实践里氏替换原则"></a>如何实践里氏替换原则</h2><p>为了避免这种奇怪现象的发生，里氏替换原则推荐我们通过在子类中调用父类的公有方法来获取一些内部状态变量，而不是直接使用它。这样我们就可以保证父类抽象中正确的状态语义，从而避免了副作用和非法的状态转变。</p>
 <p>它也推荐我们应当尽可能的使基本抽象保持简单和最小化，因为对于子类来说，有助于提供父类的扩展性。如果一个父类是比较复杂的，那么子类在覆盖它的时候，在不影响父类状态语义的情况下进行扩展绝非易事。</p>
 <p>对于内部系统做可行的后置条件检查也是一个不错的方式，这种检查通常会验证是否子类会搅乱一些关键代码的运行路径（译者注：也可以理解为状态语义），但是我本身对这个实践并没有太多的经验，所以无法给予具体的例子。</p>
 <p>代码评论也可以一定程度上给予好的帮助。当你在开发一些你可能无意间做出一些对已有系统的破坏，但是你的同事可能会很容易地发现这些（当局者迷旁观者清）。软件设计保持一致性是一件十分重要的事情，因此应当尽早、尽可能多地查明那些对对象继承链作出潜在修改的代码。</p>
 <p>最后，在<strong>单一职责原则</strong>中，我们曾提及，考虑使用<strong>组合模式</strong>来替换<strong>继承模式</strong>。</p>
-<h2>总结</h2>
-<p>正如你所看到的，在开发软件时，我们往往需要额外花一些努力和精力来使它变得更好。将这些原则牢记于心，理解它们所存在的意义以及它们想要解决的问题，这样会使你的工作变得更加容易、更具条理性，但是同时记住，这并不是一件容易的事，相反，你应当在构思软件时，花相当多的事件思考如何更好地实践这些原则。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如你所看到的，在开发软件时，我们往往需要额外花一些努力和精力来使它变得更好。将这些原则牢记于心，理解它们所存在的意义以及它们想要解决的问题，这样会使你的工作变得更加容易、更具条理性，但是同时记住，这并不是一件容易的事，相反，你应当在构思软件时，花相当多的事件思考如何更好地实践这些原则。</p>
 <p>试着让自己设计的软件系统具备可适应性，这种适应性可以抵御各种不利的变化以及潜在的错误，这样自然而然地可以使你少加班和早回家（译者注：看来加班是每个程序员都要面临的问题啊）</p>
-<h2>译者注</h2>
-<p>这是<strong>SOLID</strong>原则中我所接触和了解较少的一个原则，但经过仔细思考后，发现其实我们还是经常会在实际工作中运用它的。</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这是<strong>SOLID</strong>原则中我所接触和了解较少的一个原则，但经过仔细思考后，发现其实我们还是经常会在实际工作中运用它的。</p>
 <p>在许多面向相对的编程语言中，关于对象的继承机制中，都会提供一些内部变量和状态的修饰符，比如<code>public（公有）</code>、<code>protect（保护）</code>和<code>private（私有）</code>，关于这些修饰符本身的异同这里不再赘述，我想说的是，这些修饰符存在必然有它存在的意义，一定要在实际工作中，使用它们。之前做java后端时，经常在公司的项目的历史代码中发现，很少使用<code>protect</code>和<code>private</code>对类内部的方法和变量做约束，可见当时的编写者并没有对类本身的职能有一个清晰的认识，又或者是随着时间一步步迭代出来的结果。</p>
 <p>那么问题来了，一些静态语言有这些修饰符，但是像<code>javascript</code>这种鸭子类型语言怎么办呢？其实没有必要担心，最早开始学前端的时候，这个问题我就问过自己无数次，<code>javascript</code>虽然没有这些修饰符，但是我们可以通过别的方式来达到类似的效果，或者使用<code>typescript</code>。</p>
 <p>除了在编程语言层面，在前端实际工作中，你可能会听到一个叫作<code>immutable</code>的概念，这个概念我认为也是里氏替换原则的一直延伸。因为当前的前端框架一般提倡的理念均是<code>f(state) =&gt; view</code>，即数据状态代表视图，而数据状态本身由于<code>javascript</code>动态语言的特性，很容易会在不经意间被修改，一旦存在这种修改，视图中便会产生一些意想不到的问题，因此<code>immutable</code>和<code>函数式</code>的概念才会在前段时间火起来。</p>
-<h2>写在最后</h2>
-<p>经过这五篇文章，我们来分别总结一下这五条基本原则以及它们带来的好处：</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>经过这五篇文章，我们来分别总结一下这五条基本原则以及它们带来的好处：</p>
 <ul>
 <li>单一职责原则：提高代码实现层的内聚度，降低实现单元彼此之间的耦合度</li>
 <li>开闭原则：提高代码实现层的可扩展性，提高面临改变的可适应性，降低修改代码的冗余度</li>
@@ -288,7 +289,7 @@ Objects s">
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Liskov Substitution Principle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">什么是里氏替换原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">反面例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">如何实践里氏替换原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.</span> <span class="toc-text">译者注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.6.</span> <span class="toc-text">写在最后</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Understanding-SOLID-Principles-Liskov-Substitution-Principle"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Liskov Substitution Principle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是里氏替换原则"><span class="toc-number">1.1.</span> <span class="toc-text">什么是里氏替换原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反面例子"><span class="toc-number">1.2.</span> <span class="toc-text">反面例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何实践里氏替换原则"><span class="toc-number">1.3.</span> <span class="toc-text">如何实践里氏替换原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">1.5.</span> <span class="toc-text">译者注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写在最后"><span class="toc-number">1.6.</span> <span class="toc-text">写在最后</span></a></li></ol></li></ol>
 </div>
 
 
@@ -366,16 +367,16 @@ Objects s">
 
 
 
-            </main>
-          </div>
-        </div>
-       
+                  </main>
+                </div>
+              </div>
+              
 
 
 
 
 
-    <footer class="site-footer">
+                <footer class="site-footer">
   <p class="site-info">
     Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
     Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
@@ -390,16 +391,23 @@ Objects s">
     
   </p>
 </footer>
-    
-  </div>
+                  
+      </div>
 
-</div>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="/js/index.js"></script>
-<script src="/js/search.js"></script>
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
 
-</body>
+  </body>
+
 </html>

@@ -10,13 +10,7 @@
   
 
   
-  <meta name="description" content="说到这个face，自从70开始改版的时候，我就一度以为这个face是歪的，后来才知道，人家就是故意歪的，并且它是一个gif图片，正好最近在学习css相关的东西，借机自己重新仿制一个山寨版的吧。
-&amp;lt;!--more--&amp;gt;
-原版是这样滴。
-
-然后山寨的是这样滴。
-
-除了这个相比原版的“嘴角上扬">
+  <meta name="description" content="说到这个face，自从70开始改版的时候，我就一度以为这个face是歪的，后来才知道，人家就是故意歪的，并且它是一个gif图片，正好最近在学习css相关的东西，借机自己重新仿制一个山寨版的吧。">
   
 
   
@@ -47,11 +41,23 @@
 </head>
 
 
-<body>
-<div class="blog">
-  <div class="content">
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
 
-    
+        
 
     <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
 
@@ -86,14 +92,14 @@
  </div>
 </header>
 
-        
+          
 
-          <div class="container ">
-          <div class="row">
-            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container" style="position: inherit;">
-            <article class="article-container ">
+                    <article class="article-container ">
 
   
     
@@ -124,11 +130,11 @@
     <div class="entry">
       
           <p>说到这个face，自从70开始改版的时候，我就一度以为这个face是歪的，后来才知道，人家就是故意歪的，并且它是一个gif图片，正好最近在学习css相关的东西，借机自己重新仿制一个山寨版的吧。</p>
-<p>&lt;!--more--&gt;</p>
+<a id="more"></a>
 <p>原版是这样滴。</p>
-<p><img src="/img/happy_new_content_right.gif" width="250" height="250"></p>
+<img src="/img/happy_new_content_right.gif" width="250" height="250">
 <p>然后山寨的是这样滴。</p>
-<p><iframe src="http://jsbin.com/fosotew/edit?output" width="680" height="350" frameborder="0" allowfullscreen></iframe></p>
+<iframe src="http://jsbin.com/fosotew/edit?output" width="680" height="350" frameborder="0" allowfullscreen></iframe>
 <p>除了这个相比原版的“嘴角上扬”无法破以外，其他基本一致了，如果有大神能有办法改的话，源码在jsbin中。</p>
 
       
@@ -240,16 +246,16 @@
 
 
 
-            </main>
-          </div>
-        </div>
-       
+                  </main>
+                </div>
+              </div>
+              
 
 
 
 
 
-    <footer class="site-footer">
+                <footer class="site-footer">
   <p class="site-info">
     Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
     Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
@@ -264,16 +270,23 @@
     
   </p>
 </footer>
-    
-  </div>
+                  
+      </div>
 
-</div>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="/js/index.js"></script>
-<script src="/js/search.js"></script>
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
 
-</body>
+  </body>
+
 </html>

@@ -13,7 +13,7 @@
   <meta name="description" content="原文地址: http://marksheet.io/html-semantics.html
 
 HTML标签本身的意义是为了传递对于一个document元素的含义，所以再考虑使用正确的标签表达内容之前，考虑你的网页看起来怎么样为时过早，请将注意力集中到每一个你使用的HTML标签上。
-你需要根据你书写的">
+你需要根据你书写的内容及本文本身的含义，来选择与之匹配的HTML标签。">
   
 
   
@@ -44,11 +44,23 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
 </head>
 
 
-<body>
-<div class="blog">
-  <div class="content">
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
 
-    
+        
 
     <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
 
@@ -83,14 +95,14 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
  </div>
 </header>
 
-        
+          
 
-          <div class="container ">
-          <div class="row">
-            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container" style="position: inherit;">
-            <article class="article-container ">
+                    <article class="article-container ">
 
   
     
@@ -121,13 +133,12 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
     <div class="entry">
       
           <blockquote>
-<p>原文地址: http://marksheet.io/html-semantics.html</p>
+<p>原文地址: <a href="http://marksheet.io/html-semantics.html" target="_blank" rel="noopener">http://marksheet.io/html-semantics.html</a></p>
 </blockquote>
 <p>HTML标签本身的意义是为了传递对于一个document元素的含义，所以再考虑使用正确的标签表达内容之前，考虑你的网页看起来怎么样为时过早，请将注意力集中到每一个你使用的HTML标签上。</p>
 <p>你需要根据你书写的内容及本文本身的含义，来选择与之匹配的HTML标签。</p>
-<p>&lt;!--more--&gt;</p>
-<h2>Structure elements: 组织页面</h2>
-<p>你可以使用<strong>结构</strong>元素来组织页面的主要部分，这些部分通常包含其他的HTML元素。</p>
+<a id="more"></a>
+<h2 id="Structure-elements-组织页面"><a href="#Structure-elements-组织页面" class="headerlink" title="Structure elements: 组织页面"></a>Structure elements: 组织页面</h2><p>你可以使用<strong>结构</strong>元素来组织页面的主要部分，这些部分通常包含其他的HTML元素。</p>
 <p>下面是一个典型的网页需要包含的<strong>主要部分</strong>:</p>
 <ul>
 <li><code>&lt;header&gt;</code>作为页面的第一个元素，包含logo和tagline。</li>
@@ -136,8 +147,7 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
 <li><code>&lt;article&gt;</code>作为页面的内容模块，比如blog的一个post。</li>
 <li><code>&lt;footer&gt;</code>作为页面的最后一个元素，位于最底部。</li>
 </ul>
-<h2>Text elements: 定义内容</h2>
-<p>在结构元素中，通常需要寻找一些<strong>文本</strong>元素来达到定义内容的目的。</p>
+<h2 id="Text-elements-定义内容"><a href="#Text-elements-定义内容" class="headerlink" title="Text elements: 定义内容"></a>Text elements: 定义内容</h2><p>在结构元素中，通常需要寻找一些<strong>文本</strong>元素来达到定义内容的目的。</p>
 <p>你将主要使用如下标签:</p>
 <ul>
 <li><code>&lt;p&gt;</code>作为段落</li>
@@ -146,8 +156,7 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
 <li><code>&lt;li&gt;</code>作为列表单元</li>
 <li><code>&lt;blockquote&gt;</code>作为引用</li>
 </ul>
-<h2>Inline elements: 区分文本</h2>
-<p>因为文本标签通常会很长，并且会有不同的内容，<strong>行内</strong>元素使你可以将一些关键部分从文本中区分出来。</p>
+<h2 id="Inline-elements-区分文本"><a href="#Inline-elements-区分文本" class="headerlink" title="Inline elements: 区分文本"></a>Inline elements: 区分文本</h2><p>因为文本标签通常会很长，并且会有不同的内容，<strong>行内</strong>元素使你可以将一些关键部分从文本中区分出来。</p>
 <p>有很多的行内元素可以使用，但是你会经常用到以下几个:</p>
 <ul>
 <li><code>&lt;strong&gt;</code>作为关键字</li>
@@ -157,9 +166,8 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
 <li><code>&lt;abbr&gt;</code>作为缩写</li>
 </ul>
 <p>尝试阅读下面的HTML代码，你就可以很容易的理解每一个元素的用途。</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;article&gt;</span><br><span class="line">  &lt;h1&gt;Main title of the page&lt;/h1&gt;</span><br><span class="line">  &lt;h2&gt;A subtitle&lt;/h2&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">    Something something an other stuff and some &lt;em&gt;emphasis&lt;/em&gt; and even &lt;strong&gt;important&lt;/strong&gt; words.</span><br><span class="line">  &lt;/p&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">    Another paragraph.</span><br><span class="line">  &lt;/p&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li&gt;One&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Two&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Three&lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">  &lt;blockquote&gt;</span><br><span class="line">    Once said</span><br><span class="line">  &lt;/blockquote&gt;</span><br><span class="line">&lt;/article&gt;</span><br><span class="line">&lt;aside&gt;</span><br><span class="line">  &lt;h3&gt;My latest posts&lt;/h3&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">&lt;/aside&gt;</span><br></pre></td></tr></table></figure></p>
-<h2>Generic elements 演变标签</h2>
-<p>当没有显而易见的具有语义的标签来匹配相关内容，但你仍然要插入一些标签来达到格式化和分组化的目的，你可以使用一到两个下面的具有演变性的标签:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;article&gt;</span><br><span class="line">  &lt;h1&gt;Main title of the page&lt;/h1&gt;</span><br><span class="line">  &lt;h2&gt;A subtitle&lt;/h2&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">    Something something an other stuff and some &lt;em&gt;emphasis&lt;/em&gt; and even &lt;strong&gt;important&lt;/strong&gt; words.</span><br><span class="line">  &lt;/p&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">    Another paragraph.</span><br><span class="line">  &lt;/p&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li&gt;One&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Two&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Three&lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">  &lt;blockquote&gt;</span><br><span class="line">    Once said</span><br><span class="line">  &lt;/blockquote&gt;</span><br><span class="line">&lt;/article&gt;</span><br><span class="line">&lt;aside&gt;</span><br><span class="line">  &lt;h3&gt;My latest posts&lt;/h3&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">&lt;/aside&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Generic-elements-演变标签"><a href="#Generic-elements-演变标签" class="headerlink" title="Generic elements 演变标签"></a>Generic elements 演变标签</h2><p>当没有显而易见的具有语义的标签来匹配相关内容，但你仍然要插入一些标签来达到格式化和分组化的目的，你可以使用一到两个下面的具有演变性的标签:</p>
 <blockquote>
 <p>我理解的演变的意思是这些标签可以通过css样式来变成不同职能的其他标签</p>
 </blockquote>
@@ -168,8 +176,7 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
 <li><code>&lt;span&gt;</code>作为行内元素组</li>
 </ul>
 <p>尽管这些标签没有任何的实际意义，但它们与css配合使用将十分有用。</p>
-<h2>Don’t overthink semantics 不要想太多</h2>
-<p>大约有100多种语义标签供你使用。如果可以选择合适的元素来使用，那将是十分不错的选择。</p>
+<h2 id="Don’t-overthink-semantics-不要想太多"><a href="#Don’t-overthink-semantics-不要想太多" class="headerlink" title="Don’t overthink semantics 不要想太多"></a>Don’t overthink semantics 不要想太多</h2><p>大约有100多种语义标签供你使用。如果可以选择合适的元素来使用，那将是十分不错的选择。</p>
 <p>但是不要花费太多的事情太考虑这件事，仅仅从现在开始，有选择地使用上面所提供的标签，你的网页将会变得更好。</p>
 
       
@@ -210,7 +217,7 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">Structure elements: 组织页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">Text elements: 定义内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">Inline elements: 区分文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">Generic elements 演变标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">Don’t overthink semantics 不要想太多</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Structure-elements-组织页面"><span class="toc-number">1.</span> <span class="toc-text">Structure elements: 组织页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Text-elements-定义内容"><span class="toc-number">2.</span> <span class="toc-text">Text elements: 定义内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Inline-elements-区分文本"><span class="toc-number">3.</span> <span class="toc-text">Inline elements: 区分文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Generic-elements-演变标签"><span class="toc-number">4.</span> <span class="toc-text">Generic elements 演变标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Don’t-overthink-semantics-不要想太多"><span class="toc-number">5.</span> <span class="toc-text">Don’t overthink semantics 不要想太多</span></a></li></ol>
 </div>
 
 
@@ -288,16 +295,16 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
 
 
 
-            </main>
-          </div>
-        </div>
-       
+                  </main>
+                </div>
+              </div>
+              
 
 
 
 
 
-    <footer class="site-footer">
+                <footer class="site-footer">
   <p class="site-info">
     Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
     Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
@@ -312,16 +319,23 @@ HTML标签本身的意义是为了传递对于一个document元素的含义，�
     
   </p>
 </footer>
-    
-  </div>
+                  
+      </div>
 
-</div>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="/js/index.js"></script>
-<script src="/js/search.js"></script>
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
 
-</body>
+  </body>
+
 </html>

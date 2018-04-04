@@ -11,13 +11,10 @@
 
   
   <meta name="description" content="02 Write Compound Components
-
 原文: Write Compound Components
 
-目标
-我们需要实现的需求是能够使使用者通过&amp;lt;toggle&amp;gt;组件动态的改变包含在它内部的内容。
-实现
-我们可以把toggle抽象为一个复合组件，由三个新的组件&amp;lt;t">
+目标我们需要实现的需求是能够使使用者通过&amp;lt;toggle&amp;gt;组件动态的改变包含在它内部的内容。
+实现我们可以把toggle抽象为一个复合组件，由三个新的组件&amp;lt;togg">
   
 
   
@@ -48,11 +45,23 @@
 </head>
 
 
-<body>
-<div class="blog">
-  <div class="content">
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
 
-    
+        
 
     <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
 
@@ -87,14 +96,14 @@
  </div>
 </header>
 
-        
+          
 
-          <div class="container ">
-          <div class="row">
-            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container" style="position: inherit;">
-            <article class="article-container ">
+                    <article class="article-container ">
 
   
     
@@ -124,14 +133,11 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2>02 Write Compound Components</h2>
-<blockquote>
+          <h2 id="02-Write-Compound-Components"><a href="#02-Write-Compound-Components" class="headerlink" title="02 Write Compound Components"></a>02 Write Compound Components</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/write-compound-components-1001449c67f0" target="_blank" rel="noopener">Write Compound Components</a></p>
 </blockquote>
-<h3>目标</h3>
-<p>我们需要实现的需求是能够使使用者通过<code>&lt;toggle&gt;</code>组件动态的改变包含在它内部的内容。</p>
-<h3>实现</h3>
-<p>我们可以把toggle抽象为一个复合组件，由三个新的组件<code>&lt;toggle-button&gt;</code>、<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>构成。</p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>我们需要实现的需求是能够使使用者通过<code>&lt;toggle&gt;</code>组件动态的改变包含在它内部的内容。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们可以把toggle抽象为一个复合组件，由三个新的组件<code>&lt;toggle-button&gt;</code>、<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>构成。</p>
 <p>每一个组件的职能与它们的父组件保持一致，它们各自的职能如下：</p>
 <ul>
 <li><code>toggle-button</code>: 代表开关，用来渲染父组件的开关状态</li>
@@ -139,19 +145,14 @@
 <li><code>toggle-off</code>: 根据父组件的开关状态，渲染当状态为<strong>关</strong>时的内容</li>
 </ul>
 <p><code>&lt;toggle&gt;</code>组件可以实现<code>@ContentChild</code>装饰器获取这三个子组件的引用，从而可以根据开关状态的变化调整它们之间的关联逻辑。</p>
-<h2>成果</h2>
-<p>经过这样的调整，我们可以使用户通过使用<code>&lt;toggle&gt;</code>组件去自定义包含在它其中内容的显示逻辑，内容中会有一个按钮负责切换开关的状态。可以尝试在在线代码库中调整子组件的顺序，你可以在它们中间嵌套任何的<code>html</code>字符串，只要这三个组件是作为<code>&lt;toggle&gt;</code>的子组件存在的，一切都将正常的运行。</p>
-<h2>相关话题</h2>
-<ul>
-<li>
-<p><code>@ContentChild</code>装饰器将会返回在组件标签包含的内容中，第一个符合选择器的子组件或者子指令的引用，比如<code>&lt;toggle&gt; This is the content &lt;/toggle&gt;</code>。如果想获取所有的子组件或者子指令，使用<code>@ContentChildren</code>。</p>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>经过这样的调整，我们可以使用户通过使用<code>&lt;toggle&gt;</code>组件去自定义包含在它其中内容的显示逻辑，内容中会有一个按钮负责切换开关的状态。可以尝试在在线代码库中调整子组件的顺序，你可以在它们中间嵌套任何的<code>html</code>字符串，只要这三个组件是作为<code>&lt;toggle&gt;</code>的子组件存在的，一切都将正常的运行。</p>
+<h2 id="相关话题"><a href="#相关话题" class="headerlink" title="相关话题"></a>相关话题</h2><ul>
+<li><p><code>@ContentChild</code>装饰器将会返回在组件标签包含的内容中，第一个符合选择器的子组件或者子指令的引用，比如<code>&lt;toggle&gt; This is the content &lt;/toggle&gt;</code>。如果想获取所有的子组件或者子指令，使用<code>@ContentChildren</code>。</p>
 </li>
-<li>
-<p><code>@ViewChild</code>或者<code>@ViewChildren</code>装饰器是用来获取在组件内部模板中使用的单个或者多个组件的。比如<code>template: 'This is the view'</code>或者<code>templateUrl: './my.component.html'</code></p>
+<li><p><code>@ViewChild</code>或者<code>@ViewChildren</code>装饰器是用来获取在组件内部模板中使用的单个或者多个组件的。比如<code>template: &#39;This is the view&#39;</code>或者<code>templateUrl: &#39;./my.component.html&#39;</code></p>
 </li>
 </ul>
-<h2>译者注</h2>
-<p>这里组件架构方式是标准的<code>Smart Component（智能组件）</code>和<code>Dump Component（木偶组件）</code>组件架构方式。</p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这里组件架构方式是标准的<code>Smart Component（智能组件）</code>和<code>Dump Component（木偶组件）</code>组件架构方式。</p>
 <p>以上的需求完全是可以在<code>&lt;toggle&gt;</code>内部实现的，但是这样会使它的内部充满逻辑代码，反之我们可以将一些职能划分为成更小的碎片，并委托到它的子组件中，本身作为容器组件存在，负责协作子组件从而达到目的。</p>
 <p>对于<code>@ContentChild</code>和<code>@ViewChild</code>的使用场景，我认为通过看装饰器前缀的寓意是最后的方式。</p>
 <ul>
@@ -198,7 +199,7 @@
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">02 Write Compound Components</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">成果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">相关话题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">译者注</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#02-Write-Compound-Components"><span class="toc-number">1.</span> <span class="toc-text">02 Write Compound Components</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#目标"><span class="toc-number">1.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实现"><span class="toc-number">1.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#成果"><span class="toc-number">2.</span> <span class="toc-text">成果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关话题"><span class="toc-number">3.</span> <span class="toc-text">相关话题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">4.</span> <span class="toc-text">译者注</span></a></li></ol>
 </div>
 
 
@@ -276,16 +277,16 @@
 
 
 
-            </main>
-          </div>
-        </div>
-       
+                  </main>
+                </div>
+              </div>
+              
 
 
 
 
 
-    <footer class="site-footer">
+                <footer class="site-footer">
   <p class="site-info">
     Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
     Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
@@ -300,16 +301,23 @@
     
   </p>
 </footer>
-    
-  </div>
+                  
+      </div>
 
-</div>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="/js/index.js"></script>
-<script src="/js/search.js"></script>
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
 
-</body>
+  </body>
+
 </html>
