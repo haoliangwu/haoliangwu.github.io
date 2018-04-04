@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/04/02/30-minutes-graphql/</loc>
+    
+    <lastmod>2018-04-04T11:12:29.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/01/10/aacp-3b/</loc>
     
     <lastmod>2018-04-04T09:59:29.000Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>http://yoursite.com/2018/02/17/aacp-4/</loc>
     
     <lastmod>2018-04-04T09:58:47.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/04/02/30-minutes-graphql/</loc>
-    
-    <lastmod>2018-04-02T04:13:29.000Z</lastmod>
     
   </url>
   
@@ -149,7 +149,63 @@
   </url>
   
   <url>
+    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/08/22/interview-record-20160822/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/26/liferay-portlet-container/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/22/liferay-progress-bar/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/07/15/liferay-smile-face/</loc>
+    
+    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/09/21/vscode-typings%E9%85%8D%E7%BD%AE/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -170,42 +226,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/19/liferay-forward-proxy/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/15/liferay-smile-face/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/26/liferay-portlet-container/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/05/20160705/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/08/10/HTML-is-about-meaning/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/11/20160711/</loc>
+    <loc>http://yoursite.com/2016/07/06/warriorjs%EF%BC%8C%E5%8F%AA%E8%83%BD%E6%84%9F%E5%8F%B9%E5%9F%8E%E4%BC%9A%E7%8E%A9/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -219,28 +240,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/09/21/vscode-typings%E9%85%8D%E7%BD%AE/</loc>
+    <loc>http://yoursite.com/2016/07/05/20160705/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/06/warriorjs%EF%BC%8C%E5%8F%AA%E8%83%BD%E6%84%9F%E5%8F%B9%E5%9F%8E%E4%BC%9A%E7%8E%A9/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/10/14/%E5%BD%93%E5%BC%80%E5%8F%91%E4%B8%80%E5%91%A8%E4%BA%86/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/22/liferay-progress-bar/</loc>
+    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -261,14 +268,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/09/06/angular%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/01/Liferay-70-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://yoursite.com/2016/10/14/%E5%BD%93%E5%BC%80%E5%8F%91%E4%B8%80%E5%91%A8%E4%BA%86/</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
@@ -276,48 +276,6 @@
   
   <url>
     <loc>http://yoursite.com/2016/09/26/%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E7%A6%BB%E5%BC%80%E4%BA%86Liferay/</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/pages/index.html</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/liferay/index.html</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/recipes/%E8%9A%9D%E6%B2%B9%E7%94%9F%E8%8F%9C.html</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/recipes/index.html</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0%E5%88%86%E4%BA%AB/index.html</loc>
-    
-    <lastmod>2017-03-08T07:51:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/liferay/Fundamentals.html</loc>
     
     <lastmod>2017-03-08T07:51:10.000Z</lastmod>
     
