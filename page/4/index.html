@@ -110,10 +110,71 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <blockquote>
+      
+          <blockquote>
 <p>Set up a server to use as a proxy for requests from Liferay (such as Apache web server)</p>
 </blockquote>
+<p>&lt;!--more--&gt;</p>
+<h1>环境</h1>
+<ul>
+<li>Ubuntu 14.04</li>
+<li>httpd(apache2 for Ubuntu)</li>
+<li>liferay 7.0</li>
+</ul>
+<h1>知识背景</h1>
+<p>这里的proxy server应当是指正向代理(forward proxy)。正向代理大概的意思，就是一个位于客户端和原始服务器之间的服务器，当客户端为了从原始服务器拿一些内容的时候，不向原始服务器直接发送请求而是向代理服务器发送，代理服务器转发客户端请求给原始服务器并将获得内容返还给客户端。</p>
+<p>正向代理的意思，大体就是一个跳板，对于你不方便去的地方或者不能去的地方，它可以带你去，比如一些vpn代理，其原理就是你访问代理服务器，代理服务器访问被墙的网站，之后把内容返还给你。</p>
+<p>既然说了正向代理，就捎带说一下反向代理。反向代理和正向代理相反，对与访问者来说，你访问一个反向代理服务器后，它同样会从原始服务器拿数据，但是这里和正向代理的区别是，访问者不需要进行额外的设置，反向代理服务器判断请求如何转发给原始服务器，之后把内容返还给客户端。</p>
+<p>反向代理的意思，大体就是一个服务柜台，对于你不方便去的地方或者不能去的地方，有人可以帮你去，比如一些设置了防火墙的原始服务器为了提供给外网用户访问，就会使用反向代理。</p>
+<h1>步骤</h1>
+<h3>配置proxy server</h3>
+<p>以ubuntu为例(windows应该会更方便)，直接用apt-get安装</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apache2</span><br></pre></td></tr></table></figure></p>
+<p>之后server的根目录是
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/apache2</span><br></pre></td></tr></table></figure></p>
+<p>进入这里，会发现有一个<strong>apache2.conf</strong>的配置文件，这个文件是apache2的主要配置文件，其中包含了若干子配置文件，分别配置不同模块的配置，看注释就可以大概知道每个模块是做什么的。</p>
+<p>我们这里需要着重看的是<strong>ports.conf</strong>和<strong>000-default.conf</strong>。</p>
+<p>前者主要设置一些关于server监听端口的配置，它的源码如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Listen 80</span><br><span class="line"></span><br><span class="line">&lt;IfModule ssl_module&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_gnutls.c&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure></p>
+<p>大体的意思是</p>
+<blockquote>
+<p>监听80端口，如果有ssl_module和mod_gnutls.c模块加载的话，同时也监听443端口。</p>
+</blockquote>
+<p>如果你还想监听别端口，比如81，可以直接添加
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Listen 81</span><br></pre></td></tr></table></figure></p>
+<p>后者主要设置一些关于虚拟主机的配置，<strong>apache2.conf</strong>中有一行代码
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IncludeOptional sites-enabled/*.conf</span><br></pre></td></tr></table></figure></p>
+<p>意思是会在启动服务器的时候，把所有**./sites-enabled<strong>目录下的配置文件都包含进来，所以我们可以自己新建一个.conf文件，也可以直接更改默认的文件，也就是</strong>000-default.conf**。</p>
+<h2>配置VirtualHost</h2>
+<p>配置完proxy server的监听端口，该配置虚拟主机了，打开默认配置文件，添加如下代码</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br><span class="line">ProxyVia On</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;  </span><br><span class="line">	ServerAdmin prograsliu@gmail.com</span><br><span class="line">    ServerName www.test.com</span><br><span class="line">    ServerAlias test.com</span><br><span class="line">    ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">    CustomLog &quot;logs/test.com-access.log&quot; common    </span><br><span class="line">    </span><br><span class="line">    #正向代理设置</span><br><span class="line">    ProxyRequests On</span><br><span class="line">    ProxyVia On</span><br><span class="line"></span><br><span class="line">    &lt;Proxy *&gt;</span><br><span class="line">        Order deny,allow</span><br><span class="line">        Deny from all</span><br><span class="line">        Allow from 127.0.0.1</span><br><span class="line">    &lt;/Proxy&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure></p>
+<p>开启Apache正向代理
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br></pre></td></tr></table></figure></p>
+<p>之后设置控制位于代理服务器链中的代理请求的流向
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyVia On</span><br></pre></td></tr></table></figure></p>
+<p>每个请求和应答都会对应当前主机得到一个&quot;Via:&quot;头。</p>
+<p>再设置对apache监听主机的请求的匹配规则
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这个表示匹配所有80端口的请求，之后又由于这个标签中还有一些其他的设置，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ServerName www.test.com</span><br><span class="line">ServerAlias test.com</span><br><span class="line">ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">CustomLog &quot;logs/test.com-access.log&quot; common</span><br></pre></td></tr></table></figure></p>
+<p>因此，匹配规则会变为，匹配所有请求www.test.com:80这个主机的请求，同时呢，这个主机的小名是test.com，日志文件根据事件类型按不同路径保存。</p>
+<h2>测试一下</h2>
+<p>设置到这里，proxy server已经设置完成，因此也可以来简单测试一下，比如打开ＦＦ浏览器，之后在<strong>Preference &gt; Advanced &gt; Connection</strong>中，选择<strong>manual proxy configuration</strong>，然后把代理配置填进去，比如
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP proxy: www.test.com</span><br><span class="line">Port: 80</span><br></pre></td></tr></table></figure></p>
+<p>注意下面有一个<strong>No Proxy for</strong>的选项，因此不要拿本地的请求作测试。</p>
+<p>然后访问<strong>www.163.com</strong>，使用f12抓包，可以发现请求的相应头(response header)中，会增加一个字段
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Via: &quot;1.1 www.test.com&quot;</span><br></pre></td></tr></table></figure></p>
+<p>大体意思就是，你打开的163的页面，并不是从网易的浏览器直接获得的，而是从你配置的叫做www.test.com的代理服务器获得的，真正访问网易服务器的是www.test.com。</p>
+<h2>配置liferay</h2>
+<p>接下来就很简单了，只需要让liferay来使用我们配置好的proxy server即可。</p>
+<p>liferay中的system.properties有如下三个参数，
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Set the location of the HTTP proxy that the portal will use to fetch</span><br><span class="line"># external content.</span><br><span class="line">#</span><br><span class="line"># Set http.nonProxyHosts for hosts that will not be proxied. This is useful</span><br><span class="line"># for proxied environments where you need direct access to internal servers.</span><br><span class="line"># This should follow the same semantics as the java.net package.</span><br><span class="line">#</span><br><span class="line">#http.proxyHost=192.168.0.200</span><br><span class="line">#http.proxyPort=4480</span><br><span class="line">#http.nonProxyHosts=192.168.0.250</span><br></pre></td></tr></table></figure></p>
+<p>最后一个不用管，只需要配置前两个，把它改成我们配置的proxy server对应的参数即可，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http.proxyHost=www.test.com</span><br><span class="line">http.proxyPort=80</span><br></pre></td></tr></table></figure></p>
+<p>之后就大功告成了。当portal从外部的server，获取资源时，会使用代理，比如使用亚马逊的s3 store云储存服务时。</p>
+<h3>参考</h3>
+<p><a href="http://www.cnblogs.com/zemliu/archive/2012/04/18/2454655.html" target="_blank" rel="noopener">Apache配置正向代理与反向代理</a></p>
+
       
     </div>
     
@@ -173,8 +234,15 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>说到这个face，自从70开始改版的时候，我就一度以为这个face是歪的，后来才知道，人家就是故意歪的，并且它是一个gif图片，正好最近在学习css相关的东西，借机自己重新仿制一个山寨版的吧。</p>
+      
+          <p>说到这个face，自从70开始改版的时候，我就一度以为这个face是歪的，后来才知道，人家就是故意歪的，并且它是一个gif图片，正好最近在学习css相关的东西，借机自己重新仿制一个山寨版的吧。</p>
+<p>&lt;!--more--&gt;</p>
+<p>原版是这样滴。</p>
+<p><img src="/img/happy_new_content_right.gif" width="250" height="250"></p>
+<p>然后山寨的是这样滴。</p>
+<p><iframe src="http://jsbin.com/fosotew/edit?output" width="680" height="350" frameborder="0" allowfullscreen></iframe></p>
+<p>除了这个相比原版的“嘴角上扬”无法破以外，其他基本一致了，如果有大神能有办法改的话，源码在jsbin中。</p>
+
       
     </div>
     
@@ -234,8 +302,8 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>decent 体面的、正派的</p>
+      
+          <p>decent 体面的、正派的</p>
 <blockquote>
 <p>decent person 正派的人</p>
 </blockquote>
@@ -244,6 +312,44 @@
 <blockquote>
 <p>conservative party 保守党</p>
 </blockquote>
+<p>&lt;!--more--&gt;
+accountable 负责任的</p>
+<blockquote>
+<p>be accountable to sth 对某物负有责任</p>
+</blockquote>
+<p>complimente 表扬</p>
+<blockquote>
+<p>the teacher complimente him because his grade. 老师因为他的成绩表扬了他。</p>
+</blockquote>
+<p>turn ones back on 置之不理</p>
+<blockquote>
+<p>I turn my back on him due to his betrayal. 我因为他的背叛而对他不理不睬。</p>
+</blockquote>
+<p>refer sth to sb 提交</p>
+<blockquote>
+<p>I refer this matter to you. 我向你提交这件事。</p>
+</blockquote>
+<p>the stock of stn 库存</p>
+<p>make a prompt settlement 做出及时的解决</p>
+<p>see your way to 设法</p>
+<blockquote>
+<p>see your way to make a prompt settlement. 设法做出及时的解决</p>
+</blockquote>
+<p>on the fritz 出故障</p>
+<blockquote>
+<p>the yogurt turned sour because the fridge was on the fritz. 酸奶变酸了因为冰箱坏了。</p>
+</blockquote>
+<p>dilemma 困境</p>
+<p>re-order 续订</p>
+<p>kits 成套的装备或设备</p>
+<blockquote>
+<p>travel kits 旅行套装 gym kits 健身套装 sport kits 运动套装 first-aid kits 急救套装</p>
+</blockquote>
+<p>inventory 详细的清单、存货</p>
+<blockquote>
+<p>I'll get the inventory on the line. 我将致电获取存货状况。</p>
+</blockquote>
+
       
     </div>
     
@@ -303,8 +409,8 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>昨天build bundle的时候，无意中在掘金看到的，反正build时间那么长，不如抽空“劳逸结合”一下。</p>
+      
+          <p>昨天build bundle的时候，无意中在掘金看到的，反正build时间那么长，不如抽空“劳逸结合”一下。</p>
 <p>打开它的github项目<a href="https://github.com/olistic/warriorjs" target="_blank" rel="noopener">地址</a>，大概看了一下，具体就是一个文字编程游戏，其目的是边玩游戏边学习js编程。游戏的任务简单说，就是你需要设计一个“无敌”的战士，之后会在一座塔中进行试炼（无尽之剑??），然后这个战士的智商要能够达到以下几点：</p>
 <ul>
 <li>知道何时前进</li>
@@ -312,6 +418,16 @@
 <li>知道何时休息</li>
 <li>知道不要滥杀无辜（救俘虏）</li>
 </ul>
+<p>&lt;!--more--&gt;</p>
+<p>因为原来玩过一个叫coding tank的游戏，表面看这个游戏相对那个简单不少，我寻思着写个大概的应该不求最优只求通关不成问题，结果后来发现远比想象中的复杂，大体的坑主要体现在：</p>
+<ul>
+<li>不能无脑冲或者进攻(因为你只有20滴血)</li>
+<li>也不能采用只要残血就休息的策略(因为有弓箭手啊)</li>
+<li>也不能见怪就砍(砍着俘虏就不好了)</li>
+</ul>
+<p>所以写一个比较完善的“战士”还是需要慢慢来，而且一开始是一层一层挑战，当全部关卡完成后，会开启史诗模式，大体意思就是从1层直接干到顶层。</p>
+<p>唉，之后我会把通关过程更新到这里，最后感叹句，老外真是城会玩。</p>
+
       
     </div>
     
@@ -371,8 +487,8 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>inadequate/improper packing 包装不善</p>
+      
+          <p>inadequate/improper packing 包装不善</p>
 <blockquote>
 <p>the damage of the goods due to inadequate packing. 货物的损毁归咎于包装不善。</p>
 </blockquote>
@@ -382,8 +498,18 @@
 </blockquote>
 <p>make amends for the losses 对损失做出补偿</p>
 <blockquote>
-<p>I’ll make amends for your losses. 我会对你的损失做出补偿。</p>
+<p>I'll make amends for your losses. 我会对你的损失做出补偿。</p>
 </blockquote>
+<p>&lt;!--more--&gt;</p>
+<p>underweight 短重，还可以修饰人的体重过轻</p>
+<blockquote>
+<p>The doctor said I am underweight and unhealthy. 医生说我体重过轻并且不健康。</p>
+</blockquote>
+<p>go ok 顺利</p>
+<blockquote>
+<p>I am calling to see your delivery went ok. 我给你打电话来确认货物是否顺利抵达。</p>
+</blockquote>
+
       
     </div>
     
@@ -443,8 +569,8 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>wear out 疲惫</p>
+      
+          <p>wear out 疲惫</p>
 <blockquote>
 <p>I feel really wear out. 我感到身心俱疲。</p>
 </blockquote>
@@ -452,10 +578,36 @@
 <blockquote>
 <p>I turn around my life. 我的生活好转了。</p>
 </blockquote>
-<p>get on top of …(problems, bad situations) 解决了困境</p>
+<p>get on top of ...(problems, bad situations) 解决了困境</p>
 <blockquote>
 <p>I get on top of the problems that I never thought could deal with. 我解决了我从来没想过能处理的困难。</p>
 </blockquote>
+<p>&lt;!--more--&gt;</p>
+<p>get through to the sb</p>
+<blockquote>
+<p>It's hard to get through to the kids. 被小孩子理解十分难。</p>
+</blockquote>
+<p>suspicious 多疑的</p>
+<blockquote>
+<p>young kids are normally suspicious. 小孩子通常是多疑的。</p>
+</blockquote>
+<p>open up ...(heart, mind) 敞开心扉，敞开思想</p>
+<blockquote>
+<p>I try to open up her heart. 我尝试使她敞开心扉。</p>
+</blockquote>
+<p>sense of self-worth 自我价值感</p>
+<blockquote>
+<p>I am lack of the sense of self-worth. 我缺少自我价值感。</p>
+</blockquote>
+<p>poor/low self-esteem 自卑</p>
+<blockquote>
+<p>the kids who started summer camp with low self-esteem. 从夏令营开始时十分自卑的孩子。</p>
+</blockquote>
+<p>start out 从...开始</p>
+<blockquote>
+<p>I start out learning english in 2000. 我从2000年开始学英语。</p>
+</blockquote>
+
       
     </div>
     
@@ -515,8 +667,12 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>近期一个星期由于62 sp15即将发布，所以导致没什么事做，正好发现70的dev docs也编写的差不多了，并且也把beta的logo去掉了，所以就花了一个星期阅读了liferay开发的基本章节。大体上的感觉是，70的文档相比62来说，逻辑上更清晰易懂了，并且例子并不是简简单单给了一个hello-world而已，而是结合portal中真实的案例进行分析，这一点非常好，我还记得看62的开发文档时，看得我云里雾里不说，好不容易搞懂了，去portal的源码一看，差的十万八千里，最终也就没什么动力继续研究了。</p>
+      
+          <p>近期一个星期由于62 sp15即将发布，所以导致没什么事做，正好发现70的dev docs也编写的差不多了，并且也把beta的logo去掉了，所以就花了一个星期阅读了liferay开发的基本章节。大体上的感觉是，70的文档相比62来说，逻辑上更清晰易懂了，并且例子并不是简简单单给了一个hello-world而已，而是结合portal中真实的案例进行分析，这一点非常好，我还记得看62的开发文档时，看得我云里雾里不说，好不容易搞懂了，去portal的源码一看，差的十万八千里，最终也就没什么动力继续研究了。</p>
+<p>&lt;!--more--&gt;</p>
+<p>其实本来是想完整的把所有的文档翻译一次，后来感觉这种工作有点多余，日后随着70的普及，肯定会有专业人事从事翻译工作的，所以我就把自己觉的有价值的整理出来，供大家参考、学习，如果英语和编程功底过硬，完全可以直接参考<a href="https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/introduction" target="_blank" rel="noopener">官方文档</a>。</p>
+<p>文章的链接请猛戳<a href="/liferay">这里</a>。</p>
+
       
     </div>
     
@@ -576,11 +732,24 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>今天翻知乎，偶尔看到一个问题是讨论有关吃饭的问题的。</p>
+      
+          <p>今天翻知乎，偶尔看到一个问题是讨论有关吃饭的问题的。</p>
 <blockquote>
 <p><a href="https://www.zhihu.com/question/47889412#answer-38703556" target="_blank" rel="noopener">未来社会，叫外卖会变得比自己做饭更便宜吗？</a></p>
 </blockquote>
+<p>&lt;!--more--&gt;</p>
+<p>大体浏览一下一些回答，大体上可以被划分从3个角度来看待这个问题的：</p>
+<ul>
+<li>从成本上</li>
+<li>从生活上</li>
+<li>从安全上</li>
+</ul>
+<p>其实这个问题题主本身是提了一个设想，是说在未来的时候，餐饮服务高度规模化，从而自己做饭会变得有些“吃力不讨好”，不论从成本还是品质上来讲。</p>
+<p>先从成本上来看，大约一半的人偏向于自己做饭更便宜。因为不论从价格还是数量上来看，买菜的价格总是比一盘同样的成品菜便宜的，然后买外卖基本现在还要自理餐具费，所以自己做饭更好。之后就有人反对了，大体观点是，考虑成本只从金钱考虑的都是耍流氓，还应该考虑时间成本等因素。就好比虽然自己做饭在采购上可以占的先机，但是在加工阶段，无疑加大了时间成本的消耗，并且最终的产出可能和时间投入不成正比，比如花了1个小时做饭，却做了一盘黑暗料理。如果把同样的时间用到做你更擅长做的事情上的话，可能这1个小时会更有价值，不过代价却是“伤财”。</p>
+<p>从生活和安全上来看，很多人同样偏向于自己做饭，好多人提到，现在这种快速节奏的生活，使得吃家常饭作为一种家庭情感交流方式，变的越来越重要。同时做饭又可以算作一种生活情趣和生活技能，并且自己做的饭，除去原材料的问题，加工阶段基本可以告别什么地沟油之类的安全问题，何乐而不为？</p>
+<p>从我自己来看，我也是偏向于自己做饭的。做饭这件小事，我觉得根本不需要用好多复杂的角度来评价它，仅仅把它当作生活的一个爱好就可以了。多亏我女朋友，到现在我已经坚持自己做饭快2年了，从亲身经历来看，这是一件一举多得的事情，比计较那些成本强太多。我感觉把做饭的时间花到做其他有意义的事情上就如同把小时候打游戏的时间花到学习上一样，也就是说说而已。因为对于大部分普通人来讲，即使你自己不做饭，你也不会花到有意义的事情上。</p>
+<p>我是一个普通人，我承认了，所以我觉得我还是坚持自己做饭比较好。</p>
+
       
     </div>
     
@@ -640,10 +809,10 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>shortage 短缺</p>
+      
+          <p>shortage 短缺</p>
 <blockquote>
-<p>a shortage of …(funds, ideas, water)</p>
+<p>a shortage of ...(funds, ideas, water)</p>
 </blockquote>
 <p>under/over weight 短重/超重</p>
 <blockquote>
@@ -653,6 +822,32 @@
 <blockquote>
 <p>I feel inferior to someone. 我觉的我比别人低一等。</p>
 </blockquote>
+<p>&lt;!--more--&gt;</p>
+<p>replace 代替</p>
+<blockquote>
+<p>A replace B = sb replace B with A.</p>
+</blockquote>
+<p>adequate/inadequate 足够的/不足够的</p>
+<blockquote>
+<p>the resource is adequate for us.</p>
+</blockquote>
+<p>omission/omit 忽略，遗漏</p>
+<blockquote>
+<p>the omission 't' in word 'shorage' is incorrect.</p>
+</blockquote>
+<p>reinforce 巩固，加强</p>
+<blockquote>
+<p>refinforce evidence 提供证据</p>
+</blockquote>
+<p>minimize/maxmize 最小化/最大化</p>
+<blockquote>
+<p>minimize ...(risks, problems, unpleasant situations)</p>
+</blockquote>
+<p>sell out 售罄</p>
+<blockquote>
+<p>the shoes have been sell out.</p>
+</blockquote>
+
       
     </div>
     
@@ -712,9 +907,16 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>自从毕业以来，是一直想要建一个博客的，当然我没有什么好炫耀的个人经历又或者牛叉的技术博文，仅仅是想记录一些东西。原先的习惯是，每年会在qq空间中写一篇文章，后来qq被盗了一次，还给我把以前写的东西都删掉了，后来就再写过东西了。</p>
+      
+          <p>自从毕业以来，是一直想要建一个博客的，当然我没有什么好炫耀的个人经历又或者牛叉的技术博文，仅仅是想记录一些东西。原先的习惯是，每年会在qq空间中写一篇文章，后来qq被盗了一次，还给我把以前写的东西都删掉了，后来就再写过东西了。</p>
 <p>还记的去年还是前年的某一天，突然心血来潮又想写点东西，却发现没有地方写了。正好那段时间对nodejs感兴趣，直接买了本node高级编程就开始撸，虽然后来也没撸出什么成果来，但却可以回答一个问题，就是现在很多人总是问我，怎么学java学的好好地，怎么突然跑去学nodejs了。</p>
+<p>&lt;!--more--&gt;</p>
+<p>时间过的就是快，这转眼离毕业都将近3年了，其实我当初是想回太原的，结果阴差阳错大连呆了这么长时间，还进了个美国公司，按别人的话说，日子那叫一个悠闲，提前进入老年人生活节奏。要说自由，那确实是，要说悠闲，还是算了，其实有很多事情还是很麻烦的，尤其入了测试这个行业，对于我这种不拘小节的人来说真是哔了狗了。</p>
+<p>工作以来，生活一直都是很单调。基本就是处于上班、下班、做饭、写代码、背单词、睡觉，再利用空余时间穿插着练练吉他，仅此而已。我爸总提醒我，自己的事情，是要有个规划的，然而现在我真的有点迷茫了。首先是工作上的很多事情，愉快的不愉快的，都让我改变了对一些事情的看法。</p>
+<p>如果有人问我，说你觉你对得起你这3年的时光吗？要我说，我感觉我是浪费了。虽然也做了一些事情，比如减肥啦，看书啦什么的，也蛮有成就感。但这毕竟是生活上的，更多的成就感，依旧来源于工作。我唯一庆幸的是3年来没有因为所做的工作是测试而放弃编程的习惯，假如当初放弃了，也许现在也无法重拾了，确实要承认，这方面在工作上有很大帮助，还记得在很多论坛里，都看见有人问，做测试还需要学编程、懂代码吗？每次我都要怒答，一定要！！</p>
+<p>唉，扯远了，其实这篇的内容是想规划下这个博客主要记录写什么的，总不能什么乱七八糟的都往上写吧。大体想了想，记录一些技术上的分享、经验，业余时间在记录一些生活上的收货，比如弹琴、做饭方面之类的东西，剩余应该都是类似日记的东西了。</p>
+<p>总之，这是一个崭新的开始，在这个浮躁的年纪，想要静下心来，做些事情，真的太难了。</p>
+
       
     </div>
     

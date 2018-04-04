@@ -10,7 +10,14 @@
   
 
   
-  <meta name="description" content="Set up a server to use as a proxy for requests from Liferay (such as Apache web server)">
+  <meta name="description" content="Set up a server to use as a proxy for requests from Liferay (such as Apache web server)
+
+&amp;lt;!--more--&amp;gt;
+环境
+
+Ubuntu 14.04
+httpd(apache2 for Ubuntu)
+">
   
 
   
@@ -122,46 +129,66 @@
           <blockquote>
 <p>Set up a server to use as a proxy for requests from Liferay (such as Apache web server)</p>
 </blockquote>
-<a id="more"></a>
-<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
+<p>&lt;!--more--&gt;</p>
+<h1>环境</h1>
+<ul>
 <li>Ubuntu 14.04</li>
 <li>httpd(apache2 for Ubuntu)</li>
 <li>liferay 7.0</li>
 </ul>
-<h1 id="知识背景"><a href="#知识背景" class="headerlink" title="知识背景"></a>知识背景</h1><p>这里的proxy server应当是指正向代理(forward proxy)。正向代理大概的意思，就是一个位于客户端和原始服务器之间的服务器，当客户端为了从原始服务器拿一些内容的时候，不向原始服务器直接发送请求而是向代理服务器发送，代理服务器转发客户端请求给原始服务器并将获得内容返还给客户端。</p>
+<h1>知识背景</h1>
+<p>这里的proxy server应当是指正向代理(forward proxy)。正向代理大概的意思，就是一个位于客户端和原始服务器之间的服务器，当客户端为了从原始服务器拿一些内容的时候，不向原始服务器直接发送请求而是向代理服务器发送，代理服务器转发客户端请求给原始服务器并将获得内容返还给客户端。</p>
 <p>正向代理的意思，大体就是一个跳板，对于你不方便去的地方或者不能去的地方，它可以带你去，比如一些vpn代理，其原理就是你访问代理服务器，代理服务器访问被墙的网站，之后把内容返还给你。</p>
 <p>既然说了正向代理，就捎带说一下反向代理。反向代理和正向代理相反，对与访问者来说，你访问一个反向代理服务器后，它同样会从原始服务器拿数据，但是这里和正向代理的区别是，访问者不需要进行额外的设置，反向代理服务器判断请求如何转发给原始服务器，之后把内容返还给客户端。</p>
 <p>反向代理的意思，大体就是一个服务柜台，对于你不方便去的地方或者不能去的地方，有人可以帮你去，比如一些设置了防火墙的原始服务器为了提供给外网用户访问，就会使用反向代理。</p>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h3 id="配置proxy-server"><a href="#配置proxy-server" class="headerlink" title="配置proxy server"></a>配置proxy server</h3><p>以ubuntu为例(windows应该会更方便)，直接用apt-get安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apache2</span><br></pre></td></tr></table></figure>
-<p>之后server的根目录是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/apache2</span><br></pre></td></tr></table></figure></p>
+<h1>步骤</h1>
+<h3>配置proxy server</h3>
+<p>以ubuntu为例(windows应该会更方便)，直接用apt-get安装</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apache2</span><br></pre></td></tr></table></figure></p>
+<p>之后server的根目录是
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/apache2</span><br></pre></td></tr></table></figure></p>
 <p>进入这里，会发现有一个<strong>apache2.conf</strong>的配置文件，这个文件是apache2的主要配置文件，其中包含了若干子配置文件，分别配置不同模块的配置，看注释就可以大概知道每个模块是做什么的。</p>
 <p>我们这里需要着重看的是<strong>ports.conf</strong>和<strong>000-default.conf</strong>。</p>
-<p>前者主要设置一些关于server监听端口的配置，它的源码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Listen 80</span><br><span class="line"></span><br><span class="line">&lt;IfModule ssl_module&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_gnutls.c&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure></p>
+<p>前者主要设置一些关于server监听端口的配置，它的源码如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Listen 80</span><br><span class="line"></span><br><span class="line">&lt;IfModule ssl_module&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_gnutls.c&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure></p>
 <p>大体的意思是</p>
 <blockquote>
 <p>监听80端口，如果有ssl_module和mod_gnutls.c模块加载的话，同时也监听443端口。</p>
 </blockquote>
-<p>如果你还想监听别端口，比如81，可以直接添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Listen 81</span><br></pre></td></tr></table></figure></p>
-<p>后者主要设置一些关于虚拟主机的配置，<strong>apache2.conf</strong>中有一行代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IncludeOptional sites-enabled/*.conf</span><br></pre></td></tr></table></figure></p>
-<p>意思是会在启动服务器的时候，把所有<strong>./sites-enabled</strong>目录下的配置文件都包含进来，所以我们可以自己新建一个.conf文件，也可以直接更改默认的文件，也就是<strong>000-default.conf</strong>。</p>
-<h2 id="配置VirtualHost"><a href="#配置VirtualHost" class="headerlink" title="配置VirtualHost"></a>配置VirtualHost</h2><p>配置完proxy server的监听端口，该配置虚拟主机了，打开默认配置文件，添加如下代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br><span class="line">ProxyVia On</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;  </span><br><span class="line">	ServerAdmin prograsliu@gmail.com</span><br><span class="line">    ServerName www.test.com</span><br><span class="line">    ServerAlias test.com</span><br><span class="line">    ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">    CustomLog &quot;logs/test.com-access.log&quot; common    </span><br><span class="line">    </span><br><span class="line">    #正向代理设置</span><br><span class="line">    ProxyRequests On</span><br><span class="line">    ProxyVia On</span><br><span class="line"></span><br><span class="line">    &lt;Proxy *&gt;</span><br><span class="line">        Order deny,allow</span><br><span class="line">        Deny from all</span><br><span class="line">        Allow from 127.0.0.1</span><br><span class="line">    &lt;/Proxy&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
-<p>开启Apache正向代理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br></pre></td></tr></table></figure></p>
-<p>之后设置控制位于代理服务器链中的代理请求的流向<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyVia On</span><br></pre></td></tr></table></figure></p>
-<p>每个请求和应答都会对应当前主机得到一个”Via:”头。</p>
-<p>再设置对apache监听主机的请求的匹配规则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这个表示匹配所有80端口的请求，之后又由于这个标签中还有一些其他的设置，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ServerName www.test.com</span><br><span class="line">ServerAlias test.com</span><br><span class="line">ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">CustomLog &quot;logs/test.com-access.log&quot; common</span><br></pre></td></tr></table></figure></p>
-<p>因此，匹配规则会变为，匹配所有请求<a href="http://www.test.com:80这个主机的请求，同时呢，这个主机的小名是test.com，日志文件根据事件类型按不同路径保存。" target="_blank" rel="noopener">www.test.com:80这个主机的请求，同时呢，这个主机的小名是test.com，日志文件根据事件类型按不同路径保存。</a></p>
-<h2 id="测试一下"><a href="#测试一下" class="headerlink" title="测试一下"></a>测试一下</h2><p>设置到这里，proxy server已经设置完成，因此也可以来简单测试一下，比如打开ＦＦ浏览器，之后在<strong>Preference &gt; Advanced &gt; Connection</strong>中，选择<strong>manual proxy configuration</strong>，然后把代理配置填进去，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP proxy: www.test.com</span><br><span class="line">Port: 80</span><br></pre></td></tr></table></figure></p>
+<p>如果你还想监听别端口，比如81，可以直接添加
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Listen 81</span><br></pre></td></tr></table></figure></p>
+<p>后者主要设置一些关于虚拟主机的配置，<strong>apache2.conf</strong>中有一行代码
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IncludeOptional sites-enabled/*.conf</span><br></pre></td></tr></table></figure></p>
+<p>意思是会在启动服务器的时候，把所有**./sites-enabled<strong>目录下的配置文件都包含进来，所以我们可以自己新建一个.conf文件，也可以直接更改默认的文件，也就是</strong>000-default.conf**。</p>
+<h2>配置VirtualHost</h2>
+<p>配置完proxy server的监听端口，该配置虚拟主机了，打开默认配置文件，添加如下代码</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br><span class="line">ProxyVia On</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;  </span><br><span class="line">	ServerAdmin prograsliu@gmail.com</span><br><span class="line">    ServerName www.test.com</span><br><span class="line">    ServerAlias test.com</span><br><span class="line">    ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">    CustomLog &quot;logs/test.com-access.log&quot; common    </span><br><span class="line">    </span><br><span class="line">    #正向代理设置</span><br><span class="line">    ProxyRequests On</span><br><span class="line">    ProxyVia On</span><br><span class="line"></span><br><span class="line">    &lt;Proxy *&gt;</span><br><span class="line">        Order deny,allow</span><br><span class="line">        Deny from all</span><br><span class="line">        Allow from 127.0.0.1</span><br><span class="line">    &lt;/Proxy&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure></p>
+<p>开启Apache正向代理
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br></pre></td></tr></table></figure></p>
+<p>之后设置控制位于代理服务器链中的代理请求的流向
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyVia On</span><br></pre></td></tr></table></figure></p>
+<p>每个请求和应答都会对应当前主机得到一个&quot;Via:&quot;头。</p>
+<p>再设置对apache监听主机的请求的匹配规则
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这个表示匹配所有80端口的请求，之后又由于这个标签中还有一些其他的设置，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ServerName www.test.com</span><br><span class="line">ServerAlias test.com</span><br><span class="line">ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">CustomLog &quot;logs/test.com-access.log&quot; common</span><br></pre></td></tr></table></figure></p>
+<p>因此，匹配规则会变为，匹配所有请求www.test.com:80这个主机的请求，同时呢，这个主机的小名是test.com，日志文件根据事件类型按不同路径保存。</p>
+<h2>测试一下</h2>
+<p>设置到这里，proxy server已经设置完成，因此也可以来简单测试一下，比如打开ＦＦ浏览器，之后在<strong>Preference &gt; Advanced &gt; Connection</strong>中，选择<strong>manual proxy configuration</strong>，然后把代理配置填进去，比如
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP proxy: www.test.com</span><br><span class="line">Port: 80</span><br></pre></td></tr></table></figure></p>
 <p>注意下面有一个<strong>No Proxy for</strong>的选项，因此不要拿本地的请求作测试。</p>
-<p>然后访问<strong><a href="http://www.163.com" target="_blank" rel="noopener">www.163.com</a></strong>，使用f12抓包，可以发现请求的相应头(response header)中，会增加一个字段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Via: &quot;1.1 www.test.com&quot;</span><br></pre></td></tr></table></figure></p>
-<p>大体意思就是，你打开的163的页面，并不是从网易的浏览器直接获得的，而是从你配置的叫做<a href="http://www.test.com的代理服务器获得的，真正访问网易服务器的是www.test.com。" target="_blank" rel="noopener">www.test.com的代理服务器获得的，真正访问网易服务器的是www.test.com。</a></p>
-<h2 id="配置liferay"><a href="#配置liferay" class="headerlink" title="配置liferay"></a>配置liferay</h2><p>接下来就很简单了，只需要让liferay来使用我们配置好的proxy server即可。</p>
-<p>liferay中的system.properties有如下三个参数，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Set the location of the HTTP proxy that the portal will use to fetch</span><br><span class="line"># external content.</span><br><span class="line">#</span><br><span class="line"># Set http.nonProxyHosts for hosts that will not be proxied. This is useful</span><br><span class="line"># for proxied environments where you need direct access to internal servers.</span><br><span class="line"># This should follow the same semantics as the java.net package.</span><br><span class="line">#</span><br><span class="line">#http.proxyHost=192.168.0.200</span><br><span class="line">#http.proxyPort=4480</span><br><span class="line">#http.nonProxyHosts=192.168.0.250</span><br></pre></td></tr></table></figure></p>
-<p>最后一个不用管，只需要配置前两个，把它改成我们配置的proxy server对应的参数即可，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http.proxyHost=www.test.com</span><br><span class="line">http.proxyPort=80</span><br></pre></td></tr></table></figure></p>
+<p>然后访问<strong>www.163.com</strong>，使用f12抓包，可以发现请求的相应头(response header)中，会增加一个字段
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Via: &quot;1.1 www.test.com&quot;</span><br></pre></td></tr></table></figure></p>
+<p>大体意思就是，你打开的163的页面，并不是从网易的浏览器直接获得的，而是从你配置的叫做www.test.com的代理服务器获得的，真正访问网易服务器的是www.test.com。</p>
+<h2>配置liferay</h2>
+<p>接下来就很简单了，只需要让liferay来使用我们配置好的proxy server即可。</p>
+<p>liferay中的system.properties有如下三个参数，
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Set the location of the HTTP proxy that the portal will use to fetch</span><br><span class="line"># external content.</span><br><span class="line">#</span><br><span class="line"># Set http.nonProxyHosts for hosts that will not be proxied. This is useful</span><br><span class="line"># for proxied environments where you need direct access to internal servers.</span><br><span class="line"># This should follow the same semantics as the java.net package.</span><br><span class="line">#</span><br><span class="line">#http.proxyHost=192.168.0.200</span><br><span class="line">#http.proxyPort=4480</span><br><span class="line">#http.nonProxyHosts=192.168.0.250</span><br></pre></td></tr></table></figure></p>
+<p>最后一个不用管，只需要配置前两个，把它改成我们配置的proxy server对应的参数即可，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http.proxyHost=www.test.com</span><br><span class="line">http.proxyPort=80</span><br></pre></td></tr></table></figure></p>
 <p>之后就大功告成了。当portal从外部的server，获取资源时，会使用代理，比如使用亚马逊的s3 store云储存服务时。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://www.cnblogs.com/zemliu/archive/2012/04/18/2454655.html" target="_blank" rel="noopener">Apache配置正向代理与反向代理</a></p>
+<h3>参考</h3>
+<p><a href="http://www.cnblogs.com/zemliu/archive/2012/04/18/2454655.html" target="_blank" rel="noopener">Apache配置正向代理与反向代理</a></p>
 
       
     </div>
@@ -194,7 +221,7 @@
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#环境"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#知识背景"><span class="toc-number">2.</span> <span class="toc-text">知识背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#步骤"><span class="toc-number">3.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置proxy-server"><span class="toc-number">3.0.1.</span> <span class="toc-text">配置proxy server</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置VirtualHost"><span class="toc-number">3.1.</span> <span class="toc-text">配置VirtualHost</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试一下"><span class="toc-number">3.2.</span> <span class="toc-text">测试一下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置liferay"><span class="toc-number">3.3.</span> <span class="toc-text">配置liferay</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">3.3.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">知识背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.1.</span> <span class="toc-text">配置proxy server</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">配置VirtualHost</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">测试一下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.</span> <span class="toc-text">配置liferay</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
 </div>
 
 
