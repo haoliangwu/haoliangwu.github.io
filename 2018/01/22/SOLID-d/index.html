@@ -1,4 +1,128 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 【译】Understanding SOLID Principles - Dependency Inversion · Fine, thank you, and you.</title><meta name="description" content="【译】Understanding SOLID Principles - Dependency Inversion - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">【译】Understanding SOLID Principles - Dependency Inversion</h1><div class="post-info">Jan 22, 2018</div><div class="post-content"><h1 id="Understanding-SOLID-Principles-Dependency-Inversion"><a href="#Understanding-SOLID-Principles-Dependency-Inversion" class="headerlink" title="Understanding SOLID Principles: Dependency Inversion"></a><a href="https://codeburst.io/understanding-solid-principles-dependency-injection-d570c15560ab" target="_blank" rel="external">Understanding SOLID Principles: Dependency Inversion</a></h1><blockquote>
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>【译】Understanding SOLID Principles - Dependency Inversion | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+  <meta name="description" content="Understanding SOLID Principles: Dependency Inversion
+这是理解SOLID原则中，关于依赖倒置原则如何帮助我们编写低耦合和可测试代码的第一篇文章。
+
+写在前头当我们在读书，或者在和一些别的开发者聊天的时候，可能会谈及或者听到术语SOILD。在这些">
+  
+
+  
+  
+  <meta name="keywords" content="翻译,js,编程思想">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【译】Understanding SOLID Principles - Dependency Inversion"/>
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+              <li><a href="/about">About</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+        
+
+          <div class="container ">
+          <div class="row">
+            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+            <article class="article-container ">
+
+  
+    
+    <h3 class="article-title"><span>【译】Understanding SOLID Principles - Dependency Inversion</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/22/SOLID-d/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-22T02:21:35.000Z">
+          2018-01-22
+        </time>
+      </a>
+    </span>
+    <br />
+    
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+    
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+          <h1 id="Understanding-SOLID-Principles-Dependency-Inversion"><a href="#Understanding-SOLID-Principles-Dependency-Inversion" class="headerlink" title="Understanding SOLID Principles: Dependency Inversion"></a><a href="https://codeburst.io/understanding-solid-principles-dependency-injection-d570c15560ab" target="_blank" rel="noopener">Understanding SOLID Principles: Dependency Inversion</a></h1><blockquote>
 <p>这是理解<code>SOLID</code>原则中，关于<strong>依赖倒置</strong>原则如何帮助我们编写低耦合和可测试代码的第一篇文章。</p>
 </blockquote>
 <h2 id="写在前头"><a href="#写在前头" class="headerlink" title="写在前头"></a>写在前头</h2><p>当我们在读书，或者在和一些别的开发者聊天的时候，可能会谈及或者听到术语<code>SOILD</code>。在这些讨论中，一些人会提及它的重要性，以及一个理想中的系统，应当包含它所包含的5条原则的特性。</p>
@@ -12,7 +136,7 @@
 <li>I stand for ISP ( Interface segregation principle)：接口隔离原则</li>
 <li>D stands for DIP ( Dependency inversion principle)：依赖倒置原则</li>
 </ul>
-<p>起初这些原则是<a href="https://en.wikipedia.org/wiki/Robert_Cecil_Martin" target="_blank" rel="external">Robert C. Martin</a>在1990年提出的，遵循这些原则可以帮助我们更好的构建，低耦合、高内聚的软件架构，同时能够真正的对现实中的业务逻辑进行恰到好处的封装。</p>
+<p>起初这些原则是<a href="https://en.wikipedia.org/wiki/Robert_Cecil_Martin" target="_blank" rel="noopener">Robert C. Martin</a>在1990年提出的，遵循这些原则可以帮助我们更好的构建，低耦合、高内聚的软件架构，同时能够真正的对现实中的业务逻辑进行恰到好处的封装。</p>
 <p>不过这些原则并不会使一个差劲的程序员转变为一个优秀的程序员。这些法则取决于你如何应用它们，如果你是很随意的应用它们，那等同于你并没有使用它们一样。</p>
 <p>关于原则和模式的知识能够帮助你决定在何时何地正确的使用它们。尽管这些原则仅仅是启示性的，它们是常见问题的常规解决方案。实践中，这些原则的正确性已经被证实了很多次，所以它们应当成为一种常识。</p>
 <h2 id="依赖倒置原则是什么"><a href="#依赖倒置原则是什么" class="headerlink" title="依赖倒置原则是什么"></a>依赖倒置原则是什么</h2><ul>
@@ -28,17 +152,17 @@
 <p>但是相反的，依赖倒置也有一些缺点，就是你需要一个用于处理依赖倒置逻辑的容器，同时，你还需要配置它。容器通常需要具备能够在系统中注入服务，这些服务需要具备正确的作用域和参数，还应当被注入正确的执行上下文中。</p>
 <h2 id="以提供Websocket连接服务为例子"><a href="#以提供Websocket连接服务为例子" class="headerlink" title="以提供Websocket连接服务为例子"></a>以提供Websocket连接服务为例子</h2><p>举个例子，我们可以在这个例子中学到更多关于依赖倒置的知识，我们将使用<code>Inversify.js</code>作为依赖倒置的容器，通过这个依赖倒置容器，我们可以看看如何针对提供<code>Websocket</code>连接服务的业务场景，提供服务。</p>
 <p>比如，我们有一个web服务器提供<code>WebSockets</code>连接服务，同时客户端想要连接服务器，同时接受更新的通知。当前我们有若干种解决方案来提供一个WebSocket服务，比如说<code>Socket.io</code>、<code>Socks</code>或者使用浏览器提供的关于原生的<code>WebSocket</code>接口。每一套解决方案，都提供不同的接口和方法供我们调用，那么问题来了，我们是否可以在一个接口中，将所有的解决方案都抽象成一个提供<code>WebSocket</code>连接服务的提供者？这样，我们就可以根据我们的实际需求，使用不同的WebSocket服务提供者。</p>
-<p>首先，我们来定义我们的接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">export interface WebSocketConfiguration &#123;</div><div class="line">  uri: string;</div><div class="line">  options?: Object;</div><div class="line">&#125;</div><div class="line">export interface SocketFactory &#123;</div><div class="line">  createSocket(configuration: WebSocketConfiguration): any;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>首先，我们来定义我们的接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export interface WebSocketConfiguration &#123;</span><br><span class="line">  uri: string;</span><br><span class="line">  options?: Object;</span><br><span class="line">&#125;</span><br><span class="line">export interface SocketFactory &#123;</span><br><span class="line">  createSocket(configuration: WebSocketConfiguration): any;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意在接口中，我们没有提供任何的实现细节，因此它既是我们所拥有的<strong>抽象</strong>。</p>
-<p>接下来，如果我们想要一个提供<code>Socket.io</code>服务工厂：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">import &#123;Manager&#125; from &apos;socket.io-client&apos;;</div><div class="line"></div><div class="line">class SocketIOFactory implements SocketFactory &#123;</div><div class="line">  createSocket(configuration: WebSocketConfiguration): any &#123;</div><div class="line">    return new Manager(configuration.uri, configuration.opts);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接下来，如果我们想要一个提供<code>Socket.io</code>服务工厂：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Manager&#125; from &apos;socket.io-client&apos;;</span><br><span class="line"></span><br><span class="line">class SocketIOFactory implements SocketFactory &#123;</span><br><span class="line">  createSocket(configuration: WebSocketConfiguration): any &#123;</span><br><span class="line">    return new Manager(configuration.uri, configuration.opts);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里已经包含了一些具体的实现细节，因此它不再是抽象，因为它声明了一个从<code>Socket.io</code>库中导入的<code>Manager</code>对象，它是我们的具体实现细节。</p>
 <p>我们可以通过实现<code>SocketFactory</code>接口，来增加若干工厂类，只要我们实现这个接口即可。</p>
-<p>我们在提供一个关于客户端连接实例的抽象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">export interface SocketClient &#123;</div><div class="line">  connect(configuration: WebSocketConfiguration): Promise&lt;any&gt;;</div><div class="line">  close(): Promise&lt;any&gt;;</div><div class="line">  emit(event: string, ...args: any[]): Promise&lt;any&gt;;</div><div class="line">  on(event: string, fn: Function): Promise&lt;any&gt;;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后再提供一些实现细节：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">class WebSocketClient implements SocketClient &#123;</div><div class="line">  private socketFactory: SocketFactory;</div><div class="line">  private socket: any;</div><div class="line">  public constructor(webSocketFactory: SocketFactory) &#123;</div><div class="line">    this.socketFactory = webSocketFactory;</div><div class="line">  &#125;</div><div class="line">  public connect(config: WebSocketConfiguration): Promise&lt;any&gt; &#123;</div><div class="line">    if (!this.socket) &#123;</div><div class="line">      this.socket = this.socketFactory.createSocket(config);</div><div class="line">    &#125;</div><div class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</div><div class="line">      this.socket.on(&apos;connect&apos;, () =&gt; resolve());</div><div class="line">      this.socket.on(&apos;connect_error&apos;, (error: Error) =&gt; reject(error));</div><div class="line">    &#125;);</div><div class="line">  &#125;</div><div class="line">  public emit(event: string, ...args: any[]): Promise&lt;any&gt; &#123;</div><div class="line">    return new Promise&lt;string | Object&gt;((resolve, reject) =&gt; &#123;</div><div class="line">      if (!this.socket) &#123;</div><div class="line">        return reject(&apos;No socket connection.&apos;);</div><div class="line">      &#125;</div><div class="line">      return this.socket.emit(event, args, (response: any) =&gt; &#123;</div><div class="line">        if (response.error) &#123;</div><div class="line">          return reject(response.error);</div><div class="line">        &#125;</div><div class="line">        return resolve();</div><div class="line">      &#125;);</div><div class="line">    &#125;);</div><div class="line">  &#125;</div><div class="line">  public on(event: string, fn: Function): Promise&lt;any&gt; &#123;</div><div class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</div><div class="line">      if (!this.socket) &#123;</div><div class="line">        return reject(&apos;No socket connection.&apos;);</div><div class="line">      &#125;</div><div class="line">      this.socket.on(event, fn);</div><div class="line">      resolve();</div><div class="line">    &#125;);</div><div class="line">  &#125;</div><div class="line">  public close(): Promise&lt;any&gt; &#123;</div><div class="line">    return new Promise&lt;any&gt;((resolve) =&gt; &#123;</div><div class="line">      this.socket.close(() =&gt; &#123;</div><div class="line">        this.socket = null;</div><div class="line">        resolve();</div><div class="line">      &#125;);</div><div class="line">    &#125;);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们在提供一个关于客户端连接实例的抽象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export interface SocketClient &#123;</span><br><span class="line">  connect(configuration: WebSocketConfiguration): Promise&lt;any&gt;;</span><br><span class="line">  close(): Promise&lt;any&gt;;</span><br><span class="line">  emit(event: string, ...args: any[]): Promise&lt;any&gt;;</span><br><span class="line">  on(event: string, fn: Function): Promise&lt;any&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后再提供一些实现细节：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">class WebSocketClient implements SocketClient &#123;</span><br><span class="line">  private socketFactory: SocketFactory;</span><br><span class="line">  private socket: any;</span><br><span class="line">  public constructor(webSocketFactory: SocketFactory) &#123;</span><br><span class="line">    this.socketFactory = webSocketFactory;</span><br><span class="line">  &#125;</span><br><span class="line">  public connect(config: WebSocketConfiguration): Promise&lt;any&gt; &#123;</span><br><span class="line">    if (!this.socket) &#123;</span><br><span class="line">      this.socket = this.socketFactory.createSocket(config);</span><br><span class="line">    &#125;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      this.socket.on(&apos;connect&apos;, () =&gt; resolve());</span><br><span class="line">      this.socket.on(&apos;connect_error&apos;, (error: Error) =&gt; reject(error));</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public emit(event: string, ...args: any[]): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;string | Object&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      if (!this.socket) &#123;</span><br><span class="line">        return reject(&apos;No socket connection.&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">      return this.socket.emit(event, args, (response: any) =&gt; &#123;</span><br><span class="line">        if (response.error) &#123;</span><br><span class="line">          return reject(response.error);</span><br><span class="line">        &#125;</span><br><span class="line">        return resolve();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public on(event: string, fn: Function): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      if (!this.socket) &#123;</span><br><span class="line">        return reject(&apos;No socket connection.&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">      this.socket.on(event, fn);</span><br><span class="line">      resolve();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public close(): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve) =&gt; &#123;</span><br><span class="line">      this.socket.close(() =&gt; &#123;</span><br><span class="line">        this.socket = null;</span><br><span class="line">        resolve();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>值得注意的是，这里我们在构造函数中，传入了一个类型是<code>SocketFactory</code>的参数，这是为了满足关于依赖倒置原则的第一条规则。对于第二条规则，我们需要一种方式来提供这个不需要了解内部实现细节的、可替换的、易于配置的参数。</p>
-<p>这也是为什么我们要使用<code>Inversify</code>这个库的原因，我们来加入一些额外的代码和注解（装饰器）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">import &#123;injectable&#125; from &apos;inversify&apos;;</div><div class="line">const webSocketFactoryType: symbol = Symbol(&apos;WebSocketFactory&apos;);</div><div class="line">const webSocketClientType: symbol = Symbol(&apos;WebSocketClient&apos;);</div><div class="line">let TYPES: any = &#123;</div><div class="line">    WebSocketFactory: webSocketFactoryType,</div><div class="line">    WebSocketClient: webSocketClientType</div><div class="line">&#125;;</div><div class="line"></div><div class="line">@injectable()</div><div class="line">class SocketIOFactory implements SocketFactory &#123;...&#125;</div><div class="line">...</div><div class="line">@injectable()</div><div class="line">class WebSocketClient implements SocketClient &#123;</div><div class="line">public constructor(@inject(TYPES.WebSocketFactory) webSocketFactory: SocketFactory) &#123;</div><div class="line">  this.socketFactory = webSocketFactory;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这些注释（装饰器）仅仅会在代码运行时，在如何提供这些组件实例时，提供一些元数据，接下来我们仅仅需要创建一个依赖倒置容器，并将所有的对象按正确的类型绑定起来，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">import &#123;Container&#125; from &apos;inversify&apos;;</div><div class="line">import &apos;reflect-metadata&apos;;</div><div class="line">import &#123;TYPES, SocketClient, SocketFactory, SocketIOFactory, WebSocketClient&#125; from &apos;@web/app&apos;;</div><div class="line">const provider = new Container(&#123;defaultScope: &apos;Singleton&apos;&#125;);</div><div class="line">// Bindings</div><div class="line">provider.bind&lt;SocketClient&gt;(TYPES.WebSocketClient).to(WebSocketClient);</div><div class="line">provider.bind&lt;SocketFactory&gt;(TYPES.WebSocketFactory).to(SocketIOFactory);</div><div class="line">export default provider;</div></pre></td></tr></table></figure></p>
-<p>让我们来看看我们如何使用我们提供连接服务的客户端实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var socketClient = provider.get&lt;SocketClient&gt;(TYPES.WebSocketClient);</div></pre></td></tr></table></figure></p>
+<p>这也是为什么我们要使用<code>Inversify</code>这个库的原因，我们来加入一些额外的代码和注解（装饰器）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import &#123;injectable&#125; from &apos;inversify&apos;;</span><br><span class="line">const webSocketFactoryType: symbol = Symbol(&apos;WebSocketFactory&apos;);</span><br><span class="line">const webSocketClientType: symbol = Symbol(&apos;WebSocketClient&apos;);</span><br><span class="line">let TYPES: any = &#123;</span><br><span class="line">    WebSocketFactory: webSocketFactoryType,</span><br><span class="line">    WebSocketClient: webSocketClientType</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">@injectable()</span><br><span class="line">class SocketIOFactory implements SocketFactory &#123;...&#125;</span><br><span class="line">...</span><br><span class="line">@injectable()</span><br><span class="line">class WebSocketClient implements SocketClient &#123;</span><br><span class="line">public constructor(@inject(TYPES.WebSocketFactory) webSocketFactory: SocketFactory) &#123;</span><br><span class="line">  this.socketFactory = webSocketFactory;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这些注释（装饰器）仅仅会在代码运行时，在如何提供这些组件实例时，提供一些元数据，接下来我们仅仅需要创建一个依赖倒置容器，并将所有的对象按正确的类型绑定起来，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Container&#125; from &apos;inversify&apos;;</span><br><span class="line">import &apos;reflect-metadata&apos;;</span><br><span class="line">import &#123;TYPES, SocketClient, SocketFactory, SocketIOFactory, WebSocketClient&#125; from &apos;@web/app&apos;;</span><br><span class="line">const provider = new Container(&#123;defaultScope: &apos;Singleton&apos;&#125;);</span><br><span class="line">// Bindings</span><br><span class="line">provider.bind&lt;SocketClient&gt;(TYPES.WebSocketClient).to(WebSocketClient);</span><br><span class="line">provider.bind&lt;SocketFactory&gt;(TYPES.WebSocketFactory).to(SocketIOFactory);</span><br><span class="line">export default provider;</span><br></pre></td></tr></table></figure></p>
+<p>让我们来看看我们如何使用我们提供连接服务的客户端实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var socketClient = provider.get&lt;SocketClient&gt;(TYPES.WebSocketClient);</span><br></pre></td></tr></table></figure></p>
 <p>当然，使用<code>Inversify</code>可以提供一些更简单易用的绑定，可以通过浏览它的网站来了解。</p>
 <h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>一般说到依赖倒置原则，往往第一个想到的术语即是<code>依赖注入</code>，这种在各个技术栈都有应用，之后又会马上想到<code>spring</code>、<code>ng</code>等前后端框架。</p>
 <p>我们确实是通过使用这些框架熟知这个概念的，但是如果你仔细想想的话，是否还有其他的一些场景也使用了类似的概念呢？</p>
@@ -49,14 +173,150 @@
 <li>js中的回调函数</li>
 </ul>
 <p>也许有的人会不同意我的观点，会说依赖注入一般都是面向类和接口来讲的，这确实有一定的道理，但是我认为没有必要局限在一种固定的模式中去理解依赖倒置，毕竟它是一种思想，一种模式，在js中，所有的东西都是动态的，函数是一等公民，是对象，那么把这些与依赖倒置原则联系起来，完全也讲的通。我们真正关心的是核心问题是如何<strong>解耦</strong>，把更多的注意力投入的真正的业务逻辑中去。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/02/02/SOLID-s/" class="prev">PREV</a><a href="/2018/01/16/workerize/" class="next">NEXT</a></div><div data-thread-key="2018/01/22/SOLID-d/" data-title="【译】Understanding SOLID Principles - Dependency Inversion" data-url="http://yoursite.com/2018/01/22/SOLID-d/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-     || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
 
-</script><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>
+      
+    </div>
+    
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/翻译/">翻译</a><a href="/tags/js/">js</a><a href="/tags/编程思想/">编程思想</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+  
+    
+    
+  
+</article>
+   
+    <div id="toc" class="toc-article ">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Understanding-SOLID-Principles-Dependency-Inversion"><span class="toc-number">1.</span> <span class="toc-text">Understanding SOLID Principles: Dependency Inversion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前头"><span class="toc-number">1.1.</span> <span class="toc-text">写在前头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖倒置原则是什么"><span class="toc-number">1.2.</span> <span class="toc-text">依赖倒置原则是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#以提供Websocket连接服务为例子"><span class="toc-number">1.3.</span> <span class="toc-text">以提供Websocket连接服务为例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">1.4.</span> <span class="toc-text">译者注</span></a></li></ol></li></ol>
+</div>
+
+
+  
+
+	<!-- async load  -->
+	<script>
+			function async(u, c) {
+				var d = document, t = 'script',
+						o = d.createElement(t),
+						s = d.getElementsByTagName(t)[0];
+				o.src = u;
+				if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+				s.parentNode.insertBefore(o, s);
+			}
+	</script>
+	<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+	<script>
+			async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+					anchors.options = {
+						visible: 'hover',
+						placement: 'left',
+						// icon: '#'
+					};
+					anchors.add().remove('.article-title').remove('.subheading').remove('.sidebar-container h5');
+			})
+	</script>
+	<style>
+			/* place left on bigger screen */
+			@media all and (min-width: 800px) {
+					.anchorjs-link{
+							position: absolute;
+							left: -0.75em;
+							font-size: 1.1em;
+							margin-top : -0.1em;
+					}
+			}
+	</style>
+
+
+
+
+<!-- UY BEGIN -->
+	<div id="gitment-container"></div>
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script src="/js/web-pinyin.js"></script>
+	<script>
+		function toUnicode(s){ 
+			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+			return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+			});
+		}
+		var title = '【译】Understanding SOLID Principles - Dependency Inversion'
+		var GitHub_id = 'haoliangwu'
+		var client_id = 'e9cb0c90dcba4035e2d9'
+		var client_secret = '038be595d0dc58ec53b640f87bc5c9ebb94ec399'
+		var repo = 'littlelyon.me'
+		var gitment = new Gitment({
+		// id: '页面 ID', // 可选。默认为 location.href
+		// id:"11" ,
+		id: title,
+		title: title,
+		owner: GitHub_id,//'你的 GitHub ID',
+		repo: repo,//'存储评论的 repo',
+		oauth: {
+			client_id: client_id,//'你的 client ID',
+			client_secret: client_secret,//'你的 client secret',
+		},
+		})
+		gitment.render('gitment-container')
+	</script>
+<!-- UY END -->
+
+
+
+
+            </main>
+          </div>
+        </div>
+       
+
+
+
+
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+    
+  </div>
+
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+<script src="/js/search.js"></script>
+
+</body>
+</html>

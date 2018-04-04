@@ -1,4 +1,126 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 30分钟理解GraphQL核心概念 · Fine, thank you, and you.</title><meta name="description" content="30分钟理解GraphQL核心概念 - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">30分钟理解GraphQL核心概念</h1><div class="post-info">Apr 2, 2018</div><div class="post-content"><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在上一篇文章<a href="http://littlelyon.com/2018/03/24/rpc-reset-graphql/" target="_blank" rel="external">RPC vs REST vs GraphQL</a>中，对于这三者的优缺点进行了比较宏观的对比，而且我们也会发现，一般比较简单的项目其实并不需要GraphQL，但是我们仍然需要对新的技术有一定的了解和掌握，在新技术普及时才不会措手不及。</p>
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>30分钟理解GraphQL核心概念 | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+  <meta name="description" content="写在前面在上一篇文章RPC vs REST vs GraphQL中，对于这三者的优缺点进行了比较宏观的对比，而且我们也会发现，一般比较简单的项目其实并不需要GraphQL，但是我们仍然需要对新的技术有一定的了解和掌握，在新技术普及时才不会措手不及。
+这篇文章主要介绍一些我接触GraphQL的这段时间">
+  
+
+  
+  
+  <meta name="keywords" content="GraphQL,API">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="30分钟理解GraphQL核心概念"/>
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+              <li><a href="/about">About</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+        
+
+          <div class="container ">
+          <div class="row">
+            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+            <article class="article-container ">
+
+  
+    
+    <h3 class="article-title"><span>30分钟理解GraphQL核心概念</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/04/02/30-minutes-graphql/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-04-02T04:13:29.000Z">
+          2018-04-02
+        </time>
+      </a>
+    </span>
+    <br />
+    
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+    
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在上一篇文章<a href="http://littlelyon.com/2018/03/24/rpc-reset-graphql/" target="_blank" rel="noopener">RPC vs REST vs GraphQL</a>中，对于这三者的优缺点进行了比较宏观的对比，而且我们也会发现，一般比较简单的项目其实并不需要GraphQL，但是我们仍然需要对新的技术有一定的了解和掌握，在新技术普及时才不会措手不及。</p>
 <p>这篇文章主要介绍一些我接触GraphQL的这段时间，觉得需要了解的比较核心的概念，比较适合一下人群：</p>
 <ul>
 <li>听说过GraphQL的读者，想深入了解一下</li>
@@ -35,12 +157,12 @@
 </ul>
 <p>总之，我们只需要记住，标量是GraphQL类型系统中最小的颗粒，关于它在GraphQL解析查询结果时，我们还会再提及它。</p>
 <h3 id="Object-Type"><a href="#Object-Type" class="headerlink" title="Object Type"></a>Object Type</h3><p>仅有标量是不够的抽象一些复杂的数据模型的，这时候我们需要使用对象类型，举个例子(先忽略语法，仅从字面上看)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">type Article &#123;</div><div class="line">  id: ID</div><div class="line">  text: String</div><div class="line">  isPublished: Boolean</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的代码，就声明了一个<code>Article</code>类型，它有3个Field，分别是<code>ID</code>类型的id，<code>String</code>类型的text和<code>Boolean</code>类型的isPublished。</p>
 <p>对于对象类型的Field的声明，我们一般使用标量，但是我们也可以使用另外一个对象类型，比如如果我们再声明一个新的<code>User</code>类型，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">type User &#123;</div><div class="line">  id: ID</div><div class="line">  name: String</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type User &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  name: String</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这时我们就可以稍微的更改一下关于<code>Article</code>类型的声明代码，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">type Article &#123;</div><div class="line">  id: ID</div><div class="line">  text: String</div><div class="line">  isPublished: Boolean</div><div class="line">  author: User</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">  author: User</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>Article</code>新增的<code>author</code>的Field是<code>User</code>类型, 代表这篇文章的作者。</p>
 <p>总之，我们通过对象模型来构建GraphQL中关于一个数据模型的形状，同时还可以声明各个模型之间的内在关联（一对多、一对一或多对多）。</p>
 <h3 id="Type-Modifier"><a href="#Type-Modifier" class="headerlink" title="Type Modifier"></a>Type Modifier</h3><p>关于类型，还有一个较重要的概念，即类型修饰符，当前的类型修饰符有两种，分别是<code>List</code>和<code>Required</code>，它们的语法分别为<code>[Type]</code>和<code>Type!</code>, 同时这两者可以互相组合，比如<code>[Type]!</code>或者<code>[Type!]</code>或者<code>[Type!]!</code>(请仔细看这里<code>!</code>的位置)，它们的含义分别为：</p>
@@ -50,9 +172,9 @@
 <li>列表本身和内部元素均为必填</li>
 </ul>
 <p>我们进一步来更改上面的例子，假如我们又声明了一个新的<code>Comment</code>类型，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">type Comment &#123;</div><div class="line">  id: ID!</div><div class="line">  desc: String,</div><div class="line">  author: User!</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Comment &#123;</span><br><span class="line">  id: ID!</span><br><span class="line">  desc: String,</span><br><span class="line">  author: User!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>你会发现这里的<code>ID</code>有一个<code>!</code>，它代表这个Field是必填的，再来更新<code>Article</code>对象，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">type Article &#123;</div><div class="line">  id: ID!</div><div class="line">  text: String</div><div class="line">  isPublished: Boolean</div><div class="line">  author: User!</div><div class="line">  comments: [Comment!]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID!</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">  author: User!</span><br><span class="line">  comments: [Comment!]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们这里的作出的更改如下：</p>
 <ul>
 <li>id字段改为必填</li>
@@ -73,18 +195,18 @@
 <p>仍然以一个例子来说明。</p>
 <p>首先，我们分别以REST和GraphQL的角度，以<code>Article</code>为数据模型，编写一系列CRUD的接口，如下：</p>
 <p>Rest 接口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">GET /api/v1/articles/</div><div class="line">GET /api/v1/article/:id/</div><div class="line">POST /api/v1/article/</div><div class="line">DELETE /api/v1/article/:id/</div><div class="line">PATCH /api/v1/article/:id/</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET /api/v1/articles/</span><br><span class="line">GET /api/v1/article/:id/</span><br><span class="line">POST /api/v1/article/</span><br><span class="line">DELETE /api/v1/article/:id/</span><br><span class="line">PATCH /api/v1/article/:id/</span><br></pre></td></tr></table></figure>
 <p>GraphQL Query</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Query &#123;</div><div class="line">  articles(): [Article!]!</div><div class="line">  article(id: Int): Article!</div><div class="line">&#125;</div><div class="line"></div><div class="line">mutation &#123;</div><div class="line">  createArticle(): Article!</div><div class="line">  updateArticle(id: Int): Article!</div><div class="line">  deleteArticle(id: Int): Article!</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Query &#123;</span><br><span class="line">  articles(): [Article!]!</span><br><span class="line">  article(id: Int): Article!</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mutation &#123;</span><br><span class="line">  createArticle(): Article!</span><br><span class="line">  updateArticle(id: Int): Article!</span><br><span class="line">  deleteArticle(id: Int): Article!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>对比我们较熟悉的REST的接口我们可以发现，GraphQL中是按根查询的类型来划分Query职能的，同时还会明确的声明每个Query所返回的数据类型，这里的关于类型的语法和上一章节中是一样的。需要注意的是，我们所声明的任何<code>Query</code>都必须是<code>Root Query</code>的子集，这和GraphQL内部的运行机制有关。</p>
 <p>例子中我们仅仅声明了Query类型和Mutation类型，如果我们的应用中对于评论列表有<code>real-time</code>的需求的话，在REST中，我们可能会直接通过长连接或者通过提供一些带验证的获取长连接url的接口，比如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">POST /api/v1/messages/</div></pre></td></tr></table></figure>
-<p>之后长连接会将新的数据推送给我们，在GraphQL中，我们则会以更加声明式的方式进行声明，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">subscription &#123;</div><div class="line">  updatedArticle() &#123;</div><div class="line">    mutation</div><div class="line">    node &#123;</div><div class="line">    	comments: [Comment!]!</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /api/v1/messages/</span><br></pre></td></tr></table></figure>
+<p>之后长连接会将新的数据推送给我们，在GraphQL中，我们则会以更加声明式的方式进行声明，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">subscription &#123;</span><br><span class="line">  updatedArticle() &#123;</span><br><span class="line">    mutation</span><br><span class="line">    node &#123;</span><br><span class="line">    	comments: [Comment!]!</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>我们不必纠结于这里的语法，因为这篇文章的目的不是让你在30分钟内学会GraphQL的语法，而是理解的它的一些核心概念，比如这里，我们就声明了一个订阅Query，这个Query会在有新的Article被创建或者更新时，推送新的数据对象。当然，在实际运行中，其内部实现仍然是建立于长连接之上的，但是我们能够以更加声明式的方式来进行声明它。</p>
 <h3 id="Resolver"><a href="#Resolver" class="headerlink" title="Resolver"></a>Resolver</h3><p>如果我们仅仅在Schema中声明了若干Query，那么我们只进行了一半的工作，因为我们并没有提供相关Query所返回数据的逻辑。为了能够使GraphQL正常工作，我们还需要再了解一个核心概念，<code>Resolver（解析函数）</code>。</p>
 <p>GraphQL中，我们会有这样一个约定，Query和与之对应的Resolver是同名的，这样在GraphQL才能把它们对应起来，举个例子，比如关于<code>articles(): [Article!]!</code>这个Query, 它的Resolver的名字必然叫做<code>articles</code>。</p>
 <p>在介绍Resolver之前，是时候从整体上了解下GraphQL的内部工作机制了，假设现在我们要对使用我们已经声明的<code>articles</code>的Query，我们可能会写以下查询语句（同样暂时忽略语法）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Query &#123;</div><div class="line">  articles &#123;</div><div class="line">  	 id</div><div class="line">  	 author &#123;</div><div class="line">  	 	name</div><div class="line">  	 &#125;</div><div class="line">  	 comments &#123;</div><div class="line">      id</div><div class="line">      desc</div><div class="line">      author</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Query &#123;</span><br><span class="line">  articles &#123;</span><br><span class="line">  	 id</span><br><span class="line">  	 author &#123;</span><br><span class="line">  	 	name</span><br><span class="line">  	 &#125;</span><br><span class="line">  	 comments &#123;</span><br><span class="line">      id</span><br><span class="line">      desc</span><br><span class="line">      author</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>GraphQL在解析这段查询语句时会按如下步骤（简略版）：</p>
 <ul>
 <li>首先进行第一层解析，当前<code>Query</code>的<code>Root Query</code>类型是<code>query</code>，同时需要它的名字是<code>articles</code></li>
@@ -100,7 +222,7 @@
 <p>我们可以发现，GraphQL大体的解析流程就是遇到一个Query之后，尝试使用它的Resolver取值，之后再对返回值进行解析，这个过程是递归的，直到所解析Field的类型是<code>Scalar Type（标量类型）</code>为止。解析的整个过程我们可以把它想象成一个很长的Resolver Chain（解析链）。</p>
 <p>这里对于GraphQL的解析过程只是很简单的概括，其内部运行机制远比这个复杂，当然这些对于使用者是黑盒的，我们只需要大概了解它的过程即可。</p>
 <p>Resolver本身的声明在各个语言中是不一样的，因为它代表数据获取的具体逻辑。它的函数签名(以js为例子)如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function(parent, args, ctx, info) &#123;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function(parent, args, ctx, info) &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其中的参数的意义如下：</p>
 <ul>
 <li>parent: 当前上一个Resolver的返回值</li>
@@ -113,18 +235,154 @@
 <p>最后我尝试根据这段时间的学习GraphQL的经验，提供一些进一步学习和了解GraphQL的方向和建议，仅供参考：</p>
 <h3 id="想进一步了解GraphQL本身"><a href="#想进一步了解GraphQL本身" class="headerlink" title="想进一步了解GraphQL本身"></a>想进一步了解GraphQL本身</h3><p>我建议再仔细去官网，读一下官方文档，如果有兴趣的话，看看GraphQL的spec也是极好的。这篇文章虽然介绍了核心概念，但是其他一些概念没有涉及，比如Union、Interface、Fragment等等，这些概念均是基于核心概念之上的，在了解核心概念后，应当会很容易理解。</p>
 <h3 id="偏向服务端"><a href="#偏向服务端" class="headerlink" title="偏向服务端"></a>偏向服务端</h3><p>偏向服务端方向的话，除了需要进一步了解GraphQL在某个语言的具体生态外，还需要了解一些关于缓存、上传文件等特定方向的东西。如果是想做系统迁移，还需要对特定的框架做一些调研，比如graphene-django。</p>
-<p>如果是想使用GraphQL本身做系统开发，这里推荐了解一个叫做<a href="https://www.prisma.io/docs/" target="_blank" rel="external">prisma</a>的框架，它本身是在GraphQL的基础上构建的，并且与一些GraphQL的生态框架兼容性也较好，在各大编程语言也均有适配，它本身可以当做一个ORM来使用，也可以当做一个与数据库交互的中间层来使用。</p>
+<p>如果是想使用GraphQL本身做系统开发，这里推荐了解一个叫做<a href="https://www.prisma.io/docs/" target="_blank" rel="noopener">prisma</a>的框架，它本身是在GraphQL的基础上构建的，并且与一些GraphQL的生态框架兼容性也较好，在各大编程语言也均有适配，它本身可以当做一个ORM来使用，也可以当做一个与数据库交互的中间层来使用。</p>
 <h3 id="偏向客户端"><a href="#偏向客户端" class="headerlink" title="偏向客户端"></a>偏向客户端</h3><p>偏向客户端方向的话，需要进一步了解关于graphql-client的相关知识，我这段时间了解的是apollo，一个开源的grapql-client框架，并且与各个主流前端技术栈如Angular、React等均有适配版本，使用感觉良好。</p>
 <p>同时，还需要了解一些额外的查询概念，比如分页查询中涉及的Connection、Edge等。</p>
 <p>大概就这么多，如有错误，还望指正。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/03/24/rpc-reset-graphql/" class="next">NEXT</a></div><div data-thread-key="2018/04/02/30-minutes-graphql/" data-title="30分钟理解GraphQL核心概念" data-url="http://yoursite.com/2018/04/02/30-minutes-graphql/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-     || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
 
-</script><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>
+      
+    </div>
+    
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/GraphQL/">GraphQL</a><a href="/tags/API/">API</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+  
+    
+    
+  
+</article>
+   
+    <div id="toc" class="toc-article ">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是GraphQL"><span class="toc-number">2.</span> <span class="toc-text">什么是GraphQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Type"><span class="toc-number">3.</span> <span class="toc-text">Type</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Scalar-Type"><span class="toc-number">3.1.</span> <span class="toc-text">Scalar Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Type"><span class="toc-number">3.2.</span> <span class="toc-text">Object Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Type-Modifier"><span class="toc-number">3.3.</span> <span class="toc-text">Type Modifier</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Schema"><span class="toc-number">4.</span> <span class="toc-text">Schema</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Query"><span class="toc-number">4.1.</span> <span class="toc-text">Query</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Resolver"><span class="toc-number">4.2.</span> <span class="toc-text">Resolver</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#想进一步了解GraphQL本身"><span class="toc-number">5.1.</span> <span class="toc-text">想进一步了解GraphQL本身</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#偏向服务端"><span class="toc-number">5.2.</span> <span class="toc-text">偏向服务端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#偏向客户端"><span class="toc-number">5.3.</span> <span class="toc-text">偏向客户端</span></a></li></ol></li></ol>
+</div>
+
+
+  
+
+	<!-- async load  -->
+	<script>
+			function async(u, c) {
+				var d = document, t = 'script',
+						o = d.createElement(t),
+						s = d.getElementsByTagName(t)[0];
+				o.src = u;
+				if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+				s.parentNode.insertBefore(o, s);
+			}
+	</script>
+	<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+	<script>
+			async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+					anchors.options = {
+						visible: 'hover',
+						placement: 'left',
+						// icon: '#'
+					};
+					anchors.add().remove('.article-title').remove('.subheading').remove('.sidebar-container h5');
+			})
+	</script>
+	<style>
+			/* place left on bigger screen */
+			@media all and (min-width: 800px) {
+					.anchorjs-link{
+							position: absolute;
+							left: -0.75em;
+							font-size: 1.1em;
+							margin-top : -0.1em;
+					}
+			}
+	</style>
+
+
+
+
+<!-- UY BEGIN -->
+	<div id="gitment-container"></div>
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script src="/js/web-pinyin.js"></script>
+	<script>
+		function toUnicode(s){ 
+			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+			return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+			});
+		}
+		var title = '30分钟理解GraphQL核心概念'
+		var GitHub_id = 'haoliangwu'
+		var client_id = 'e9cb0c90dcba4035e2d9'
+		var client_secret = '038be595d0dc58ec53b640f87bc5c9ebb94ec399'
+		var repo = 'littlelyon.me'
+		var gitment = new Gitment({
+		// id: '页面 ID', // 可选。默认为 location.href
+		// id:"11" ,
+		id: title,
+		title: title,
+		owner: GitHub_id,//'你的 GitHub ID',
+		repo: repo,//'存储评论的 repo',
+		oauth: {
+			client_id: client_id,//'你的 client ID',
+			client_secret: client_secret,//'你的 client secret',
+		},
+		})
+		gitment.render('gitment-container')
+	</script>
+<!-- UY END -->
+
+
+
+
+            </main>
+          </div>
+        </div>
+       
+
+
+
+
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+    
+  </div>
+
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+<script src="/js/search.js"></script>
+
+</body>
+</html>

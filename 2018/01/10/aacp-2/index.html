@@ -1,5 +1,130 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 高级 Angular 组件模式 (2) · Fine, thank you, and you.</title><meta name="description" content="高级 Angular 组件模式 (2) - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">高级 Angular 组件模式 (2)</h1><div class="post-info">Jan 10, 2018</div><div class="post-content"><h2 id="02-Write-Compound-Components"><a href="#02-Write-Compound-Components" class="headerlink" title="02 Write Compound Components"></a>02 Write Compound Components</h2><blockquote>
-<p>原文: <a href="https://blog.angularindepth.com/write-compound-components-1001449c67f0" target="_blank" rel="external">Write Compound Components</a></p>
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>高级 Angular 组件模式 (2) | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+  <meta name="description" content="02 Write Compound Components
+原文: Write Compound Components
+
+目标我们需要实现的需求是能够使使用者通过&amp;lt;toggle&amp;gt;组件动态的改变包含在它内部的内容。
+实现我们可以把toggle抽象为一个复合组件，由三个新的组件&amp;lt;togg">
+  
+
+  
+  
+  <meta name="keywords" content="翻译,js,ngx,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="高级 Angular 组件模式 (2)"/>
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+              <li><a href="/about">About</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+        
+
+          <div class="container ">
+          <div class="row">
+            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+            <article class="article-container ">
+
+  
+    
+    <h3 class="article-title"><span>高级 Angular 组件模式 (2)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/10/aacp-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-10T13:05:59.000Z">
+          2018-01-10
+        </time>
+      </a>
+    </span>
+    <br />
+    
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+    
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+          <h2 id="02-Write-Compound-Components"><a href="#02-Write-Compound-Components" class="headerlink" title="02 Write Compound Components"></a>02 Write Compound Components</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/write-compound-components-1001449c67f0" target="_blank" rel="noopener">Write Compound Components</a></p>
 </blockquote>
 <h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>我们需要实现的需求是能够使使用者通过<code>&lt;toggle&gt;</code>组件动态的改变包含在它内部的内容。</p>
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们可以把toggle抽象为一个复合组件，由三个新的组件<code>&lt;toggle-button&gt;</code>、<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>构成。</p>
@@ -17,7 +142,6 @@
 <li><p><code>@ViewChild</code>或者<code>@ViewChildren</code>装饰器是用来获取在组件内部模板中使用的单个或者多个组件的。比如<code>template: &#39;This is the view&#39;</code>或者<code>templateUrl: &#39;./my.component.html&#39;</code></p>
 </li>
 </ul>
-<iframe src="https://stackblitz.com/edit/adv-ng-patterns-02-compound-components" width="800" height="600" frameborder="0" allowfullscreen></iframe>
 <h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这里组件架构方式是标准的<code>Smart Component（智能组件）</code>和<code>Dump Component（木偶组件）</code>组件架构方式。</p>
 <p>以上的需求完全是可以在<code>&lt;toggle&gt;</code>内部实现的，但是这样会使它的内部充满逻辑代码，反之我们可以将一些职能划分为成更小的碎片，并委托到它的子组件中，本身作为容器组件存在，负责协作子组件从而达到目的。</p>
 <p>对于<code>@ContentChild</code>和<code>@ViewChild</code>的使用场景，我认为通过看装饰器前缀的寓意是最后的方式。</p>
@@ -26,14 +150,150 @@
 <li><code>View</code>代表视图，视图代表组件本身的模板，代表组件本身的渲染逻辑</li>
 </ul>
 <p><code>@ContentChildren</code>和<code>@ViewChildren</code>同理。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/01/10/aacp-3a/" class="prev">PREV</a><a href="/2018/01/10/aacp-1/" class="next">NEXT</a></div><div data-thread-key="2018/01/10/aacp-2/" data-title="高级 Angular 组件模式 (2)" data-url="http://yoursite.com/2018/01/10/aacp-2/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-     || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
 
-</script><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>
+      
+    </div>
+    
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/翻译/">翻译</a><a href="/tags/js/">js</a><a href="/tags/ngx/">ngx</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+  
+    
+    
+  
+</article>
+   
+    <div id="toc" class="toc-article ">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#02-Write-Compound-Components"><span class="toc-number">1.</span> <span class="toc-text">02 Write Compound Components</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#目标"><span class="toc-number">1.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实现"><span class="toc-number">1.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#成果"><span class="toc-number">2.</span> <span class="toc-text">成果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关话题"><span class="toc-number">3.</span> <span class="toc-text">相关话题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">4.</span> <span class="toc-text">译者注</span></a></li></ol>
+</div>
+
+
+  
+
+	<!-- async load  -->
+	<script>
+			function async(u, c) {
+				var d = document, t = 'script',
+						o = d.createElement(t),
+						s = d.getElementsByTagName(t)[0];
+				o.src = u;
+				if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+				s.parentNode.insertBefore(o, s);
+			}
+	</script>
+	<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+	<script>
+			async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+					anchors.options = {
+						visible: 'hover',
+						placement: 'left',
+						// icon: '#'
+					};
+					anchors.add().remove('.article-title').remove('.subheading').remove('.sidebar-container h5');
+			})
+	</script>
+	<style>
+			/* place left on bigger screen */
+			@media all and (min-width: 800px) {
+					.anchorjs-link{
+							position: absolute;
+							left: -0.75em;
+							font-size: 1.1em;
+							margin-top : -0.1em;
+					}
+			}
+	</style>
+
+
+
+
+<!-- UY BEGIN -->
+	<div id="gitment-container"></div>
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script src="/js/web-pinyin.js"></script>
+	<script>
+		function toUnicode(s){ 
+			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+			return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+			});
+		}
+		var title = '高级 Angular 组件模式 (2)'
+		var GitHub_id = 'haoliangwu'
+		var client_id = 'e9cb0c90dcba4035e2d9'
+		var client_secret = '038be595d0dc58ec53b640f87bc5c9ebb94ec399'
+		var repo = 'littlelyon.me'
+		var gitment = new Gitment({
+		// id: '页面 ID', // 可选。默认为 location.href
+		// id:"11" ,
+		id: title,
+		title: title,
+		owner: GitHub_id,//'你的 GitHub ID',
+		repo: repo,//'存储评论的 repo',
+		oauth: {
+			client_id: client_id,//'你的 client ID',
+			client_secret: client_secret,//'你的 client secret',
+		},
+		})
+		gitment.render('gitment-container')
+	</script>
+<!-- UY END -->
+
+
+
+
+            </main>
+          </div>
+        </div>
+       
+
+
+
+
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+    
+  </div>
+
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+<script src="/js/search.js"></script>
+
+</body>
+</html>

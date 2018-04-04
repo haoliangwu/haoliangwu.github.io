@@ -1,46 +1,306 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 高级 Angular 组件模式 (3b) · Fine, thank you, and you.</title><meta name="description" content="高级 Angular 组件模式 (3b) - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">高级 Angular 组件模式 (3b)</h1><div class="post-info">Jan 10, 2018</div><div class="post-content"><h2 id="03-b-Enhance-Components-with-Directives"><a href="#03-b-Enhance-Components-with-Directives" class="headerlink" title="03-b Enhance Components with Directives"></a>03-b Enhance Components with Directives</h2><blockquote>
-<p>原文: <a href="https://blog.angularindepth.com/enhance-components-with-directives-58f16c4ca1f" target="_blank" rel="external">Enhance Components with Directives</a></p>
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>高级 Angular 组件模式 (3b) | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+  <meta name="description" content="03-b Enhance Components with Directives
+原文: Enhance Components with Directives
+
+Kent C. Dodds的第四篇文章中的一个重要元素在上一篇文章中没有涉及，使用withToggle高阶组件(HoC, react中的常用">
+  
+
+  
+  
+  <meta name="keywords" content="翻译,js,ngx,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="高级 Angular 组件模式 (3b)"/>
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+              <li><a href="/about">About</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+        
+
+          <div class="container ">
+          <div class="row">
+            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+            <article class="article-container ">
+
+  
+    
+    <h3 class="article-title"><span>高级 Angular 组件模式 (3b)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/10/aacp-3b/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-10T14:02:45.000Z">
+          2018-01-10
+        </time>
+      </a>
+    </span>
+    <br />
+    
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+    
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+          <h2 id="03-b-Enhance-Components-with-Directives"><a href="#03-b-Enhance-Components-with-Directives" class="headerlink" title="03-b Enhance Components with Directives"></a>03-b Enhance Components with Directives</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/enhance-components-with-directives-58f16c4ca1f" target="_blank" rel="noopener">Enhance Components with Directives</a></p>
 </blockquote>
 <p>Kent C. Dodds的第四篇文章中的一个重要元素在上一篇文章中没有涉及，使用<code>withToggle</code>高阶组件(HoC, react中的常用模式)可以将<code>&lt;toggle-on&gt;</code>、<code>&lt;toggle-off&gt;</code>、<code>&lt;toggle-button&gt;</code>组件中的公用逻辑分离出来。</p>
 <p>虽然上一篇文章中上面提及的三个组件并没有太多的公用逻辑，可以万一它们有公用逻辑呢？如果我们想要提供更加声明式的功能，比如能够显式的声明它们使用的<code>&lt;toggle&gt;</code>组件实例而非最邻近的父实例。</p>
 <p>同时，因为<code>&lt;toggle&gt;</code>组件的模板并不存在任何的变动，我们可以将它转化为一个<strong>指令</strong>，这样我们可以以更加灵活的方式来使用它。</p>
 <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
 <li>允许我们的<code>&lt;toggle&gt;</code>组件能够以<code>tag</code>的形式或者<code>attribute</code>的形式使用，如<code>&lt;toggle&gt;</code>或者<code>&lt;div toggle&gt;&lt;/div&gt;</code></li>
-<li>允许通过`withToggle<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">## 实现</div><div class="line">### 1）将``&lt;toggle&gt;``作为一个指令</div><div class="line">将``&lt;toggle&gt;``组件改变为指令十分简单，因为它本身的模板仅仅是``&lt;ng-content&gt;&lt;/ng-content&gt;``，在组件渲染时，``&lt;ng-content&gt;``会被替换为我们当前组件标签内包含的内容，所以我们可以直接移除它，并使用``@Directive``装饰器来描述``&lt;toggle&gt;``组件，如下：</div></pre></td></tr></table></figure></li>
+<li>允许通过`withToggle<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 实现</span><br><span class="line">### 1）将``&lt;toggle&gt;``作为一个指令</span><br><span class="line">将``&lt;toggle&gt;``组件改变为指令十分简单，因为它本身的模板仅仅是``&lt;ng-content&gt;&lt;/ng-content&gt;``，在组件渲染时，``&lt;ng-content&gt;``会被替换为我们当前组件标签内包含的内容，所以我们可以直接移除它，并使用``@Directive``装饰器来描述``&lt;toggle&gt;``组件，如下：</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p>@Directive({<br>  exportAs: ‘toggle’,<br>  selector: ‘toggle, [toggle]’,<br>})<br>export class ToggleDirective {}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">你可能注意到了，指令的选择器允许``toggle``指令可以以**标签名**和**属性名**的形式来使用。对于``exportAs``关键字是必须要提供的，因为这是当我们需要在别的指令或者组件能够获取``toggle``指令引用的名字，会在这个系列文章的第5章详细删除``exportAs``（Handle Template Reference Variables with Directives）。</div><div class="line"></div><div class="line">### 2）``withToggle``指令</div><div class="line">在这个新的指令中，我们将会封装关于如何选取需要绑定某个``toggle``指令实例的逻辑。</div><div class="line"></div><div class="line">首先，我们的设想是这样的，每一个组件注入``withToggle``指令，而不是直接注入最邻近的父``toggle``指令。同时每个使用``withToggle``指令的组件通过使用``withToggle.toggle``来访问它所绑定的``toggle``指令的实例，如下：</div></pre></td></tr></table></figure></p>
-<p>@Component({<br>  selector: ‘toggle-off’,<br>  template: <code>&lt;ng-content *ngIf=&quot;!withToggle.toggle?.on&quot;&gt;&lt;/ng-content&gt;</code>,<br>})<br>export class ToggleOffComponent {<br>  constructor(public withToggle: WithToggleDirective) {}<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">其次，``withToggle``指令将它自身与``toggle``指令的选择器绑定（就是两个指令的选择器是相同的），同时增加一个额外的选择器``[withToggle]``，如下：</div></pre></td></tr></table></figure></p>
-<p>@Directive({<br>  exportAs: ‘withToggle’,<br>  selector: ‘toggle, [toggle], [withToggle]’,<br>})<br>export class WithToggleDirective //…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">现在``withToggle``指令为它的子组件们提供所绑定的``toggle``指令实例，无论这个实例是显示绑定的，还是默认的父``toggle``指令。关于其中实现的具体细节，可以参考文章最后的[附录部分](#附录)。</div><div class="line"></div><div class="line">## 成果</div><div class="line">我们的``app.component.html``现在可以通过三种不同的使用方式来展现内容。</div><div class="line"></div><div class="line">### 1）基本</div></pre></td></tr></table></figure></p>
-<p><div toggle="" #firsttoggle="toggle"><br>  …<br>  <toggle #secondtoggle="toggle"><br>    …<br>  </toggle><br></div><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">注意``#firstToggle``和``#secondToggle``视图变量是如何使用``toggle``组件的，前者使用属性声明的方式，后者使用标签名声明方式，无论怎样，它们都按理想中那样运行。</div><div class="line"></div><div class="line">而且，``#secondToggle``是嵌套在``#firstToggle``中的，所以它的子组件使用的是它本身的开关状态，而非``#firstToggle``中的，这符合我们的预期。</div><div class="line"></div><div class="line">### 2）显式引用</div></pre></td></tr></table></figure></p>
-<p></p><p [withtoggle]="firstToggle"><br>  First:<br>  <toggle-on>On</toggle-on><br>  <toggle-off>Off</toggle-off><br>  <toggle-button></toggle-button><br></p><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">这里没有任何``toggle``指令是当前``p``标签的子组件的祖先，但是通过``withToggle``指令，我们可以让所有的子组件使用``#firstToggle``的``toggle``指令实例。</div><div class="line"></div><div class="line">### 3）自定义组件</div></pre></td></tr></table></figure><p></p>
+<p>@Directive({<br>  exportAs: ‘toggle’,<br>  selector: ‘toggle, [toggle]’,<br>})<br>export class ToggleDirective {}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">你可能注意到了，指令的选择器允许``toggle``指令可以以**标签名**和**属性名**的形式来使用。对于``exportAs``关键字是必须要提供的，因为这是当我们需要在别的指令或者组件能够获取``toggle``指令引用的名字，会在这个系列文章的第5章详细删除``exportAs``（Handle Template Reference Variables with Directives）。</span><br><span class="line"></span><br><span class="line">### 2）``withToggle``指令</span><br><span class="line">在这个新的指令中，我们将会封装关于如何选取需要绑定某个``toggle``指令实例的逻辑。</span><br><span class="line"></span><br><span class="line">首先，我们的设想是这样的，每一个组件注入``withToggle``指令，而不是直接注入最邻近的父``toggle``指令。同时每个使用``withToggle``指令的组件通过使用``withToggle.toggle``来访问它所绑定的``toggle``指令的实例，如下：</span><br></pre></td></tr></table></figure></p>
+<p>@Component({<br>  selector: ‘toggle-off’,<br>  template: <code>&lt;ng-content *ngIf=&quot;!withToggle.toggle?.on&quot;&gt;&lt;/ng-content&gt;</code>,<br>})<br>export class ToggleOffComponent {<br>  constructor(public withToggle: WithToggleDirective) {}<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">其次，``withToggle``指令将它自身与``toggle``指令的选择器绑定（就是两个指令的选择器是相同的），同时增加一个额外的选择器``[withToggle]``，如下：</span><br></pre></td></tr></table></figure></p>
+<p>@Directive({<br>  exportAs: ‘withToggle’,<br>  selector: ‘toggle, [toggle], [withToggle]’,<br>})<br>export class WithToggleDirective //…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">现在``withToggle``指令为它的子组件们提供所绑定的``toggle``指令实例，无论这个实例是显示绑定的，还是默认的父``toggle``指令。关于其中实现的具体细节，可以参考文章最后的[附录部分](#附录)。</span><br><span class="line"></span><br><span class="line">## 成果</span><br><span class="line">我们的``app.component.html``现在可以通过三种不同的使用方式来展现内容。</span><br><span class="line"></span><br><span class="line">### 1）基本</span><br></pre></td></tr></table></figure></p>
+<p><div toggle="" #firsttoggle="toggle"><br>  …<br>  <toggle #secondtoggle="toggle"><br>    …<br>  </toggle><br></div><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">注意``#firstToggle``和``#secondToggle``视图变量是如何使用``toggle``组件的，前者使用属性声明的方式，后者使用标签名声明方式，无论怎样，它们都按理想中那样运行。</span><br><span class="line"></span><br><span class="line">而且，``#secondToggle``是嵌套在``#firstToggle``中的，所以它的子组件使用的是它本身的开关状态，而非``#firstToggle``中的，这符合我们的预期。</span><br><span class="line"></span><br><span class="line">### 2）显式引用</span><br></pre></td></tr></table></figure></p>
+<p></p><p [withtoggle]="firstToggle"><br>  First:<br>  <toggle-on>On</toggle-on><br>  <toggle-off>Off</toggle-off><br>  <toggle-button></toggle-button><br></p><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这里没有任何``toggle``指令是当前``p``标签的子组件的祖先，但是通过``withToggle``指令，我们可以让所有的子组件使用``#firstToggle``的``toggle``指令实例。</span><br><span class="line"></span><br><span class="line">### 3）自定义组件</span><br></pre></td></tr></table></figure><p></p>
 <p><div [withtoggle]="firstToggle"><br>  <labelled-state togglename="First"></labelled-state><br>  <labelled-button togglename="First"></labelled-button><br></div></p>
 <p><labelled-state togglename="Second" [withtoggle]="secondToggle"> </labelled-state></p>
-<p><labelled-button togglename="Second" [withtoggle]="secondToggle"> </labelled-button><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">``withToggle``指令甚至可以通过DI机制注入到内部的任何自定义组件中，如``&lt;labelled-state&gt;``组件和``&lt;labelled-button&gt;``都没有任何关于``withToggle``或者``toggle``的引用声明。它们无需关心这个开关状态的来源，它们仅仅需要知道的是，根据这个开关状态，如何与它们的子组件进行交互。</div><div class="line"></div><div class="line">## 附录</div><div class="line">``withToggle``的实现，是一个标准的指令声明方式，除了它的构造方法，如下：</div></pre></td></tr></table></figure></p>
-<p>constructor(<br>  @Host() @Optional() private toggleDirective: ToggleDirective,<br>) {}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">值得注意的有两点：</div><div class="line">* ``@Host()``：这个装饰器的作用是，可以限制从属于当前指令的DI注入器，仅注入**绑定到某个满足特定条件指定或者组件上的**``toggle``指令实例，而不是从它的祖先组件们中注入。（这里选择器为空，则为宿主对象）</div><div class="line">* ``@Optional()``：这个装饰器会告诉编译器，当注入器没有找到任何可注入的``toggle``指令时，不要抛出错误（如果我们手动的指定某个引用），这样在它无法被注入时，使它保持``undefined``即可。</div><div class="line"></div><div class="line">现在我们可以很容易的理解在``ngOnChanges``生命周期钩子函数中的代码的作用，</div></pre></td></tr></table></figure></p>
-<p>this.toggle = this.withToggle || this.toggleDirective;<br>```</p>
+<p><labelled-button togglename="Second" [withtoggle]="secondToggle"> </labelled-button><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">``withToggle``指令甚至可以通过DI机制注入到内部的任何自定义组件中，如``&lt;labelled-state&gt;``组件和``&lt;labelled-button&gt;``都没有任何关于``withToggle``或者``toggle``的引用声明。它们无需关心这个开关状态的来源，它们仅仅需要知道的是，根据这个开关状态，如何与它们的子组件进行交互。</span><br><span class="line"></span><br><span class="line">## 附录</span><br><span class="line">``withToggle``的实现，是一个标准的指令声明方式，除了它的构造方法，如下：</span><br></pre></td></tr></table></figure></p>
+<p>constructor(<br>  @Host() @Optional() private toggleDirective: ToggleDirective,<br>) {}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">值得注意的有两点：</span><br><span class="line">* ``@Host()``：这个装饰器的作用是，可以限制从属于当前指令的DI注入器，仅注入**绑定到某个满足特定条件指定或者组件上的**``toggle``指令实例，而不是从它的祖先组件们中注入。（这里选择器为空，则为宿主对象）</span><br><span class="line">* ``@Optional()``：这个装饰器会告诉编译器，当注入器没有找到任何可注入的``toggle``指令时，不要抛出错误（如果我们手动的指定某个引用），这样在它无法被注入时，使它保持``undefined``即可。</span><br><span class="line"></span><br><span class="line">现在我们可以很容易的理解在``ngOnChanges``生命周期钩子函数中的代码的作用，</span><br></pre></td></tr></table></figure></p>
+<p>this.toggle = this.withToggle || this.toggleDirective;<br><code>`</code></p>
 <ul>
 <li>如果我们的<code>@Input()</code>被指定，那么使用它的值</li>
 <li>如果没有，则尝试去使用在当前宿主对象上注入的<code>toggle</code>指令实例</li>
 <li>如果没有，则使用<code>undefined</code></li>
 </ul>
 <p>当前的<code>this</code>指定<code>withToggle</code>本身，所以拥有它引用的子组件都可以访问它。</p>
-<iframe src="https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<p><a href="https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives" target="_blank" rel="noopener">https://stackblitz.com/edit/adv-ng-patterns-03b-enhance-with-directives</a></p>
 <h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>在这一节中，主要进行了以下几方面的改进：</p>
 <ul>
 <li>简化<code>toggle</code>本身，因为它一直是作为一个容器组件使用的，所以完全可以以指令（可以理解为没有模板的组件）的形式存在</li>
-<li>依赖注入（DI）的机制虽然很强大，但是受限于它的运作原理（关于具体的运作原理可以参考<a href="https://angular.cn/guide/dependency-injection" target="_blank" rel="external">官方文档</a>）。这里原作者使用一个额外的<code>withToggle</code>指令作为中间件，来作为<code>toggle</code>指令的托管容器。这部分理解起来可能需要先了解一下视图变量和<code>exportAs</code>的相关的知识</li>
+<li>依赖注入（DI）的机制虽然很强大，但是受限于它的运作原理（关于具体的运作原理可以参考<a href="https://angular.cn/guide/dependency-injection" target="_blank" rel="noopener">官方文档</a>）。这里原作者使用一个额外的<code>withToggle</code>指令作为中间件，来作为<code>toggle</code>指令的托管容器。这部分理解起来可能需要先了解一下视图变量和<code>exportAs</code>的相关的知识</li>
 <li>对于<code>toggle</code>指令实例的获取逻辑，采用平稳退化的策略，就好比人在实际生活中思考问题的方式一样。</li>
 </ul>
 <p>这种开发模式，在实际工作中，我有一次在重构公司项目中一个关于表单组件的过程中曾使用过，之所以使用这种方式，是因为在表单组件中，会存在一些关于联动校验或者分组的需求，如果将这部门逻辑封装为<code>service</code>或者直接写在<code>controller</code>内部，越到后面会发现逻辑复杂度越高，从而越来越难维护。</p>
 <p>使用这种模式，将复杂的逻辑划分成小的颗粒，再封装为独立的指令，在需要用到这些逻辑的组件中注入这些指令即可，指令的特点就是一般都会比较简洁，只会做一些简单的事情，相比之下，维护一个十分复杂的service和维护若干简单的指令，我更倾向于后者。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/01/16/workerize/" class="prev">PREV</a><a href="/2018/01/10/aacp-3a/" class="next">NEXT</a></div><div data-thread-key="2018/01/10/aacp-3b/" data-title="高级 Angular 组件模式 (3b)" data-url="http://yoursite.com/2018/01/10/aacp-3b/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-     || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
 
-</script><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>
+      
+    </div>
+    
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/翻译/">翻译</a><a href="/tags/js/">js</a><a href="/tags/ngx/">ngx</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+  
+    
+    
+  
+</article>
+   
+    <div id="toc" class="toc-article ">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#03-b-Enhance-Components-with-Directives"><span class="toc-number">1.</span> <span class="toc-text">03-b Enhance Components with Directives</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目标"><span class="toc-number">2.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">3.</span> <span class="toc-text">译者注</span></a></li></ol>
+</div>
+
+
+  
+
+	<!-- async load  -->
+	<script>
+			function async(u, c) {
+				var d = document, t = 'script',
+						o = d.createElement(t),
+						s = d.getElementsByTagName(t)[0];
+				o.src = u;
+				if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+				s.parentNode.insertBefore(o, s);
+			}
+	</script>
+	<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+	<script>
+			async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+					anchors.options = {
+						visible: 'hover',
+						placement: 'left',
+						// icon: '#'
+					};
+					anchors.add().remove('.article-title').remove('.subheading').remove('.sidebar-container h5');
+			})
+	</script>
+	<style>
+			/* place left on bigger screen */
+			@media all and (min-width: 800px) {
+					.anchorjs-link{
+							position: absolute;
+							left: -0.75em;
+							font-size: 1.1em;
+							margin-top : -0.1em;
+					}
+			}
+	</style>
+
+
+
+
+<!-- UY BEGIN -->
+	<div id="gitment-container"></div>
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script src="/js/web-pinyin.js"></script>
+	<script>
+		function toUnicode(s){ 
+			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+			return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+			});
+		}
+		var title = '高级 Angular 组件模式 (3b)'
+		var GitHub_id = 'haoliangwu'
+		var client_id = 'e9cb0c90dcba4035e2d9'
+		var client_secret = '038be595d0dc58ec53b640f87bc5c9ebb94ec399'
+		var repo = 'littlelyon.me'
+		var gitment = new Gitment({
+		// id: '页面 ID', // 可选。默认为 location.href
+		// id:"11" ,
+		id: title,
+		title: title,
+		owner: GitHub_id,//'你的 GitHub ID',
+		repo: repo,//'存储评论的 repo',
+		oauth: {
+			client_id: client_id,//'你的 client ID',
+			client_secret: client_secret,//'你的 client secret',
+		},
+		})
+		gitment.render('gitment-container')
+	</script>
+<!-- UY END -->
+
+
+
+
+            </main>
+          </div>
+        </div>
+       
+
+
+
+
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+    
+  </div>
+
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+<script src="/js/search.js"></script>
+
+</body>
+</html>

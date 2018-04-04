@@ -1,1 +1,215 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Fine, thank you, and you.</title><meta name="description" content="A Blog Powered By Hexo"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="archive"><h2 class="archive-year">2018</h2><div class="post-item"><div class="post-info">Feb 17, 2018</div><a href="/2018/02/17/aacp-4/" class="post-title-link">高级 Angular 组件模式 (4)</a></div><div class="post-item"><div class="post-info">Feb 17, 2018</div><a href="/2018/02/17/aacp-5/" class="post-title-link">高级 Angular 组件模式 (5)</a></div><div class="post-item"><div class="post-info">Feb 8, 2018</div><a href="/2018/02/08/javascript原型链review/" class="post-title-link">javascript原型链-review</a></div><div class="post-item"><div class="post-info">Feb 8, 2018</div><a href="/2018/02/08/SOLID-l/" class="post-title-link">【译】Understanding SOLID Principles - Liskov Substitution Principle</a></div><div class="post-item"><div class="post-info">Feb 8, 2018</div><a href="/2018/02/08/SOLID-i/" class="post-title-link">【译】Understanding SOLID Principles - Interface Segregation Principle</a></div><div class="post-item"><div class="post-info">Feb 4, 2018</div><a href="/2018/02/04/SOLID-o/" class="post-title-link">【译】Understanding SOLID Principles - Open Closed Principle</a></div><div class="post-item"><div class="post-info">Feb 2, 2018</div><a href="/2018/02/02/SOLID-s/" class="post-title-link">【译】Understanding SOLID Principles - Single Responsibility</a></div></div></section><footer><div class="paginator"></div><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>Archives: 2018/2 | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+              <li><a href="/about">About</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+        
+
+          <div class="container ">
+          <div class="row">
+            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+            
+
+<article>
+
+  <h2 class="article-title ">2018/2</h2>
+
+  <div class="archive">
+    
+      <div class="post archive">
+        <div class="archive-post">
+          <time datetime="2018-02-17T11:08:26.000Z">
+            <a href="/2018/02/17/aacp-4/">2018-02-17</a>
+          </time>
+          
+            <h3 class="archive-title"><a href="/2018/02/17/aacp-4/"><span>高级 Angular 组件模式 (4)</span></a></h3>
+          
+        </div>
+      </div>
+    
+      <div class="post archive">
+        <div class="archive-post">
+          <time datetime="2018-02-17T11:07:14.000Z">
+            <a href="/2018/02/17/aacp-5/">2018-02-17</a>
+          </time>
+          
+            <h3 class="archive-title"><a href="/2018/02/17/aacp-5/"><span>高级 Angular 组件模式 (5)</span></a></h3>
+          
+        </div>
+      </div>
+    
+      <div class="post archive">
+        <div class="archive-post">
+          <time datetime="2018-02-08T09:28:48.000Z">
+            <a href="/2018/02/08/javascript原型链review/">2018-02-08</a>
+          </time>
+          
+            <h3 class="archive-title"><a href="/2018/02/08/javascript原型链review/"><span>javascript原型链-review</span></a></h3>
+          
+        </div>
+      </div>
+    
+      <div class="post archive">
+        <div class="archive-post">
+          <time datetime="2018-02-08T03:16:57.000Z">
+            <a href="/2018/02/08/SOLID-l/">2018-02-08</a>
+          </time>
+          
+            <h3 class="archive-title"><a href="/2018/02/08/SOLID-l/"><span>【译】Understanding SOLID Principles - Liskov Substitution Principle</span></a></h3>
+          
+        </div>
+      </div>
+    
+      <div class="post archive">
+        <div class="archive-post">
+          <time datetime="2018-02-08T01:40:33.000Z">
+            <a href="/2018/02/08/SOLID-i/">2018-02-08</a>
+          </time>
+          
+            <h3 class="archive-title"><a href="/2018/02/08/SOLID-i/"><span>【译】Understanding SOLID Principles - Interface Segregation Principle</span></a></h3>
+          
+        </div>
+      </div>
+    
+      <div class="post archive">
+        <div class="archive-post">
+          <time datetime="2018-02-04T01:34:48.000Z">
+            <a href="/2018/02/04/SOLID-o/">2018-02-04</a>
+          </time>
+          
+            <h3 class="archive-title"><a href="/2018/02/04/SOLID-o/"><span>【译】Understanding SOLID Principles - Open Closed Principle</span></a></h3>
+          
+        </div>
+      </div>
+    
+      <div class="post archive">
+        <div class="archive-post">
+          <time datetime="2018-02-02T07:28:46.000Z">
+            <a href="/2018/02/02/SOLID-s/">2018-02-02</a>
+          </time>
+          
+            <h3 class="archive-title"><a href="/2018/02/02/SOLID-s/"><span>【译】Understanding SOLID Principles - Single Responsibility</span></a></h3>
+          
+        </div>
+      </div>
+    
+    <nav class="pagination">
+  
+  
+</nav>
+  </div>
+
+</article>
+            </main>
+          </div>
+        </div>
+       
+
+
+
+
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+    
+  </div>
+
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+<script src="/js/search.js"></script>
+
+</body>
+</html>

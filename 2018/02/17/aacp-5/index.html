@@ -1,5 +1,129 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 高级 Angular 组件模式 (5) · Fine, thank you, and you.</title><meta name="description" content="高级 Angular 组件模式 (5) - Lyon Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.ico"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"><link rel="stylesheet" href="/css/apollo.css"><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.ico"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/pages/" target="_self" class="nav-list-link"><i class="fa fa-bookmark">&nbsp;</i>Pages</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link"><i class="fa fa-folder-open-o">&nbsp;</i>Archive</a></li><li class="nav-list-item"><a href="https://github.com/haoliangwu" target="_self" class="nav-list-link"><i class="fa fa-github-alt">&nbsp;</i>GitHub</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">高级 Angular 组件模式 (5)</h1><div class="post-info">Feb 17, 2018</div><div class="post-content"><h2 id="05-Handle-Template-Reference-Variables-with-Directives"><a href="#05-Handle-Template-Reference-Variables-with-Directives" class="headerlink" title="05 Handle Template Reference Variables with Directives"></a>05 Handle Template Reference Variables with Directives</h2><blockquote>
-<p>原文: <a href="https://blog.angularindepth.com/handle-template-reference-variables-with-directives-223081bc70c2" target="_blank" rel="external">Handle Template Reference Variables with Directives</a></p>
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>高级 Angular 组件模式 (5) | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+  <meta name="description" content="05 Handle Template Reference Variables with Directives
+原文: Handle Template Reference Variables with Directives
+
+在之前的例子中，已经出现多次使用template reference var">
+  
+
+  
+  
+  <meta name="keywords" content="翻译,js,ngx,设计模式">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="高级 Angular 组件模式 (5)"/>
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+              <li><a href="/about">About</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+        
+
+          <div class="container ">
+          <div class="row">
+            <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+            <article class="article-container ">
+
+  
+    
+    <h3 class="article-title"><span>高级 Angular 组件模式 (5)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/17/aacp-5/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-17T11:07:14.000Z">
+          2018-02-17
+        </time>
+      </a>
+    </span>
+    <br />
+    
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+    
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+          <h2 id="05-Handle-Template-Reference-Variables-with-Directives"><a href="#05-Handle-Template-Reference-Variables-with-Directives" class="headerlink" title="05 Handle Template Reference Variables with Directives"></a>05 Handle Template Reference Variables with Directives</h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/handle-template-reference-variables-with-directives-223081bc70c2" target="_blank" rel="noopener">Handle Template Reference Variables with Directives</a></p>
 </blockquote>
 <p>在之前的例子中，已经出现多次使用<code>template reference variable（模板引用变量）</code>的场景，现在让我们来深入研究如何通过使用模板引用变量来关联某个具体指令。</p>
 <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在视图模板内，获取一个指令的引用。</p>
@@ -12,23 +136,160 @@
 <li>原生html元素，并且没有任何组件绑定与它，比如<code>&lt;div #someDiv&gt;&lt;/div&gt;</code></li>
 </ol>
 <p>之后我们来分别看3个例子。</p>
-<h3 id="指令与exportAs"><a href="#指令与exportAs" class="headerlink" title="指令与exportAs"></a>指令与<code>exportAs</code></h3><p>指令可以在它的元数据中声明<code>exportAs</code>属性，这个属性表示它被这个模板引用变量所标识，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// toggle.directive.ts</div><div class="line">@Directive(&#123;</div><div class="line">  selector: &apos;[toggle]&apos;,</div><div class="line">  exportAs: &apos;toggle&apos;,</div><div class="line">&#125;)</div><div class="line">export class ToggleDirective &#123; ... &#125;</div></pre></td></tr></table></figure></p>
-<p>之后我们可以在视图模板中直接使用<code>toggle</code>来获取指令的引用，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// app.component.html</div><div class="line">&lt;div toggle #myTemplateRefVar=&quot;toggle&quot;&gt;&lt;/div&gt;</div><div class="line">// myTemplateRefVar is the ToggleDirective</div></pre></td></tr></table></figure></p>
-<h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><p>对于每一个<code>html</code>元素，只会有一个组件与之对应。当一个组件绑定于一个元素时，那么声明的模板引用变量将会被解析为当前元素上所绑定的组件，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// app.component.html</div><div class="line">&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</div><div class="line">// toggleOn is the ToggleOnComponent</div></pre></td></tr></table></figure></p>
-<h3 id="HTML元素"><a href="#HTML元素" class="headerlink" title="HTML元素"></a>HTML元素</h3><p>如果没有组件与元素绑定，模板引用变量会指向当前这个<code>html</code>元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// app.component.html</div><div class="line">&lt;div #someDiv&gt;&lt;/div&gt;</div><div class="line">// someDiv is an HTMLDivElement</div></pre></td></tr></table></figure></p>
-<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><p>Note: 在<code>stackblitz</code>中，我通过打印模板引用变量所指向的类的名字（constructor.name）来演示它所代表的引用。<br><iframe src="https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables" width="800" height="600" frameborder="0" allowfullscreen></iframe></p>
+<h3 id="指令与exportAs"><a href="#指令与exportAs" class="headerlink" title="指令与exportAs"></a>指令与<code>exportAs</code></h3><p>指令可以在它的元数据中声明<code>exportAs</code>属性，这个属性表示它被这个模板引用变量所标识，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// toggle.directive.ts</span><br><span class="line">@Directive(&#123;</span><br><span class="line">  selector: &apos;[toggle]&apos;,</span><br><span class="line">  exportAs: &apos;toggle&apos;,</span><br><span class="line">&#125;)</span><br><span class="line">export class ToggleDirective &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后我们可以在视图模板中直接使用<code>toggle</code>来获取指令的引用，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div toggle #myTemplateRefVar=&quot;toggle&quot;&gt;&lt;/div&gt;</span><br><span class="line">// myTemplateRefVar is the ToggleDirective</span><br></pre></td></tr></table></figure></p>
+<h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><p>对于每一个<code>html</code>元素，只会有一个组件与之对应。当一个组件绑定于一个元素时，那么声明的模板引用变量将会被解析为当前元素上所绑定的组件，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</span><br><span class="line">// toggleOn is the ToggleOnComponent</span><br></pre></td></tr></table></figure></p>
+<h3 id="HTML元素"><a href="#HTML元素" class="headerlink" title="HTML元素"></a>HTML元素</h3><p>如果没有组件与元素绑定，模板引用变量会指向当前这个<code>html</code>元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div #someDiv&gt;&lt;/div&gt;</span><br><span class="line">// someDiv is an HTMLDivElement</span><br></pre></td></tr></table></figure></p>
+<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><p>Note: 在<code>stackblitz</code>中，我通过打印模板引用变量所指向的类的名字（constructor.name）来演示它所代表的引用。</p>
+<p><a href="https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables" target="_blank" rel="noopener">https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables</a></p>
 <h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这篇文章作者关于模板引用变量，仅仅介绍了关于如何声明和在视图模板中如何使用，我在这里再补充一些，如何在组件或者指令类的内部使用。</p>
-<p>在类内部获取模板引用变量所指向的引用是通过使用<code>ViewChild</code>装饰器完成的，比如上述文章中的第二个例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">@Component(&#123;</div><div class="line">  selector: &apos;my-app&apos;,</div><div class="line">  template: `</div><div class="line">    &lt;div #myDiv&gt;&lt;/div&gt;</div><div class="line">  `,</div><div class="line">&#125;)</div><div class="line">export class AppComponent &#123;</div><div class="line">  @ViewChild(&apos;myDiv&apos;)</div><div class="line">  myDiv: ElementRef;</div><div class="line"></div><div class="line">  ngAfterViewInit() &#123;</div><div class="line">    console.log(this.myDiv);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在类内部获取模板引用变量所指向的引用是通过使用<code>ViewChild</code>装饰器完成的，比如上述文章中的第二个例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  selector: &apos;my-app&apos;,</span><br><span class="line">  template: `</span><br><span class="line">    &lt;div #myDiv&gt;&lt;/div&gt;</span><br><span class="line">  `,</span><br><span class="line">&#125;)</span><br><span class="line">export class AppComponent &#123;</span><br><span class="line">  @ViewChild(&apos;myDiv&apos;)</span><br><span class="line">  myDiv: ElementRef;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    console.log(this.myDiv);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里的<code>myDiv</code>即指向当前模板引用变量所指向的html元素。</p>
 <p>Note: 在类中获取模板引用变量所指向的引用时，请格外注意你期望获取的引用类型，在例子中，我们期望获取html元素，因此这里的引用类型是<code>ElementRef</code>，如果是指令或者组件，则分别要对应其类型的<code>Type</code>。</p>
-</div></article></div></section><footer><div class="paginator"><a href="/2018/02/17/aacp-4/" class="prev">PREV</a><a href="/2018/02/08/javascript原型链review/" class="next">NEXT</a></div><div data-thread-key="2018/02/17/aacp-5/" data-title="高级 Angular 组件模式 (5)" data-url="http://yoursite.com/2018/02/17/aacp-5/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"littlelyno"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-     || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
 
-</script><div class="copyright"><p>© 2016 - 2018 <a href="https://github.com/haoliangwu">Lyon Wu</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script async src="//littlelyon.com/js/index.js"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-83849508-1",'auto');ga('send','pageview');</script></body></html>
+      
+    </div>
+    
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/翻译/">翻译</a><a href="/tags/js/">js</a><a href="/tags/ngx/">ngx</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+  
+    
+    
+  
+</article>
+   
+    <div id="toc" class="toc-article ">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#05-Handle-Template-Reference-Variables-with-Directives"><span class="toc-number">1.</span> <span class="toc-text">05 Handle Template Reference Variables with Directives</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目标"><span class="toc-number">2.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#指令与exportAs"><span class="toc-number">3.1.</span> <span class="toc-text">指令与exportAs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组件"><span class="toc-number">3.2.</span> <span class="toc-text">组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTML元素"><span class="toc-number">3.3.</span> <span class="toc-text">HTML元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#成果"><span class="toc-number">3.4.</span> <span class="toc-text">成果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">4.</span> <span class="toc-text">译者注</span></a></li></ol>
+</div>
+
+
+  
+
+	<!-- async load  -->
+	<script>
+			function async(u, c) {
+				var d = document, t = 'script',
+						o = d.createElement(t),
+						s = d.getElementsByTagName(t)[0];
+				o.src = u;
+				if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+				s.parentNode.insertBefore(o, s);
+			}
+	</script>
+	<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+	<script>
+			async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+					anchors.options = {
+						visible: 'hover',
+						placement: 'left',
+						// icon: '#'
+					};
+					anchors.add().remove('.article-title').remove('.subheading').remove('.sidebar-container h5');
+			})
+	</script>
+	<style>
+			/* place left on bigger screen */
+			@media all and (min-width: 800px) {
+					.anchorjs-link{
+							position: absolute;
+							left: -0.75em;
+							font-size: 1.1em;
+							margin-top : -0.1em;
+					}
+			}
+	</style>
+
+
+
+
+<!-- UY BEGIN -->
+	<div id="gitment-container"></div>
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script src="/js/web-pinyin.js"></script>
+	<script>
+		function toUnicode(s){ 
+			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+			return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+			});
+		}
+		var title = '高级 Angular 组件模式 (5)'
+		var GitHub_id = 'haoliangwu'
+		var client_id = 'e9cb0c90dcba4035e2d9'
+		var client_secret = '038be595d0dc58ec53b640f87bc5c9ebb94ec399'
+		var repo = 'littlelyon.me'
+		var gitment = new Gitment({
+		// id: '页面 ID', // 可选。默认为 location.href
+		// id:"11" ,
+		id: title,
+		title: title,
+		owner: GitHub_id,//'你的 GitHub ID',
+		repo: repo,//'存储评论的 repo',
+		oauth: {
+			client_id: client_id,//'你的 client ID',
+			client_secret: client_secret,//'你的 client secret',
+		},
+		})
+		gitment.render('gitment-container')
+	</script>
+<!-- UY END -->
+
+
+
+
+            </main>
+          </div>
+        </div>
+       
+
+
+
+
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+    
+  </div>
+
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+<script src="/js/search.js"></script>
+
+</body>
+</html>
