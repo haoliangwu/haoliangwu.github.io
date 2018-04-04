@@ -11,12 +11,16 @@
 
   
   <meta name="description" content="上次山寨了一个smile face，最近因为一直都在测70，然后就又对70的progress bar起了兴趣。
-大体上portal的progress bar就两种，一种是线性的，一种是环形的。">
+大体上portal的progress bar就两种，一种是线性的，一种是环形的。
+&amp;lt;!--more--&amp;gt;
+先来线性的:
+
+线性没有什么困难，值得注意的是，可以使用float属性">
   
 
   
   
-  <meta name="keywords" content="css,liferay">
+  <meta name="keywords" content="liferay,css">
   
 
   <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
@@ -120,13 +124,14 @@
       
           <p>上次山寨了一个smile face，最近因为一直都在测70，然后就又对70的progress bar起了兴趣。</p>
 <p>大体上portal的progress bar就两种，一种是线性的，一种是环形的。</p>
-<a id="more"></a>
+<p>&lt;!--more--&gt;</p>
 <p>先来线性的:</p>
-<iframe src="http://jsbin.com/xumove/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe>
+<p><iframe src="http://jsbin.com/xumove/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe></p>
 <p>线性没有什么困难，值得注意的是，可以使用<code>float</code>属性来模拟一下先向右延伸之后又收缩的效果。</p>
 <p>再来环状的:</p>
-<iframe src="http://jsbin.com/zavabaw/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe>
-<p>环状的比线性的复杂一点，在模拟旋转效果的时候，为了使动画效果不存在偏差（虽然这种偏差十分小，正常情况下是不会被肉眼发现的），在设置<code>transform-origin</code>的时候需要将旋转颗粒的半径也考虑进去，因此旋转中心会变成:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform-origin: $r/2 50px;</span><br></pre></td></tr></table></figure></p>
+<p><iframe src="http://jsbin.com/zavabaw/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe></p>
+<p>环状的比线性的复杂一点，在模拟旋转效果的时候，为了使动画效果不存在偏差（虽然这种偏差十分小，正常情况下是不会被肉眼发现的），在设置<code>transform-origin</code>的时候需要将旋转颗粒的半径也考虑进去，因此旋转中心会变成:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform-origin: $r/2 50px;</span><br></pre></td></tr></table></figure></p>
 <p>就这样，完了有时间再模拟一些portal其他的动画效果。</p>
 
       
@@ -144,7 +149,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/css/">css</a><a href="/tags/liferay/">liferay</a>
+        <a href="/tags/liferay/">liferay</a><a href="/tags/css/">css</a>
     </span>
     
 

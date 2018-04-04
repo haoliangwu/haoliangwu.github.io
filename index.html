@@ -109,7 +109,8 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在上一篇文章<a href="http://littlelyon.com/2018/03/24/rpc-reset-graphql/" target="_blank" rel="noopener">RPC vs REST vs GraphQL</a>中，对于这三者的优缺点进行了比较宏观的对比，而且我们也会发现，一般比较简单的项目其实并不需要GraphQL，但是我们仍然需要对新的技术有一定的了解和掌握，在新技术普及时才不会措手不及。</p>
+          <h2>写在前面</h2>
+<p>在上一篇文章<a href="http://littlelyon.com/2018/03/24/rpc-reset-graphql/" target="_blank" rel="noopener">RPC vs REST vs GraphQL</a>中，对于这三者的优缺点进行了比较宏观的对比，而且我们也会发现，一般比较简单的项目其实并不需要GraphQL，但是我们仍然需要对新的技术有一定的了解和掌握，在新技术普及时才不会措手不及。</p>
 <p>这篇文章主要介绍一些我接触GraphQL的这段时间，觉得需要了解的比较核心的概念，比较适合一下人群：</p>
 <ul>
 <li>听说过GraphQL的读者，想深入了解一下</li>
@@ -118,7 +119,8 @@
 </ul>
 <p>这些概念并不局限于服务端或者是客户端，如果你熟悉这些概念，在接触任意使用GraphQL作为技术背景的库或者框架时，都可以通过文档很快的上手。</p>
 <p>如果你已经GraphQL应用于了实际项目中，那么这篇文章可能不适合你，因为其中并没有包含一些实践中的总结和经验，关于实践的东西我会在之后再单另写一篇文章总结。</p>
-<h2 id="什么是GraphQL"><a href="#什么是GraphQL" class="headerlink" title="什么是GraphQL"></a>什么是GraphQL</h2><p>介绍GraphQL是什么的文章网上一搜一大把，篇幅有长有短，但是从最核心上讲，它是一种查询语言，再进一步说，是一种API查询语言。</p>
+<h2>什么是GraphQL</h2>
+<p>介绍GraphQL是什么的文章网上一搜一大把，篇幅有长有短，但是从最核心上讲，它是一种查询语言，再进一步说，是一种API查询语言。</p>
 <p>这里可能有的人就会说，什么？API还能查？API不是用来调用的吗？是的，这正是GraphQL的强大之处，引用官方文档的一句话：</p>
 <blockquote>
 <p>ask what exactly you want.</p>
@@ -136,34 +138,38 @@
 <li>对于接口获取数据的逻辑是通过Schema来描述的</li>
 </ul>
 <p>这么说可能比较抽象，我们一个一个来说明。</p>
-<h2 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h2><p>对于数据模型的抽象是通过Type来描述的，每一个Type有若干Field组成，每个Field又分别指向某个Type。</p>
+<h2>Type</h2>
+<p>对于数据模型的抽象是通过Type来描述的，每一个Type有若干Field组成，每个Field又分别指向某个Type。</p>
 <p>GraphQL的Type简单可以分为两种，一种叫做<code>Scalar Type(标量类型)</code>，另一种叫做<code>Object Type(对象类型)</code>。</p>
-<h3 id="Scalar-Type"><a href="#Scalar-Type" class="headerlink" title="Scalar Type"></a>Scalar Type</h3><p>GraphQL中的内建的标量包含，<code>String</code>、<code>Int</code>、<code>Float</code>、<code>Boolean</code>、<code>Enum</code>，对于熟悉编程语言的人来说，这些都应该很好理解。</p>
+<h3>Scalar Type</h3>
+<p>GraphQL中的内建的标量包含，<code>String</code>、<code>Int</code>、<code>Float</code>、<code>Boolean</code>、<code>Enum</code>，对于熟悉编程语言的人来说，这些都应该很好理解。</p>
 <p>值得注意的是，GraphQL中可以通过<code>Scalar</code>声明一个新的标量，比如：</p>
 <ul>
 <li>prisma（一个使用GraphQL来抽象数据库操作的库）中，还有<code>DateTime</code>和<code>ID</code>这两个标量分别代表日期格式和主键</li>
 <li>在使用GraphQL实现文件上传接口时，需要声明一个<code>Upload</code>标量来代表要上传的文件</li>
 </ul>
 <p>总之，我们只需要记住，标量是GraphQL类型系统中最小的颗粒，关于它在GraphQL解析查询结果时，我们还会再提及它。</p>
-<h3 id="Object-Type"><a href="#Object-Type" class="headerlink" title="Object Type"></a>Object Type</h3><p>仅有标量是不够的抽象一些复杂的数据模型的，这时候我们需要使用对象类型，举个例子(先忽略语法，仅从字面上看)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3>Object Type</h3>
+<p>仅有标量是不够的抽象一些复杂的数据模型的，这时候我们需要使用对象类型，举个例子(先忽略语法，仅从字面上看)：</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>上面的代码，就声明了一个<code>Article</code>类型，它有3个Field，分别是<code>ID</code>类型的id，<code>String</code>类型的text和<code>Boolean</code>类型的isPublished。</p>
 <p>对于对象类型的Field的声明，我们一般使用标量，但是我们也可以使用另外一个对象类型，比如如果我们再声明一个新的<code>User</code>类型，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type User &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  name: String</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type User &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  name: String</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这时我们就可以稍微的更改一下关于<code>Article</code>类型的声明代码，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">  author: User</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">  author: User</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p><code>Article</code>新增的<code>author</code>的Field是<code>User</code>类型, 代表这篇文章的作者。</p>
 <p>总之，我们通过对象模型来构建GraphQL中关于一个数据模型的形状，同时还可以声明各个模型之间的内在关联（一对多、一对一或多对多）。</p>
-<h3 id="Type-Modifier"><a href="#Type-Modifier" class="headerlink" title="Type Modifier"></a>Type Modifier</h3><p>关于类型，还有一个较重要的概念，即类型修饰符，当前的类型修饰符有两种，分别是<code>List</code>和<code>Required</code>，它们的语法分别为<code>[Type]</code>和<code>Type!</code>, 同时这两者可以互相组合，比如<code>[Type]!</code>或者<code>[Type!]</code>或者<code>[Type!]!</code>(请仔细看这里<code>!</code>的位置)，它们的含义分别为：</p>
+<h3>Type Modifier</h3>
+<p>关于类型，还有一个较重要的概念，即类型修饰符，当前的类型修饰符有两种，分别是<code>List</code>和<code>Required</code>，它们的语法分别为<code>[Type]</code>和<code>Type!</code>, 同时这两者可以互相组合，比如<code>[Type]!</code>或者<code>[Type!]</code>或者<code>[Type!]!</code>(请仔细看这里<code>!</code>的位置)，它们的含义分别为：</p>
 <ul>
 <li>列表本身为必填项，但其内部元素可以为空</li>
 <li>列表本身可以为空，但是其内部元素为必填</li>
 <li>列表本身和内部元素均为必填</li>
 </ul>
 <p>我们进一步来更改上面的例子，假如我们又声明了一个新的<code>Comment</code>类型，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Comment &#123;</span><br><span class="line">  id: ID!</span><br><span class="line">  desc: String,</span><br><span class="line">  author: User!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Comment &#123;</span><br><span class="line">  id: ID!</span><br><span class="line">  desc: String,</span><br><span class="line">  author: User!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>你会发现这里的<code>ID</code>有一个<code>!</code>，它代表这个Field是必填的，再来更新<code>Article</code>对象，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID!</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">  author: User!</span><br><span class="line">  comments: [Comment!]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type Article &#123;</span><br><span class="line">  id: ID!</span><br><span class="line">  text: String</span><br><span class="line">  isPublished: Boolean</span><br><span class="line">  author: User!</span><br><span class="line">  comments: [Comment!]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>我们这里的作出的更改如下：</p>
 <ul>
 <li>id字段改为必填</li>
@@ -171,10 +177,12 @@
 <li>新增了comments字段，它的类型是一个元素为Comment类型的List类型</li>
 </ul>
 <p>最终的<code>Article</code>类型，就是GraphQL中关于文章这个数据模型，一个比较简单的类型声明。</p>
-<h2 id="Schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h2><p>现在我们开始介绍<code>Schema</code>，我们之前简单描述了它的作用，即它是用来描述<code>对于接口获取数据逻辑</code>的，但这样描述仍然是有些抽象的，我们其实不妨把它当做REST架构中每个独立资源的<code>uri</code>来理解它，只不过在GraphQL中，我们用Query来描述资源的获取方式。因此，我们可以将<code>Schema</code>理解为多个Query组成的一张表。</p>
-<p>这里又涉及一个新的概念<code>Query</code>，GraphQL中使用<code>Query</code>来抽象数据的查询逻辑，当前标准下，有三种查询类型，分别是<em>query（查询）</em>、<em>mutation（更改）</em>和<em>subscription（订阅）</em>。 </p>
+<h2>Schema</h2>
+<p>现在我们开始介绍<code>Schema</code>，我们之前简单描述了它的作用，即它是用来描述<code>对于接口获取数据逻辑</code>的，但这样描述仍然是有些抽象的，我们其实不妨把它当做REST架构中每个独立资源的<code>uri</code>来理解它，只不过在GraphQL中，我们用Query来描述资源的获取方式。因此，我们可以将<code>Schema</code>理解为多个Query组成的一张表。</p>
+<p>这里又涉及一个新的概念<code>Query</code>，GraphQL中使用<code>Query</code>来抽象数据的查询逻辑，当前标准下，有三种查询类型，分别是<em>query（查询）</em>、<em>mutation（更改）<em>和</em>subscription（订阅）</em>。</p>
 <p>Note: 为了方便区分，<code>Query</code>特指GraphQL中的查询（包含三种类型），<code>query</code>指GraphQL中的查询类型（仅指查询类型）</p>
-<h3 id="Query"><a href="#Query" class="headerlink" title="Query"></a>Query</h3><p>上面所提及的3中基本查询类型是作为<code>Root Query（根查询）</code>存在的，对于传统的CRUD项目，我们只需要前两种类型就足够了，第三种是针对当前日趋流行的<code>real-time</code>应用提出的。</p>
+<h3>Query</h3>
+<p>上面所提及的3中基本查询类型是作为<code>Root Query（根查询）</code>存在的，对于传统的CRUD项目，我们只需要前两种类型就足够了，第三种是针对当前日趋流行的<code>real-time</code>应用提出的。</p>
 <p>我们按照字面意思来理解它们就好，如下：</p>
 <ul>
 <li>query（查询）：当获取数据时，应当选取Query类型</li>
@@ -184,34 +192,37 @@
 <p>仍然以一个例子来说明。</p>
 <p>首先，我们分别以REST和GraphQL的角度，以<code>Article</code>为数据模型，编写一系列CRUD的接口，如下：</p>
 <p>Rest 接口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET /api/v1/articles/</span><br><span class="line">GET /api/v1/article/:id/</span><br><span class="line">POST /api/v1/article/</span><br><span class="line">DELETE /api/v1/article/:id/</span><br><span class="line">PATCH /api/v1/article/:id/</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET /api/v1/articles/</span><br><span class="line">GET /api/v1/article/:id/</span><br><span class="line">POST /api/v1/article/</span><br><span class="line">DELETE /api/v1/article/:id/</span><br><span class="line">PATCH /api/v1/article/:id/</span><br></pre></td></tr></table></figure></p>
 <p>GraphQL Query</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Query &#123;</span><br><span class="line">  articles(): [Article!]!</span><br><span class="line">  article(id: Int): Article!</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mutation &#123;</span><br><span class="line">  createArticle(): Article!</span><br><span class="line">  updateArticle(id: Int): Article!</span><br><span class="line">  deleteArticle(id: Int): Article!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Query &#123;</span><br><span class="line">  articles(): [Article!]!</span><br><span class="line">  article(id: Int): Article!</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mutation &#123;</span><br><span class="line">  createArticle(): Article!</span><br><span class="line">  updateArticle(id: Int): Article!</span><br><span class="line">  deleteArticle(id: Int): Article!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>对比我们较熟悉的REST的接口我们可以发现，GraphQL中是按根查询的类型来划分Query职能的，同时还会明确的声明每个Query所返回的数据类型，这里的关于类型的语法和上一章节中是一样的。需要注意的是，我们所声明的任何<code>Query</code>都必须是<code>Root Query</code>的子集，这和GraphQL内部的运行机制有关。</p>
 <p>例子中我们仅仅声明了Query类型和Mutation类型，如果我们的应用中对于评论列表有<code>real-time</code>的需求的话，在REST中，我们可能会直接通过长连接或者通过提供一些带验证的获取长连接url的接口，比如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /api/v1/messages/</span><br></pre></td></tr></table></figure>
-<p>之后长连接会将新的数据推送给我们，在GraphQL中，我们则会以更加声明式的方式进行声明，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">subscription &#123;</span><br><span class="line">  updatedArticle() &#123;</span><br><span class="line">    mutation</span><br><span class="line">    node &#123;</span><br><span class="line">    	comments: [Comment!]!</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /api/v1/messages/</span><br></pre></td></tr></table></figure></p>
+<p>之后长连接会将新的数据推送给我们，在GraphQL中，我们则会以更加声明式的方式进行声明，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">subscription &#123;</span><br><span class="line">  updatedArticle() &#123;</span><br><span class="line">    mutation</span><br><span class="line">    node &#123;</span><br><span class="line">    	comments: [Comment!]!</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>我们不必纠结于这里的语法，因为这篇文章的目的不是让你在30分钟内学会GraphQL的语法，而是理解的它的一些核心概念，比如这里，我们就声明了一个订阅Query，这个Query会在有新的Article被创建或者更新时，推送新的数据对象。当然，在实际运行中，其内部实现仍然是建立于长连接之上的，但是我们能够以更加声明式的方式来进行声明它。</p>
-<h3 id="Resolver"><a href="#Resolver" class="headerlink" title="Resolver"></a>Resolver</h3><p>如果我们仅仅在Schema中声明了若干Query，那么我们只进行了一半的工作，因为我们并没有提供相关Query所返回数据的逻辑。为了能够使GraphQL正常工作，我们还需要再了解一个核心概念，<code>Resolver（解析函数）</code>。</p>
+<h3>Resolver</h3>
+<p>如果我们仅仅在Schema中声明了若干Query，那么我们只进行了一半的工作，因为我们并没有提供相关Query所返回数据的逻辑。为了能够使GraphQL正常工作，我们还需要再了解一个核心概念，<code>Resolver（解析函数）</code>。</p>
 <p>GraphQL中，我们会有这样一个约定，Query和与之对应的Resolver是同名的，这样在GraphQL才能把它们对应起来，举个例子，比如关于<code>articles(): [Article!]!</code>这个Query, 它的Resolver的名字必然叫做<code>articles</code>。</p>
 <p>在介绍Resolver之前，是时候从整体上了解下GraphQL的内部工作机制了，假设现在我们要对使用我们已经声明的<code>articles</code>的Query，我们可能会写以下查询语句（同样暂时忽略语法）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Query &#123;</span><br><span class="line">  articles &#123;</span><br><span class="line">  	 id</span><br><span class="line">  	 author &#123;</span><br><span class="line">  	 	name</span><br><span class="line">  	 &#125;</span><br><span class="line">  	 comments &#123;</span><br><span class="line">      id</span><br><span class="line">      desc</span><br><span class="line">      author</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Query &#123;</span><br><span class="line">  articles &#123;</span><br><span class="line">  	 id</span><br><span class="line">  	 author &#123;</span><br><span class="line">  	 	name</span><br><span class="line">  	 &#125;</span><br><span class="line">  	 comments &#123;</span><br><span class="line">      id</span><br><span class="line">      desc</span><br><span class="line">      author</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>GraphQL在解析这段查询语句时会按如下步骤（简略版）：</p>
 <ul>
 <li>首先进行第一层解析，当前<code>Query</code>的<code>Root Query</code>类型是<code>query</code>，同时需要它的名字是<code>articles</code></li>
 <li>之后会尝试使用<code>articles</code>的<code>Resolver</code>获取解析数据，第一层解析完毕</li>
-<li>之后对第一层解析的返回值，进行第二层解析，当前<code>articles</code>还包含三个子<code>Query</code>，分别是<code>id</code>、<code>author</code>和<code>comments</code><ul>
+<li>之后对第一层解析的返回值，进行第二层解析，当前<code>articles</code>还包含三个子<code>Query</code>，分别是<code>id</code>、<code>author</code>和<code>comments</code>
+<ul>
 <li>id在Author类型中为标量类型，解析结束</li>
 <li>author在Author类型中为对象类型User，尝试使用<code>User</code>的<code>Resolver</code>获取数据，当前field解析完毕</li>
 <li>之后对第二层解析的返回值，进行第三层解析，当前<code>author</code>还包含一个<code>Query</code>, <code>name</code>，由于它是标量类型，解析结束</li>
-<li>comments同上…</li>
+<li>comments同上...</li>
 </ul>
 </li>
 </ul>
 <p>我们可以发现，GraphQL大体的解析流程就是遇到一个Query之后，尝试使用它的Resolver取值，之后再对返回值进行解析，这个过程是递归的，直到所解析Field的类型是<code>Scalar Type（标量类型）</code>为止。解析的整个过程我们可以把它想象成一个很长的Resolver Chain（解析链）。</p>
 <p>这里对于GraphQL的解析过程只是很简单的概括，其内部运行机制远比这个复杂，当然这些对于使用者是黑盒的，我们只需要大概了解它的过程即可。</p>
 <p>Resolver本身的声明在各个语言中是不一样的，因为它代表数据获取的具体逻辑。它的函数签名(以js为例子)如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function(parent, args, ctx, info) &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function(parent, args, ctx, info) &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>其中的参数的意义如下：</p>
 <ul>
 <li>parent: 当前上一个Resolver的返回值</li>
@@ -220,12 +231,16 @@
 <li>info: 当前Query的AST对象</li>
 </ul>
 <p>值得注意的是，Resolver内部实现对于GraphQL完全是黑盒状态。这意味着Resolver如何返回数据、返回什么样的数据、从哪返回数据，完全取决于Resolver本身，基于这一点，在实际中，很多人往往把GraphQL作为一个中间层来使用，数据的获取通过Resolver来封装，内部数据获取的实现可能基于RPC、REST、WS、SQL等多种不同的方式。同时，基于这一点，当你在对一些未使用GraphQL的系统进行迁移时（比如REST），可以很好的进行增量式迁移。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>大概就这么多，首先感谢你耐心的读到这里，虽然题目是30分钟熟悉GraphQL核心概念，但是可能已经超时了，不过我相信你对GraphQL中的核心概念已经比较熟悉了。但是它本身所涉及的东西远远比这个丰富，同时它还处于飞速的发展中。</p>
+<h2>总结</h2>
+<p>大概就这么多，首先感谢你耐心的读到这里，虽然题目是30分钟熟悉GraphQL核心概念，但是可能已经超时了，不过我相信你对GraphQL中的核心概念已经比较熟悉了。但是它本身所涉及的东西远远比这个丰富，同时它还处于飞速的发展中。</p>
 <p>最后我尝试根据这段时间的学习GraphQL的经验，提供一些进一步学习和了解GraphQL的方向和建议，仅供参考：</p>
-<h3 id="想进一步了解GraphQL本身"><a href="#想进一步了解GraphQL本身" class="headerlink" title="想进一步了解GraphQL本身"></a>想进一步了解GraphQL本身</h3><p>我建议再仔细去官网，读一下官方文档，如果有兴趣的话，看看GraphQL的spec也是极好的。这篇文章虽然介绍了核心概念，但是其他一些概念没有涉及，比如Union、Interface、Fragment等等，这些概念均是基于核心概念之上的，在了解核心概念后，应当会很容易理解。</p>
-<h3 id="偏向服务端"><a href="#偏向服务端" class="headerlink" title="偏向服务端"></a>偏向服务端</h3><p>偏向服务端方向的话，除了需要进一步了解GraphQL在某个语言的具体生态外，还需要了解一些关于缓存、上传文件等特定方向的东西。如果是想做系统迁移，还需要对特定的框架做一些调研，比如graphene-django。</p>
+<h3>想进一步了解GraphQL本身</h3>
+<p>我建议再仔细去官网，读一下官方文档，如果有兴趣的话，看看GraphQL的spec也是极好的。这篇文章虽然介绍了核心概念，但是其他一些概念没有涉及，比如Union、Interface、Fragment等等，这些概念均是基于核心概念之上的，在了解核心概念后，应当会很容易理解。</p>
+<h3>偏向服务端</h3>
+<p>偏向服务端方向的话，除了需要进一步了解GraphQL在某个语言的具体生态外，还需要了解一些关于缓存、上传文件等特定方向的东西。如果是想做系统迁移，还需要对特定的框架做一些调研，比如graphene-django。</p>
 <p>如果是想使用GraphQL本身做系统开发，这里推荐了解一个叫做<a href="https://www.prisma.io/docs/" target="_blank" rel="noopener">prisma</a>的框架，它本身是在GraphQL的基础上构建的，并且与一些GraphQL的生态框架兼容性也较好，在各大编程语言也均有适配，它本身可以当做一个ORM来使用，也可以当做一个与数据库交互的中间层来使用。</p>
-<h3 id="偏向客户端"><a href="#偏向客户端" class="headerlink" title="偏向客户端"></a>偏向客户端</h3><p>偏向客户端方向的话，需要进一步了解关于graphql-client的相关知识，我这段时间了解的是apollo，一个开源的grapql-client框架，并且与各个主流前端技术栈如Angular、React等均有适配版本，使用感觉良好。</p>
+<h3>偏向客户端</h3>
+<p>偏向客户端方向的话，需要进一步了解关于graphql-client的相关知识，我这段时间了解的是apollo，一个开源的grapql-client框架，并且与各个主流前端技术栈如Angular、React等均有适配版本，使用感觉良好。</p>
 <p>同时，还需要了解一些额外的查询概念，比如分页查询中涉及的Connection、Edge等。</p>
 <p>大概就这么多，如有错误，还望指正。</p>
 
@@ -242,7 +257,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/前端/">前端</a>, <a href="/categories/前端/后端/">后端</a>
+        <a href="/categories/原创/">原创</a>
     </span>
     
 
@@ -296,19 +311,23 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
+          <h2>写在前面</h2>
+<p>最近2周的时间由于工作不忙，一直在看有关<code>GraphQL</code>的东西，前后端均有涉及，由于我之前做过后端开发，当时实现的接口的大体是符合<code>RPC</code>风格的接口。后来转做了前端开发，从实现接口者变成了调用接口者，接触最多的当属<code>REST</code>风格的接口。因此在这段学习<code>GraphQL</code>的过程中，并且也尝试使用它以全栈的角度做了一个小项目，在这个过程中，一直在思考它对比前两者在<code>API</code>设计的整体架构体系中的各个指标上，孰优孰劣。</p>
 <p>其实在使用和学习的过程中，有很多文章都对比过它们的异同，但是大部分文章并没有从一个相对客观的角度来对比，更多是为了突显一个的优点而刻意指出另外一个的缺点。这让我想到一句话，脱离业务情景谈技术就是耍流氓。</p>
 <p>昨天订阅的<code>GraphQL Weekly</code>中推送的一个视频正好是讲关于它们这三者的，于是就点进去看了看，发现质量还是不错的，于是就想整理出来，分享给大家。</p>
 <p>原视频地址(油管地址，自备梯子)：<a href="https://www.youtube.com/watch?v=IvsANO0qZEg" target="_blank" rel="noopener">这里</a></p>
 <p>如果没有梯子的话直接看我整理的东西也可以，我觉的应该都覆盖到视频中所讲的重点内容了。</p>
 <p>当然，这些内容如果分开来讲，每一块内容所涉及的东西都够写一本书了，这里仅仅是简单归纳和整理，从宏观的角度来对比它们的异同，从而能够在日后面临技术选型时，有一个更佳明确的决策方向。</p>
-<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><p>先简单介绍下<code>RPC</code>，它是<code>Remote Procedure Call(远程过程调用)</code>的简称。一般基于<code>RPC</code>协议所设计的接口，是基于网络采用客户端/服务端的模式完成调用接口的。</p>
-<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<h2>RPC</h2>
+<p>先简单介绍下<code>RPC</code>，它是<code>Remote Procedure Call(远程过程调用)</code>的简称。一般基于<code>RPC</code>协议所设计的接口，是基于网络采用客户端/服务端的模式完成调用接口的。</p>
+<h3>优点</h3>
+<ul>
 <li>简单并且易于理解（面向开发者）</li>
 <li>轻量级的数据载体</li>
 <li>高性能</li>
 </ul>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<h3>缺点</h3>
+<ul>
 <li>对于系统本身耦合性高</li>
 <li>因为RPC本身很简单、轻量，因此很容易造成 <code>function explosion</code></li>
 </ul>
@@ -320,30 +339,36 @@
 <li>一般<code>RPC</code>所暴露接口仅仅会暴露函数的名称和参数等信息，对于函数之间的调用关系无法提供，这意味着调用者必须足够了解系统，从能够知道如何正确的调用这些接口，但是对于接口调用者往往不需要了解过多系统内部实现细节</li>
 </ul>
 <p>关于上面的第二点，为了减少<code>breaking change</code>，我之前实现接口的时候一般都会引入版本的概念，就是在暴露接口的方法名中加入版本号，一开始效果确实不错，但是随后就不知不觉的形成了<code>function explosion</code>，和视频中主讲人所举例的例子差不多，贴一下视频中的截图感受一波：</p>
-<img src="/img/func_explosion.png">
-<h1 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h1><p>当前REST风格的API架构方式已经成了主流解决方案了，相比较RPC，它的主要不同之处在于，它是对于资源(Resource)的模型化而非步骤(Procedure)。</p>
-<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
+<p><img src="/img/func_explosion.png"></p>
+<h1>REST</h1>
+<p>当前REST风格的API架构方式已经成了主流解决方案了，相比较RPC，它的主要不同之处在于，它是对于资源(Resource)的模型化而非步骤(Procedure)。</p>
+<h3>优点</h3>
+<ul>
 <li>对于系统本身耦合性低，调用者不再需要了解接口内部处理和实现细节</li>
 <li>重复使用了一些 http 协议中的已定义好的部分状态动词，增强语义表现力</li>
 <li>API可以随着时间而不断演进</li>
 </ul>
-<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<h3>缺点</h3>
+<ul>
 <li>缺少约束，缺少简单、统一的规范</li>
-<li>有时候 payload 会变的冗余(overload)，有时候调用api会比较繁琐(chattiness) </li>
+<li>有时候 payload 会变的冗余(overload)，有时候调用api会比较繁琐(chattiness)</li>
 <li>有时候需要发送多条请求已获取数据，在网络带宽较低的场景，往往会造成不好的影响</li>
 </ul>
 <p>REST的优点基本解决了RPC中存在的问题，就是解耦，从而使得前后端分离成为可能。接口提供者在修改接口时，不容易造成breaking-change，接口调用者在调用接口时，往往面向数据模型编程，而省去了了解接口本身的时间成本。</p>
 <p>但是，我认为REST当前最大的问题在于虽然它利用<code>http</code>的动词约束了接口的暴露方式，同时增强了语义，但是却没有约束接口如何返回数据的最佳实践，总让人感觉只要是返回json格式的接口都可以称作REST。</p>
 <p>我在实际工作中，经常会遇到第二条缺点所指出的问题，就是接口返回的数据冗余度很高，但是却缺少我真正需要的数据，因此不得已只能调用其他接口或者直接和后端商议修改接口，并且这种问题会在web端和移动端共用一套接口中被放大。</p>
 <p>当前比较好的解决方案就是规范化返回数据的格式，比如json-schema或者自己制定的规范。</p>
-<h1 id="GraphQL"><a href="#GraphQL" class="headerlink" title="GraphQL"></a>GraphQL</h1><p>GraphQL是近来比较热门的一个技术话题，相比REST和RPC，它汲取了两者的优点，即不面向资源，也不面向过程，而是面向数据查询(ask for exactly what you want)。</p>
+<h1>GraphQL</h1>
+<p>GraphQL是近来比较热门的一个技术话题，相比REST和RPC，它汲取了两者的优点，即不面向资源，也不面向过程，而是面向数据查询(ask for exactly what you want)。</p>
 <p>同时GraphQL本身需要使用强类型的Schema来对数据模型进行定义，因此相比REST它的约束性更强。</p>
-<h3 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h3><ul>
+<h3>优点</h3>
+<ul>
 <li>网络开销低，可以在单一请求中获取REST中使用多条请求获取的资源</li>
 <li>强类型Schema（约束意味着可以根据规范形成文档、IDE、错误提示等生态工具）</li>
 <li>特别适合<em>图</em>状数据结构的业务场景（比如好友、流程、组织架构等系统）</li>
 </ul>
-<h3 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<h3>缺点</h3>
+<ul>
 <li>本身的语法相比较REST和RPC均复杂一些</li>
 <li>实现方面需要配套 Caching 以解决性能瓶颈</li>
 <li>对于 API 的版本控制当前没有完善解决方案（社区的建议是不要使API版本化）</li>
@@ -354,7 +379,8 @@
 <p>但是这个看起来很好的东西为什么没有火起来呢？我觉的最主要的原因是因为GraphQL所带来的好处，大部分是对于接口调用者而言的，但是实现这部分的工作却需要接口提供者来完成。</p>
 <p>同时GraphQL的最佳实践场景应当是类似像Facebook这样的网站，业务逻辑模型是图状数据结构，比如社交。如果在一些业务逻辑模型相对简单的场景，使用GraphQL确实不如使用REST来得简单明了、直截了当。</p>
 <p>另外一方面是GraphQL的使用场景相当灵活，在我自己的调研项目中，我是把它当做一个类似ORM的框架来使用的，在别人的一些文章中，会把它当做一个中间层来做渐进式开发和系统升级。这应当算是另外一个优点。</p>
-<h3 id="到底用哪个"><a href="#到底用哪个" class="headerlink" title="到底用哪个"></a>到底用哪个</h3><p>下面根据要设计的API类型给予一些技术选型建议。</p>
+<h3>到底用哪个</h3>
+<p>下面根据要设计的API类型给予一些技术选型建议。</p>
 <p>如果是<code>Management API</code>，这类API的特点如下：</p>
 <ul>
 <li>关注于对象与资源</li>
@@ -386,7 +412,8 @@
 <li>希望对于高延迟场景可以有更好的优化</li>
 </ul>
 <p>这种场景无疑<code>GraphQL</code>是最好的选择。</p>
-<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>提供一张表格来总览它们之间在不同指标下的表现：</p>
+<h3>写在最后</h3>
+<p>提供一张表格来总览它们之间在不同指标下的表现：</p>
 <table>
 <thead>
 <tr>
@@ -444,7 +471,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>, <a href="/categories/设计模式/前端/">前端</a>, <a href="/categories/设计模式/前端/后端/">后端</a>
+        <a href="/categories/原创/">原创</a>, <a href="/categories/原创/软件架构/">软件架构</a>
     </span>
     
 
@@ -498,21 +525,29 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2 id="04-Avoid-Namespace-Clashes-with-Directives"><a href="#04-Avoid-Namespace-Clashes-with-Directives" class="headerlink" title="04 Avoid Namespace Clashes with Directives"></a>04 Avoid Namespace Clashes with Directives</h2><blockquote>
+          <h2>04 Avoid Namespace Clashes with Directives</h2>
+<blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/avoid-namespace-clashes-with-directives-1f00d62de445" target="_blank" rel="noopener">Avoid Namespace Clashes with Directives</a></p>
 </blockquote>
-<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>在同一个<code>html</code>元素上绑定多个指令可能会造成命名冲突。</p>
+<h2>提示</h2>
+<p>在同一个<code>html</code>元素上绑定多个指令可能会造成命名冲突。</p>
 <p>命名冲突不仅存在于指令的选择器之间，同时也会存在于指令的<code>Inputs</code>和<code>Outputs</code>属性，当这些属性名一样时，Angular并不会进行提示，它会按原本的逻辑正常工作。这种情况有时候是我们希望看到的，有些时候却不是。</p>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>避免存在于绑定在相同元素上的多个指令上的命名冲突。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>因为<code>toggle</code>和<code>withToggle</code>指令都绑定于<code>&lt;toggle&gt;</code>元素，我们将通过为它们增加一个<code>label</code>属性来说明问题。</p>
-<p>首先我们设置一个<code>label</code>属性，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;toggle label=&quot;some label&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<h2>目标</h2>
+<p>避免存在于绑定在相同元素上的多个指令上的命名冲突。</p>
+<h2>实现</h2>
+<p>因为<code>toggle</code>和<code>withToggle</code>指令都绑定于<code>&lt;toggle&gt;</code>元素，我们将通过为它们增加一个<code>label</code>属性来说明问题。</p>
+<p>首先我们设置一个<code>label</code>属性，比如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;toggle label=&quot;some label&quot;&gt;</span><br></pre></td></tr></table></figure></p>
 <p>这个<code>label</code>属性的值会同时绑定在每个指令上，如果想要为其中的某个指令单独绑定，只能通过使用<code>prefix(前缀)</code>来实现。</p>
 <p>Angular官方提供的规范指南也警示了这一点，当你在使用<code>prefix</code>修饰指令的名称时，也需要注意使用<code>prefix</code>来修饰<code>Input</code>和<code>Output</code>属性的名称。</p>
 <p>Note: 当使用<code>Output</code>属性重写原生<code>DOM</code>元素的事件和使用<code>Input</code>属性重写原生元素的属性时，请额外注意，没有任何方式可以获知别人在他们编写的应用或者库中使用的命名，但是你可以很轻易的知道的具体命名的大体规则是什么，并且不要重写它们，除非你有意为之。</p>
-<p>增加<code>prefix</code>的一种方式是在每个指令的<code>label</code>属性的装饰器内增加一个字符串参数，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// In withToggle.directive.ts</span><br><span class="line">@Input(&apos;withToggleLabel&apos;) label;</span><br><span class="line"></span><br><span class="line">// In toggle.directive.ts</span><br><span class="line">@Input(&apos;toggleLabel&apos;) label;</span><br></pre></td></tr></table></figure></p>
+<p>增加<code>prefix</code>的一种方式是在每个指令的<code>label</code>属性的装饰器内增加一个字符串参数，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// In withToggle.directive.ts</span><br><span class="line">@Input(&apos;withToggleLabel&apos;) label;</span><br><span class="line"></span><br><span class="line">// In toggle.directive.ts</span><br><span class="line">@Input(&apos;toggleLabel&apos;) label;</span><br></pre></td></tr></table></figure></p>
 <p>但是这种解决方案的前提时，你至少能够更改存在命名冲突中的一个或多个指令的源码。如果在两个第三方库中存在命名冲突，这种情况是最棘手的，我们不在这里讨论它们。</p>
-<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p><a href="https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes" target="_blank" rel="noopener">https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes</a></p>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>原文中关于最后一段提出的关于在多个第三方库中存在的命名冲突的场景，作者提供做出具体的解决方案，我在这里简单分享一下自己对于这种情况的解决方案：</p>
+<h2>成果</h2>
+<p>https://stackblitz.com/edit/adv-ng-patterns-04-namespace-clashes</p>
+<h2>译者注</h2>
+<p>原文中关于最后一段提出的关于在多个第三方库中存在的命名冲突的场景，作者提供做出具体的解决方案，我在这里简单分享一下自己对于这种情况的解决方案：</p>
 <p>通常这种情况比较少见，但是万一存在这种情况，我们可以通过创建一个新的<code>wrapper</code>指令来封装第三方指令，<code>wrapper</code>指令提供与第三方指令一样的接口属性，但是因为我们对于<code>wrapper</code>指令有绝对的控制权，我们可以提供统一的<code>prefix</code>来修饰这些接口属性，从而达到解决冲突的效果。</p>
 
       
@@ -528,7 +563,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>, <a href="/categories/翻译/设计模式/前端/">前端</a>
+        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/前端/">前端</a>
     </span>
     
 
@@ -582,12 +617,15 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2 id="05-Handle-Template-Reference-Variables-with-Directives"><a href="#05-Handle-Template-Reference-Variables-with-Directives" class="headerlink" title="05 Handle Template Reference Variables with Directives"></a>05 Handle Template Reference Variables with Directives</h2><blockquote>
+          <h2>05 Handle Template Reference Variables with Directives</h2>
+<blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/handle-template-reference-variables-with-directives-223081bc70c2" target="_blank" rel="noopener">Handle Template Reference Variables with Directives</a></p>
 </blockquote>
 <p>在之前的例子中，已经出现多次使用<code>template reference variable（模板引用变量）</code>的场景，现在让我们来深入研究如何通过使用模板引用变量来关联某个具体指令。</p>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在视图模板内，获取一个指令的引用。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>模板引用变量是获取某个元素、组件或者指令引用的一种方式，这个引用可以在当前的视图模板中的任何地方使用。它们通常是以<code>#baseToggle</code>或者<code>#myToggle=&quot;toggle&quot;</code>的语法声明的。一旦声明，在视图模板的任何地方就可以使用它。</p>
+<h2>目标</h2>
+<p>在视图模板内，获取一个指令的引用。</p>
+<h2>实现</h2>
+<p>模板引用变量是获取某个元素、组件或者指令引用的一种方式，这个引用可以在当前的视图模板中的任何地方使用。它们通常是以<code>#baseToggle</code>或者<code>#myToggle=&quot;toggle&quot;</code>的语法声明的。一旦声明，在视图模板的任何地方就可以使用它。</p>
 <p>Note: 请注意作用域的问题，如果你使用<code>&lt;ng-template&gt;</code>或者是一个结构性指令，比如<code>*ngIf</code>或者<code>*ngFor</code>，它会在这个模板上创建一个新的作用域，之后在其内部声明的模板引用变量无法在该模板作用域以外使用。</p>
 <p>模板引用变量的解析顺序通常为：</p>
 <ol>
@@ -596,14 +634,24 @@
 <li>原生html元素，并且没有任何组件绑定与它，比如<code>&lt;div #someDiv&gt;&lt;/div&gt;</code></li>
 </ol>
 <p>之后我们来分别看3个例子。</p>
-<h3 id="指令与exportAs"><a href="#指令与exportAs" class="headerlink" title="指令与exportAs"></a>指令与<code>exportAs</code></h3><p>指令可以在它的元数据中声明<code>exportAs</code>属性，这个属性表示它被这个模板引用变量所标识，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// toggle.directive.ts</span><br><span class="line">@Directive(&#123;</span><br><span class="line">  selector: &apos;[toggle]&apos;,</span><br><span class="line">  exportAs: &apos;toggle&apos;,</span><br><span class="line">&#125;)</span><br><span class="line">export class ToggleDirective &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后我们可以在视图模板中直接使用<code>toggle</code>来获取指令的引用，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div toggle #myTemplateRefVar=&quot;toggle&quot;&gt;&lt;/div&gt;</span><br><span class="line">// myTemplateRefVar is the ToggleDirective</span><br></pre></td></tr></table></figure></p>
-<h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><p>对于每一个<code>html</code>元素，只会有一个组件与之对应。当一个组件绑定于一个元素时，那么声明的模板引用变量将会被解析为当前元素上所绑定的组件，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</span><br><span class="line">// toggleOn is the ToggleOnComponent</span><br></pre></td></tr></table></figure></p>
-<h3 id="HTML元素"><a href="#HTML元素" class="headerlink" title="HTML元素"></a>HTML元素</h3><p>如果没有组件与元素绑定，模板引用变量会指向当前这个<code>html</code>元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div #someDiv&gt;&lt;/div&gt;</span><br><span class="line">// someDiv is an HTMLDivElement</span><br></pre></td></tr></table></figure></p>
-<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><p>Note: 在<code>stackblitz</code>中，我通过打印模板引用变量所指向的类的名字（constructor.name）来演示它所代表的引用。</p>
-<p><a href="https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables" target="_blank" rel="noopener">https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables</a></p>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这篇文章作者关于模板引用变量，仅仅介绍了关于如何声明和在视图模板中如何使用，我在这里再补充一些，如何在组件或者指令类的内部使用。</p>
-<p>在类内部获取模板引用变量所指向的引用是通过使用<code>ViewChild</code>装饰器完成的，比如上述文章中的第二个例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  selector: &apos;my-app&apos;,</span><br><span class="line">  template: `</span><br><span class="line">    &lt;div #myDiv&gt;&lt;/div&gt;</span><br><span class="line">  `,</span><br><span class="line">&#125;)</span><br><span class="line">export class AppComponent &#123;</span><br><span class="line">  @ViewChild(&apos;myDiv&apos;)</span><br><span class="line">  myDiv: ElementRef;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    console.log(this.myDiv);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3>指令与<code>exportAs</code></h3>
+<p>指令可以在它的元数据中声明<code>exportAs</code>属性，这个属性表示它被这个模板引用变量所标识，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// toggle.directive.ts</span><br><span class="line">@Directive(&#123;</span><br><span class="line">  selector: &apos;[toggle]&apos;,</span><br><span class="line">  exportAs: &apos;toggle&apos;,</span><br><span class="line">&#125;)</span><br><span class="line">export class ToggleDirective &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后我们可以在视图模板中直接使用<code>toggle</code>来获取指令的引用，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div toggle #myTemplateRefVar=&quot;toggle&quot;&gt;&lt;/div&gt;</span><br><span class="line">// myTemplateRefVar is the ToggleDirective</span><br></pre></td></tr></table></figure></p>
+<h3>组件</h3>
+<p>对于每一个<code>html</code>元素，只会有一个组件与之对应。当一个组件绑定于一个元素时，那么声明的模板引用变量将会被解析为当前元素上所绑定的组件，比如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</span><br><span class="line">// toggleOn is the ToggleOnComponent</span><br></pre></td></tr></table></figure></p>
+<h3>HTML元素</h3>
+<p>如果没有组件与元素绑定，模板引用变量会指向当前这个<code>html</code>元素。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div #someDiv&gt;&lt;/div&gt;</span><br><span class="line">// someDiv is an HTMLDivElement</span><br></pre></td></tr></table></figure></p>
+<h3>成果</h3>
+<p>Note: 在<code>stackblitz</code>中，我通过打印模板引用变量所指向的类的名字（constructor.name）来演示它所代表的引用。</p>
+<p>https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables</p>
+<h2>译者注</h2>
+<p>这篇文章作者关于模板引用变量，仅仅介绍了关于如何声明和在视图模板中如何使用，我在这里再补充一些，如何在组件或者指令类的内部使用。</p>
+<p>在类内部获取模板引用变量所指向的引用是通过使用<code>ViewChild</code>装饰器完成的，比如上述文章中的第二个例子:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  selector: &apos;my-app&apos;,</span><br><span class="line">  template: `</span><br><span class="line">    &lt;div #myDiv&gt;&lt;/div&gt;</span><br><span class="line">  `,</span><br><span class="line">&#125;)</span><br><span class="line">export class AppComponent &#123;</span><br><span class="line">  @ViewChild(&apos;myDiv&apos;)</span><br><span class="line">  myDiv: ElementRef;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    console.log(this.myDiv);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里的<code>myDiv</code>即指向当前模板引用变量所指向的html元素。</p>
 <p>Note: 在类中获取模板引用变量所指向的引用时，请格外注意你期望获取的引用类型，在例子中，我们期望获取html元素，因此这里的引用类型是<code>ElementRef</code>，如果是指令或者组件，则分别要对应其类型的<code>Type</code>。</p>
 
@@ -620,7 +668,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>, <a href="/categories/翻译/设计模式/前端/">前端</a>
+        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/前端/">前端</a>
     </span>
     
 
@@ -674,9 +722,12 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>虽然现在es8都已经在预发布阶段了，但是无论发布到es几，其本身的运作原理都是一样的。</p>
-<p>首先祭上一张图, 这张图主要描述了以下的关系，如果觉的这里的说明过于复杂可以直接看<a href="#总结">最后一段</a>。<br><img src="/img/e83bca5f1d1e6bf359d1f75727968c11_hd.jpg"></p>
-<h2 id="简单说明"><a href="#简单说明" class="headerlink" title="简单说明"></a>简单说明</h2><p>关于<code>function(class)A</code>和它的原型之间的关系</p>
+          <h2>写在前面</h2>
+<p>虽然现在es8都已经在预发布阶段了，但是无论发布到es几，其本身的运作原理都是一样的。</p>
+<p>首先祭上一张图, 这张图主要描述了以下的关系，如果觉的这里的说明过于复杂可以直接看<a href="#%E6%80%BB%E7%BB%93">最后一段</a>。
+<img src="/img/e83bca5f1d1e6bf359d1f75727968c11_hd.jpg"></p>
+<h2>简单说明</h2>
+<p>关于<code>function(class)A</code>和它的原型之间的关系</p>
 <blockquote>
 <p><code>A.prototype.constructor</code>与<code>A</code>等价</p>
 </blockquote>
@@ -714,8 +765,10 @@
 <blockquote>
 <p><code>Object.__proto__</code>与<code>Function.prototype</code></p>
 </blockquote>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>所以无论是es5风格的继承还是es6风格的继承语法，原型链的形成是都是通过<code>__proto__</code>和<code>prototype</code>描述的，举个例子，这里使用<code>es6</code>, 即:</p>
-<p>如果有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">class B extends A &#123;&#125;</span><br><span class="line">const a = new B()</span><br></pre></td></tr></table></figure></p>
+<h2>总结</h2>
+<p>所以无论是es5风格的继承还是es6风格的继承语法，原型链的形成是都是通过<code>__proto__</code>和<code>prototype</code>描述的，举个例子，这里使用<code>es6</code>, 即:</p>
+<p>如果有:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">class B extends A &#123;&#125;</span><br><span class="line">const a = new B()</span><br></pre></td></tr></table></figure></p>
 <p>则有：</p>
 <ul>
 <li><code>a.__proto__ === B.prototype</code></li>
@@ -741,7 +794,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/前端/">前端</a>
+        <a href="/categories/原创/">原创</a>, <a href="/categories/原创/前端/">前端</a>
     </span>
     
 
@@ -795,10 +848,12 @@
   <div class="article-content">
     <div class="entry">
       
-          <h1 id="Understanding-SOLID-Principles-Liskov-Substitution-Principle"><a href="#Understanding-SOLID-Principles-Liskov-Substitution-Principle" class="headerlink" title="Understanding SOLID Principles: Liskov Substitution Principle"></a><a href="https://codeburst.io/understanding-solid-principles-liskov-substitution-principle-e7f35277d8d5" target="_blank" rel="noopener">Understanding SOLID Principles: Liskov Substitution Principle</a></h1><blockquote>
+          <h1><a href="https://codeburst.io/understanding-solid-principles-liskov-substitution-principle-e7f35277d8d5" target="_blank" rel="noopener">Understanding SOLID Principles: Liskov Substitution Principle</a></h1>
+<blockquote>
 <p>这是理解<code>SOLID</code>原则，关于<strong>里氏替换原则</strong>为什么提倡我们面向抽象层编程而不是具体实现层，以及为什么这样可以使代码更具维护性和复用性。</p>
 </blockquote>
-<h2 id="什么是里氏替换原则"><a href="#什么是里氏替换原则" class="headerlink" title="什么是里氏替换原则"></a>什么是里氏替换原则</h2><blockquote>
+<h2>什么是里氏替换原则</h2>
+<blockquote>
 <p>Objects should be replaceable with instances of their subtypes without altering the correctness of that program.</p>
 </blockquote>
 <blockquote>
@@ -811,25 +866,32 @@
 <li>对于父类的单元测试对于子类是无效的，因此会降低代码的可测试性和验证程度</li>
 </ul>
 <p>通常打破这条原则的情况发生在修改父类中在其他方法中使用的，与当前子类无关联的内部或者私有变量。这通常算得上是一种对于类本身的一次潜在攻击，而且这种攻击可能是你在不经意间自己发起的，而且不仅在子类中。</p>
-<h2 id="反面例子"><a href="#反面例子" class="headerlink" title="反面例子"></a>反面例子</h2><p>让我们通过一个<strong>反面例子</strong>来演示这种修改行为和它所产生的后果。比如，我们有一个关于<code>Store</code>的抽象类和它的实现类<code>BasicStore</code>，这个类会储存一些消息在内存中，直到储存的个数超过每个上限。客户端代码的实现也很简单明了，它期望通过调用<code>retrieveMessages</code>就可以获取到所有储存的消息。</p>
-<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">interface Store &#123;</span><br><span class="line">    store(message: string);</span><br><span class="line">    retrieveMessages(): string[];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const STORE_LIMIT = 5;</span><br><span class="line"></span><br><span class="line">class BasicStore implements Store &#123;</span><br><span class="line">   protected stash: string[] = [];</span><br><span class="line">   protected storeLimit: number = STORE_LIMIT;</span><br><span class="line">  </span><br><span class="line">   store(message: string) &#123;</span><br><span class="line">     if (this.storeLimit === this.stash.length) &#123;</span><br><span class="line">         this.makeMoreRoomForStore();</span><br><span class="line">      &#125;</span><br><span class="line">      this.stash.push(message);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    retrieveMessages(): string[] &#123;</span><br><span class="line">      return this.stash;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    makeMoreRoomForStore(): void &#123;</span><br><span class="line">       this.storeLimit += 5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后通过继承<code>BasicStore</code>，我们又创建了一个新的<code>RotatingStore</code>实现类，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class RotatingStore extends BasicStore &#123;</span><br><span class="line">    makeMoreRoomForStore() &#123;</span><br><span class="line">        this.stash = this.stash.slice(1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2>反面例子</h2>
+<p>让我们通过一个<strong>反面例子</strong>来演示这种修改行为和它所产生的后果。比如，我们有一个关于<code>Store</code>的抽象类和它的实现类<code>BasicStore</code>，这个类会储存一些消息在内存中，直到储存的个数超过每个上限。客户端代码的实现也很简单明了，它期望通过调用<code>retrieveMessages</code>就可以获取到所有储存的消息。</p>
+<p>代码如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">interface Store &#123;</span><br><span class="line">    store(message: string);</span><br><span class="line">    retrieveMessages(): string[];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const STORE_LIMIT = 5;</span><br><span class="line"></span><br><span class="line">class BasicStore implements Store &#123;</span><br><span class="line">   protected stash: string[] = [];</span><br><span class="line">   protected storeLimit: number = STORE_LIMIT;</span><br><span class="line">  </span><br><span class="line">   store(message: string) &#123;</span><br><span class="line">     if (this.storeLimit === this.stash.length) &#123;</span><br><span class="line">         this.makeMoreRoomForStore();</span><br><span class="line">      &#125;</span><br><span class="line">      this.stash.push(message);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    retrieveMessages(): string[] &#123;</span><br><span class="line">      return this.stash;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    makeMoreRoomForStore(): void &#123;</span><br><span class="line">       this.storeLimit += 5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后通过继承<code>BasicStore</code>，我们又创建了一个新的<code>RotatingStore</code>实现类，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class RotatingStore extends BasicStore &#123;</span><br><span class="line">    makeMoreRoomForStore() &#123;</span><br><span class="line">        this.stash = this.stash.slice(1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意<code>RotatingStore</code>中覆盖父类<code>makeMoreRoomForStore</code>方法的代码以及它是如何隐蔽地改变了父类<code>BasicStore</code>关于<code>stash</code>的状态语义的。它不仅修改了<code>stash</code>变量，还销毁了在程序进程中已储存的消息已为将来的消息提供额外的空间。</p>
 <p>在使用<code>RotatingStore</code>的过程中，我们会遇到一些奇怪的现象，这正式由于<code>RotatingStore</code>本身产生的，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const st: Store = new RotatingStore()</span><br><span class="line"></span><br><span class="line">st.store(&quot;hello&quot;)</span><br><span class="line">st.store(&quot;world&quot;)</span><br><span class="line">st.store(&quot;how&quot;)</span><br><span class="line">st.store(&quot;are&quot;)</span><br><span class="line">st.store(&quot;you&quot;)</span><br><span class="line">st.store(&quot;today&quot;)</span><br><span class="line">st.store(&quot;sir?&quot;)</span><br><span class="line"></span><br><span class="line">st.retrieveMessages() // 一些消息丢失了</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const st: Store = new RotatingStore()</span><br><span class="line"></span><br><span class="line">st.store(&quot;hello&quot;)</span><br><span class="line">st.store(&quot;world&quot;)</span><br><span class="line">st.store(&quot;how&quot;)</span><br><span class="line">st.store(&quot;are&quot;)</span><br><span class="line">st.store(&quot;you&quot;)</span><br><span class="line">st.store(&quot;today&quot;)</span><br><span class="line">st.store(&quot;sir?&quot;)</span><br><span class="line"></span><br><span class="line">st.retrieveMessages() // 一些消息丢失了</span><br></pre></td></tr></table></figure></p>
 <p>一些消息会无故消失，当前这个类的表现逻辑与所有消息均可以被取出的基本需求不一致。</p>
-<h2 id="如何实践里氏替换原则"><a href="#如何实践里氏替换原则" class="headerlink" title="如何实践里氏替换原则"></a>如何实践里氏替换原则</h2><p>为了避免这种奇怪现象的发生，里氏替换原则推荐我们通过在子类中调用父类的公有方法来获取一些内部状态变量，而不是直接使用它。这样我们就可以保证父类抽象中正确的状态语义，从而避免了副作用和非法的状态转变。</p>
+<h2>如何实践里氏替换原则</h2>
+<p>为了避免这种奇怪现象的发生，里氏替换原则推荐我们通过在子类中调用父类的公有方法来获取一些内部状态变量，而不是直接使用它。这样我们就可以保证父类抽象中正确的状态语义，从而避免了副作用和非法的状态转变。</p>
 <p>它也推荐我们应当尽可能的使基本抽象保持简单和最小化，因为对于子类来说，有助于提供父类的扩展性。如果一个父类是比较复杂的，那么子类在覆盖它的时候，在不影响父类状态语义的情况下进行扩展绝非易事。</p>
 <p>对于内部系统做可行的后置条件检查也是一个不错的方式，这种检查通常会验证是否子类会搅乱一些关键代码的运行路径（译者注：也可以理解为状态语义），但是我本身对这个实践并没有太多的经验，所以无法给予具体的例子。</p>
 <p>代码评论也可以一定程度上给予好的帮助。当你在开发一些你可能无意间做出一些对已有系统的破坏，但是你的同事可能会很容易地发现这些（当局者迷旁观者清）。软件设计保持一致性是一件十分重要的事情，因此应当尽早、尽可能多地查明那些对对象继承链作出潜在修改的代码。</p>
 <p>最后，在<strong>单一职责原则</strong>中，我们曾提及，考虑使用<strong>组合模式</strong>来替换<strong>继承模式</strong>。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如你所看到的，在开发软件时，我们往往需要额外花一些努力和精力来使它变得更好。将这些原则牢记于心，理解它们所存在的意义以及它们想要解决的问题，这样会使你的工作变得更加容易、更具条理性，但是同时记住，这并不是一件容易的事，相反，你应当在构思软件时，花相当多的事件思考如何更好地实践这些原则。</p>
+<h2>总结</h2>
+<p>正如你所看到的，在开发软件时，我们往往需要额外花一些努力和精力来使它变得更好。将这些原则牢记于心，理解它们所存在的意义以及它们想要解决的问题，这样会使你的工作变得更加容易、更具条理性，但是同时记住，这并不是一件容易的事，相反，你应当在构思软件时，花相当多的事件思考如何更好地实践这些原则。</p>
 <p>试着让自己设计的软件系统具备可适应性，这种适应性可以抵御各种不利的变化以及潜在的错误，这样自然而然地可以使你少加班和早回家（译者注：看来加班是每个程序员都要面临的问题啊）</p>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这是<strong>SOLID</strong>原则中我所接触和了解较少的一个原则，但经过仔细思考后，发现其实我们还是经常会在实际工作中运用它的。</p>
+<h2>译者注</h2>
+<p>这是<strong>SOLID</strong>原则中我所接触和了解较少的一个原则，但经过仔细思考后，发现其实我们还是经常会在实际工作中运用它的。</p>
 <p>在许多面向相对的编程语言中，关于对象的继承机制中，都会提供一些内部变量和状态的修饰符，比如<code>public（公有）</code>、<code>protect（保护）</code>和<code>private（私有）</code>，关于这些修饰符本身的异同这里不再赘述，我想说的是，这些修饰符存在必然有它存在的意义，一定要在实际工作中，使用它们。之前做java后端时，经常在公司的项目的历史代码中发现，很少使用<code>protect</code>和<code>private</code>对类内部的方法和变量做约束，可见当时的编写者并没有对类本身的职能有一个清晰的认识，又或者是随着时间一步步迭代出来的结果。</p>
 <p>那么问题来了，一些静态语言有这些修饰符，但是像<code>javascript</code>这种鸭子类型语言怎么办呢？其实没有必要担心，最早开始学前端的时候，这个问题我就问过自己无数次，<code>javascript</code>虽然没有这些修饰符，但是我们可以通过别的方式来达到类似的效果，或者使用<code>typescript</code>。</p>
 <p>除了在编程语言层面，在前端实际工作中，你可能会听到一个叫作<code>immutable</code>的概念，这个概念我认为也是里氏替换原则的一直延伸。因为当前的前端框架一般提倡的理念均是<code>f(state) =&gt; view</code>，即数据状态代表视图，而数据状态本身由于<code>javascript</code>动态语言的特性，很容易会在不经意间被修改，一旦存在这种修改，视图中便会产生一些意想不到的问题，因此<code>immutable</code>和<code>函数式</code>的概念才会在前段时间火起来。</p>
-<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>经过这五篇文章，我们来分别总结一下这五条基本原则以及它们带来的好处：</p>
+<h2>写在最后</h2>
+<p>经过这五篇文章，我们来分别总结一下这五条基本原则以及它们带来的好处：</p>
 <ul>
 <li>单一职责原则：提高代码实现层的内聚度，降低实现单元彼此之间的耦合度</li>
 <li>开闭原则：提高代码实现层的可扩展性，提高面临改变的可适应性，降低修改代码的冗余度</li>
@@ -926,7 +988,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>, <a href="/categories/设计模式/前端/">前端</a>, <a href="/categories/设计模式/前端/后端/">后端</a>, <a href="/categories/设计模式/前端/后端/翻译/">翻译</a>, <a href="/categories/设计模式/前端/后端/翻译/编程思想/">编程思想</a>
+        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>
     </span>
     
 
@@ -980,10 +1042,12 @@
   <div class="article-content">
     <div class="entry">
       
-          <h1 id="Understanding-SOLID-Principles-Interface-Segregation-Principle"><a href="#Understanding-SOLID-Principles-Interface-Segregation-Principle" class="headerlink" title="Understanding SOLID Principles: Interface Segregation Principle"></a><a href="https://codeburst.io/understanding-solid-principles-interface-segregation-principle-b2d57026cf6c" target="_blank" rel="noopener">Understanding SOLID Principles: Interface Segregation Principle</a></h1><blockquote>
+          <h1><a href="https://codeburst.io/understanding-solid-principles-interface-segregation-principle-b2d57026cf6c" target="_blank" rel="noopener">Understanding SOLID Principles: Interface Segregation Principle</a></h1>
+<blockquote>
 <p>这是理解<code>SOLID</code>原则，关于<strong>接口隔离</strong>原则如何帮助我们创建简单的抽象接口，并使客户端代与接口之间存在的更少的依赖关系。</p>
 </blockquote>
-<h2 id="接口隔离原则是什么"><a href="#接口隔离原则是什么" class="headerlink" title="接口隔离原则是什么"></a>接口隔离原则是什么</h2><blockquote>
+<h2>接口隔离原则是什么</h2>
+<blockquote>
 <p>Clients should not be forced to depend on methods that they do not use.</p>
 </blockquote>
 <blockquote>
@@ -992,19 +1056,24 @@
 <p>这个原则本身与单一职责原则关系十分紧密，它意味着当你在定义你的抽象层代码时，不应当在客户端代码在实现抽象逻辑时，暴露一些客户端代码不需要使用或者关心的方法。</p>
 <p>进一步说明的话，就是当你有意地在抽象层中暴露的方法时，这意味着所有实现这些抽象逻辑的客户端代码都必须要实现所有的抽象方法，尽管这些方法并不一定都对客户端代码有意义。</p>
 <p>将你的接口的保持精简和小颗粒度，并且不要在它们中间增加无用的抽象方法，当你在对新的抽象接口进行命名时，你就会拥有更好的选择，因为你已有了若干小颗粒的命名类型。这样做的意义在于当你在需要提供一个更加大颗粒度的抽象接口时，你可以拥有足够的灵活性来将已有的小颗粒度接口进行组合。</p>
-<h2 id="如何实践接口隔离原则"><a href="#如何实践接口隔离原则" class="headerlink" title="如何实践接口隔离原则"></a>如何实践接口隔离原则</h2><p>这个例子是关于一个ATM用户界面的抽象接口，这个接口会处理诸如存款请求、取款请求等逻辑，从这个例子中我们会了解到，我们如何对这个接口进行隔离，使其进一步划分为多个独立的、更加具体的若干接口。</p>
-<p>首先我们应当有一个工具函数库接口，这个接口会描述我们想要暴露的关于<code>byte</code>操作逻辑的方法，让我们创建这样一个接口，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type ByteUtils interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) // Read into buffer</span><br><span class="line">    Write(b []byte)(n int, err error) // Write into buffer</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte // Trim buffer by removing bytes from the exclusion chars</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2>如何实践接口隔离原则</h2>
+<p>这个例子是关于一个ATM用户界面的抽象接口，这个接口会处理诸如存款请求、取款请求等逻辑，从这个例子中我们会了解到，我们如何对这个接口进行隔离，使其进一步划分为多个独立的、更加具体的若干接口。</p>
+<p>首先我们应当有一个工具函数库接口，这个接口会描述我们想要暴露的关于<code>byte</code>操作逻辑的方法，让我们创建这样一个接口，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type ByteUtils interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) // Read into buffer</span><br><span class="line">    Write(b []byte)(n int, err error) // Write into buffer</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte // Trim buffer by removing bytes from the exclusion chars</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>它可以正常工作一段时间，但是很快我们就会发现以下两个问题：</p>
 <ul>
 <li>它的命名<code>ByteUtils</code>太过于通用，如果我们仅通过命名本身，基本无法获取任何具体的信息</li>
 <li>当使用它时，会有一些古怪的感觉，因为当你根据不同的优化场景来按不同逻辑实现<code>trim</code>方法时，你所实现的<code>read</code>和<code>write</code>几乎没什么差别，但是你却需要重复地实现它们，同时在某些不需要读或者写的场景，仍然需要实现它们。</li>
 </ul>
 <p>所以它虽然能够正常工作，但是却不够好。</p>
-<p>我们可以通过创建三个更精简、更具体的接口来替代原先通用的接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type Reader interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Writer interface &#123;</span><br><span class="line">    Write(b []byte)(n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Trimmer interface &#123;</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以通过创建三个更精简、更具体的接口来替代原先通用的接口：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type Reader interface &#123;</span><br><span class="line">    Read(b []byte) (n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Writer interface &#123;</span><br><span class="line">    Write(b []byte)(n int, err error) </span><br><span class="line">&#125;</span><br><span class="line">type Trimmer interface &#123;</span><br><span class="line">    Trim(b []byte, exclusions string)[]byte </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这种颗粒度比较细的接口也可以称为<strong>角色接口</strong>，因为它们更易于重构和改变，甚至对于已经定义好的角色和目的也可以很容易的进行重新部署和定义。</p>
-<p>在这三个基础上，我们可以通过组合它们来获取一个更有关联性的接口列表，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">type ReadWriter interface &#123;</span><br><span class="line">    Reader</span><br><span class="line">    Writer </span><br><span class="line">&#125;</span><br><span class="line">type TrimReader interface &#123;</span><br><span class="line">    Trimmer</span><br><span class="line">    Reader</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这三个基础上，我们可以通过组合它们来获取一个更有关联性的接口列表，比如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">type ReadWriter interface &#123;</span><br><span class="line">    Reader</span><br><span class="line">    Writer </span><br><span class="line">&#125;</span><br><span class="line">type TrimReader interface &#123;</span><br><span class="line">    Trimmer</span><br><span class="line">    Reader</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这意味客户端代码拥有了可以根据它们各自的需求来组合抽象层接口的灵活性，这样就会避免在实现抽象接口时不必要的麻烦（比如必须要实现某些无用的方法），比如上面的<code>TrimReader</code>的实现并未包含多余的<code>Write</code>方法的声明。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如你所看到的，通用的接口往往会无意识的将自己和类的实现耦合在了一起，所以你应当尽量的避免这种情况的发生。在设计接口时，你应当时刻提醒自己，我是否需要使用所有在接口中声明的方法呢？如果不是的话，将接口细分为更多个更精简、更具体的接口。</p>
+<h2>总结</h2>
+<p>正如你所看到的，通用的接口往往会无意识的将自己和类的实现耦合在了一起，所以你应当尽量的避免这种情况的发生。在设计接口时，你应当时刻提醒自己，我是否需要使用所有在接口中声明的方法呢？如果不是的话，将接口细分为更多个更精简、更具体的接口。</p>
 <p>正如甘地曾经说过：</p>
 <blockquote>
 <p>你的行动决定你的习惯，你的习惯决定你的价值，你的价值会决定你的命运。</p>
@@ -1012,7 +1081,8 @@
 <p>如果在架构中，你每次都会经过仔细思考，会按照好的模式来进行设计，它将会成为一种习惯，自然慢慢会转变为你的价值或者原则，最终则会成为你的命运，比如成为了一个始终给予完善解决方案的软件架构师。</p>
 <p>我的观点是，始终通过挑战自己来变的更好，在某些时刻，你可能会遇到问题，但是往往你可能已经拥有了答案。</p>
 <p>Happy coding!</p>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>对于接口隔离原则的理解，我一直觉的它本身其实是单一职责原则的一个扩展，但是它们之间也有细微的不同：</p>
+<h2>译者注</h2>
+<p>对于接口隔离原则的理解，我一直觉的它本身其实是单一职责原则的一个扩展，但是它们之间也有细微的不同：</p>
 <ul>
 <li>单一职责原则往往面向实现层，比如具体的类或者某个方法</li>
 <li>接口隔离原则往往面向抽象层，比如一些抽象类或者抽象方法</li>
@@ -1034,7 +1104,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>, <a href="/categories/设计模式/前端/">前端</a>, <a href="/categories/设计模式/前端/后端/">后端</a>, <a href="/categories/设计模式/前端/后端/翻译/">翻译</a>, <a href="/categories/设计模式/前端/后端/翻译/编程思想/">编程思想</a>
+        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>
     </span>
     
 
@@ -1088,10 +1158,12 @@
   <div class="article-content">
     <div class="entry">
       
-          <h1 id="Understanding-SOLID-Principles-Open-Closed-Principle"><a href="#Understanding-SOLID-Principles-Open-Closed-Principle" class="headerlink" title="Understanding SOLID Principles: Open Closed Principle"></a><a href="https://codeburst.io/understanding-solid-principles-open-closed-principle-e2b588b6491f" target="_blank" rel="noopener">Understanding SOLID Principles: Open Closed Principle</a></h1><blockquote>
+          <h1><a href="https://codeburst.io/understanding-solid-principles-open-closed-principle-e2b588b6491f" target="_blank" rel="noopener">Understanding SOLID Principles: Open Closed Principle</a></h1>
+<blockquote>
 <p>这是理解<code>SOLID</code>原则，介绍什么是<strong>开闭原则</strong>以及它为什么能够在对已有的软件系统或者模块提供新功能时，避免不必要的更改（重复劳动）。</p>
 </blockquote>
-<h2 id="开闭原则是什么"><a href="#开闭原则是什么" class="headerlink" title="开闭原则是什么"></a>开闭原则是什么</h2><blockquote>
+<h2>开闭原则是什么</h2>
+<blockquote>
 <p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.</p>
 </blockquote>
 <blockquote>
@@ -1101,31 +1173,40 @@
 <p>但是另一方面，我们还是会面临改变，这些改变包含范围（译者注：应当是指抽象模块的职责范围）的改变，新功能的增加请求还有新的业务逻辑需求。</p>
 <p>所以对于上面我们所拥有的抽象层代码，在长期想让它处于一成不变的状态是不现实的，你不可避免的会针对以上的需要作出改变的需求，增加更多的功能，增加更多的逻辑和交互。在上一篇文章，我们知道，改变会使系统复杂，复杂会促使模块间的耦合性上升，所以我们迫切地需要寻找一种方法能够使我们的抽象模块不仅可以扩大它的职责范围，同时还能够保持当前良好的状态（简洁、高内聚、好用）。</p>
 <p>这便是<strong>开闭原则</strong>存在的意义，它能够帮助我们完美地实现这一切。</p>
-<h2 id="如何实践开闭原则"><a href="#如何实践开闭原则" class="headerlink" title="如何实践开闭原则"></a>如何实践开闭原则</h2><p>当你需要对已有代码作出一些修改时，请切记以下两点：</p>
+<h2>如何实践开闭原则</h2>
+<p>当你需要对已有代码作出一些修改时，请切记以下两点：</p>
 <ul>
 <li>保持函数、类、模块当前它们本身的状态，或者是近似于它们一般情况下的状态（即不可修改性）</li>
 <li>使用组合的方式（避免使用继承方式）来扩展现有的类，函数或模块，以使它们可能以不同的名称来暴露新的特性或功能</li>
 </ul>
 <p>这里关于继承，我们特意增加了一个注释，在这种情况下使用继承可能会使模块之间耦合在一起，同时这种耦合是可避免的，我们通常在一些预先有着良好定义的结构上使用继承。（译者注：这里应该是指，对于我们预先设计好的功能，推荐使用继承方式，对于后续新增的变更需求，推荐使用组合方式）</p>
-<p>举个例子（译者注：我对这里的例子做了一些修改，原文中并没有详细的说明）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">interface IRunner &#123;</span><br><span class="line">  run: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Runner implements IRunner &#123;</span><br><span class="line">  run(): void &#123;</span><br><span class="line">    console.log(&quot;9.78s&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface IJumper &#123;</span><br><span class="line">  jump: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Jumper implements IJumper &#123;</span><br><span class="line">  jump(): void &#123;</span><br><span class="line">    console.log(&quot;8.95,&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>举个例子（译者注：我对这里的例子做了一些修改，原文中并没有详细的说明）
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">interface IRunner &#123;</span><br><span class="line">  run: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Runner implements IRunner &#123;</span><br><span class="line">  run(): void &#123;</span><br><span class="line">    console.log(&quot;9.78s&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface IJumper &#123;</span><br><span class="line">  jump: () =&gt; void;</span><br><span class="line">&#125;</span><br><span class="line">class Jumper implements IJumper &#123;</span><br><span class="line">  jump(): void &#123;</span><br><span class="line">    console.log(&quot;8.95,&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>例子中，我们首先声明了一个<code>IRunner</code>接口，之后又声明了<code>IJumper</code>，并分别实现了它们，并且实现类的职能都是单一的。</p>
-<p>假如现在我们需要提供一个既会跑又会跳的对象，如果我们使用继承的方式，可以这么写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Runner &#123;</span><br><span class="line">  jump: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Jumper &#123;</span><br><span class="line">  run: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>但是使用继承的方式会使这个<code>RunnerAndJumper</code>与<code>Runner</code>（或者<code>Jumper</code>）耦合在一起（耦合在一起的原因是因为它的职责不再单一），我们再来用组合的方式试试看，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper &#123;</span><br><span class="line">  private runnerClass: IRunner;</span><br><span class="line">  private jumperClass: IJumper;</span><br><span class="line">  constructor(runner: IRunner, jumper: IJumper) &#123;</span><br><span class="line">    this.runnerClass = new runner();</span><br><span class="line">    this.jumperClass = new jumper();</span><br><span class="line">  &#125;</span><br><span class="line">  run() &#123;</span><br><span class="line">    this.runnerClass.run();</span><br><span class="line">  &#125;</span><br><span class="line">  jump() &#123;</span><br><span class="line">    this.jumperClass.jump();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>假如现在我们需要提供一个既会跑又会跳的对象，如果我们使用继承的方式，可以这么写
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Runner &#123;</span><br><span class="line">  jump: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>或者
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper extends Jumper &#123;</span><br><span class="line">  run: () =&gt; void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是使用继承的方式会使这个<code>RunnerAndJumper</code>与<code>Runner</code>（或者<code>Jumper</code>）耦合在一起（耦合在一起的原因是因为它的职责不再单一），我们再来用组合的方式试试看，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class RunnerAndJumper &#123;</span><br><span class="line">  private runnerClass: IRunner;</span><br><span class="line">  private jumperClass: IJumper;</span><br><span class="line">  constructor(runner: IRunner, jumper: IJumper) &#123;</span><br><span class="line">    this.runnerClass = new runner();</span><br><span class="line">    this.jumperClass = new jumper();</span><br><span class="line">  &#125;</span><br><span class="line">  run() &#123;</span><br><span class="line">    this.runnerClass.run();</span><br><span class="line">  &#125;</span><br><span class="line">  jump() &#123;</span><br><span class="line">    this.jumperClass.jump();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>我们在<code>RunnerAndJumper</code>的构造函数中声明两个依赖，一个是<code>IRunner</code>类型，一个是<code>IJumper</code>类型。</p>
 <p>最终的代码其实和<strong>依赖倒置原则</strong>中的例子很像，而且你会发现，<code>RunnerAndJumper</code>类本身并没有与任何别的类耦合在一起，它的职能同样是单一的，它是对一个即会跑又会跳的实体的抽象，并且这里我们还可以使用<code>DI（依赖注入）</code>技术进一步的优化我们的代码，降低它的耦合度。</p>
-<h2 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h2><p><strong>开闭原则</strong>所带来最有用的好处就是，当我们在实现我们的抽象层代码时，我们就可以对未来可能需要作出改变的地方拥有一个比较完整的设想，这样当我们真正面临改变时，我们所对原有代码的修改，更贴近于改变本身，而不是一味的修改我们已有的抽象代码。</p>
+<h2>反思</h2>
+<p><strong>开闭原则</strong>所带来最有用的好处就是，当我们在实现我们的抽象层代码时，我们就可以对未来可能需要作出改变的地方拥有一个比较完整的设想，这样当我们真正面临改变时，我们所对原有代码的修改，更贴近于改变本身，而不是一味的修改我们已有的抽象代码。</p>
 <p>在这种情况下，由于我们节省了不必要的劳动和时间，我们就可以将更多的精力投入到关于更加长远的事宜计划上面，而且可以针对这些事宜需要作出的改变，提前和团队沟通，最终给予一套更加健壮、更符合系统模块本身的解决方案。</p>
 <p>在整个软件开发周期中（比如一个敏捷开发周期），你对于整个周期中的事情了解的越透彻、越多，则越好。身为一个工程师，在一个开发冲刺中，为了在冲刺截止日期结束前，实现一个高效的、可靠的系统，你不会期望作出太多的改变，因此往往你可能会“偷工减料”。</p>
 <p>从另一个角度来讲，我们也应当致力于在每一次面临需求变更的情况下，不需要一而再，再而三的更改我们已有的代码。所有新的功能都应当通过增加一个新的组合类或方法实现，或者通过复用已有的代码来实现。</p>
-<h2 id="插件与中间件"><a href="#插件与中间件" class="headerlink" title="插件与中间件"></a>插件与中间件</h2><p>充分贯彻开闭原则的另一个例子，便是<strong>插件与中间件</strong>架构，我们可以从三个角度来简单分析这种架构是如何运作的：</p>
+<h2>插件与中间件</h2>
+<p>充分贯彻开闭原则的另一个例子，便是<strong>插件与中间件</strong>架构，我们可以从三个角度来简单分析这种架构是如何运作的：</p>
 <ul>
 <li>内核或者容器：往往是核心功能的实现的前提，一般会成为整个系统最核心的部分</li>
 <li>插件：在实现容器的基础上，往往一些核心功能都是以内置的插件实现的，并且，通过实现一套通用的网关类接口，我们可以使插件具有可插拔性，这样在需要新增特性和功能时，只需要实现新的插件并添加到容器即可，比如支持插件扩展功能的浏览器<code>Chrome</code>。</li>
 <li>中间件：中间件我们可以通过一个例子来说明，比如我们拥有一个请求 - 响应周期，我们可以通过中间件，在周期中添加中间业务逻辑，以便为应用程序提供额外的服务或横切关注点，比如<code>Redux</code>、<code>express</code>还有很多框架都支持这样的功能。</li>
 </ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>希望这篇文章能够帮助你学会如何应用<strong>开闭原则</strong>并且从中收益。设计一个具有可组合性的系统，同时提供具有良好定义的扩展接口，是一种非常有用的技术，这种技术最关键的地方在于，它使我们的系统能够在保持强健的同时，提供新功能、新特性，但是却不会影响它当前的状态。</p>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>开闭原则是面向对象编程中最重要的原则之一，有多重要呢？这么说吧，很多的设计原则和设计模式所希望达成的最终状态，往往符合开闭原则，因此需要原则也都作为实现开闭原则的一种手段，在原文的例子中，我们可以很明显的体会到，在实现开闭原则所提倡的理念的过程中，我们不经意地使用之前两篇文章中涉及的原则，比如：</p>
+<h2>总结</h2>
+<p>希望这篇文章能够帮助你学会如何应用<strong>开闭原则</strong>并且从中收益。设计一个具有可组合性的系统，同时提供具有良好定义的扩展接口，是一种非常有用的技术，这种技术最关键的地方在于，它使我们的系统能够在保持强健的同时，提供新功能、新特性，但是却不会影响它当前的状态。</p>
+<h2>译者注</h2>
+<p>开闭原则是面向对象编程中最重要的原则之一，有多重要呢？这么说吧，很多的设计原则和设计模式所希望达成的最终状态，往往符合开闭原则，因此需要原则也都作为实现开闭原则的一种手段，在原文的例子中，我们可以很明显的体会到，在实现开闭原则所提倡的理念的过程中，我们不经意地使用之前两篇文章中涉及的原则，比如：</p>
 <ul>
 <li>保持对象的单一性（单一职责）</li>
 <li>实现依赖于抽象（依赖倒置原则）</li>
@@ -1136,7 +1217,8 @@
 <ul>
 <li>UI组件的表单组件：对于表单本身以容器来实现，表单项以插件来实现，这样对于表单项如何渲染、如何加载、如何布局等功能，均会封闭与表单容器中，而对于表单项如何校验、如何取值、如何格式化等功能，则会开放与表单项容器中。</li>
 <li>API服务：一般我们可能会在项目中提供自定义修改请求头部的工具方法，并在需要的时候调用。但这其实是一种比较笨的方法，如果可能的话，建议使用拦截器来完成这项任务，不仅会提供代码的可读性，同时还会使发接口的业务层代码保持封闭。</li>
-<li>事件驱动模型：对于一些复杂的事件驱动模型，比如拖拽，往往使用开闭原则会达到意想不到的效果。最近有一个比较火的拖拽库<a href="https://github.com/Shopify/draggable" target="_blank" rel="noopener">draggable</a>，提供的拖拽体验相比其他同类型的库简直不是一个级别。我前段时间去读它的源码，发现它之所以强大，是因为在它内部，针对多种拖拽事件，封装了独立的事件发射器（其内部称作<code>Sensor</code>），之后根据这些发射器指定了一套独立的抽象事件驱动模型，在这个模型基础上，针对不同的业务场景提供不同的插件，比如：<ul>
+<li>事件驱动模型：对于一些复杂的事件驱动模型，比如拖拽，往往使用开闭原则会达到意想不到的效果。最近有一个比较火的拖拽库<a href="https://github.com/Shopify/draggable" target="_blank" rel="noopener">draggable</a>，提供的拖拽体验相比其他同类型的库简直不是一个级别。我前段时间去读它的源码，发现它之所以强大，是因为在它内部，针对多种拖拽事件，封装了独立的事件发射器（其内部称作<code>Sensor</code>），之后根据这些发射器指定了一套独立的抽象事件驱动模型，在这个模型基础上，针对不同的业务场景提供不同的插件，比如：
+<ul>
 <li>原生拖拽(Draggable)</li>
 <li>拖拽排序(Sortable)</li>
 <li>拖拽放置(Droppable)</li>
@@ -1159,7 +1241,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>, <a href="/categories/设计模式/前端/">前端</a>, <a href="/categories/设计模式/前端/后端/">后端</a>, <a href="/categories/设计模式/前端/后端/翻译/">翻译</a>, <a href="/categories/设计模式/前端/后端/翻译/编程思想/">编程思想</a>
+        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>
     </span>
     
 
@@ -1213,10 +1295,12 @@
   <div class="article-content">
     <div class="entry">
       
-          <h1 id="Understanding-SOLID-Principles-Single-Responsibility"><a href="#Understanding-SOLID-Principles-Single-Responsibility" class="headerlink" title="Understanding SOLID Principles: Single Responsibility"></a><a href="https://codeburst.io/understanding-solid-principles-single-responsibility-b7c7ec0bf80" target="_blank" rel="noopener">Understanding SOLID Principles: Single Responsibility</a></h1><blockquote>
+          <h1><a href="https://codeburst.io/understanding-solid-principles-single-responsibility-b7c7ec0bf80" target="_blank" rel="noopener">Understanding SOLID Principles: Single Responsibility</a></h1>
+<blockquote>
 <p>这是理解<code>SOLID</code>原则中，关于<strong>单一职责原则</strong>如何帮助我们编写低耦合和高内聚的第二篇文章。</p>
 </blockquote>
-<h2 id="单一职责原则是什么"><a href="#单一职责原则是什么" class="headerlink" title="单一职责原则是什么"></a>单一职责原则是什么</h2><p>之前的第一篇文章阐述了<strong>依赖倒置原则（DIP）</strong>能够使我们编写的代码变得低耦合，同时具有很好的可测试性，接下来我们来简单了解下单一职责原则的基本概念：</p>
+<h2>单一职责原则是什么</h2>
+<p>之前的第一篇文章阐述了**依赖倒置原则（DIP）**能够使我们编写的代码变得低耦合，同时具有很好的可测试性，接下来我们来简单了解下单一职责原则的基本概念：</p>
 <blockquote>
 <p>Every module or class should have responsibility over a single part of the functionality provided by the software, and that responsibility should be entirely encapsulated by the class.</p>
 </blockquote>
@@ -1236,7 +1320,8 @@
 <li>Responsibility: 职责</li>
 <li>Change: 改变</li>
 </ul>
-<h2 id="什么是单一"><a href="#什么是单一" class="headerlink" title="什么是单一"></a>什么是<code>单一</code></h2><blockquote>
+<h2>什么是<code>单一</code></h2>
+<blockquote>
 <p>Only one; not one of several.</p>
 </blockquote>
 <blockquote>
@@ -1248,7 +1333,8 @@
 <blockquote>
 <p>同义词：一，仅有的一个，唯一，独个，独自存在的，孤立的，仅自己。</p>
 </blockquote>
-<p><strong>单一</strong>意味着某些工作是独立的。比如，在类中，类方法仅完成某家独立的事情，而不是两件，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class UserComponent &#123; </span><br><span class="line">  // 这是第一件事情，获取用户详情数据</span><br><span class="line">  getUserInfo(id) &#123;</span><br><span class="line">    this.api.getUserInfo(id).then(saveToState)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 这是第二件事情，渲染视图的逻辑</span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123; userInfo &#125; = this.state;</span><br><span class="line">    return &lt;div&gt;</span><br><span class="line">      &lt;ul&gt;</span><br><span class="line">        &lt;li&gt;Name: &#123; userInfo.name &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Surname: &#123; userInfo.surname &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Email: &#123; userInfo.email &#125;&lt;/li&gt;</span><br><span class="line">      &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>单一</strong>意味着某些工作是独立的。比如，在类中，类方法仅完成某家独立的事情，而不是两件，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class UserComponent &#123; </span><br><span class="line">  // 这是第一件事情，获取用户详情数据</span><br><span class="line">  getUserInfo(id) &#123;</span><br><span class="line">    this.api.getUserInfo(id).then(saveToState)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 这是第二件事情，渲染视图的逻辑</span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123; userInfo &#125; = this.state;</span><br><span class="line">    return &lt;div&gt;</span><br><span class="line">      &lt;ul&gt;</span><br><span class="line">        &lt;li&gt;Name: &#123; userInfo.name &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Surname: &#123; userInfo.surname &#125;&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;Email: &#123; userInfo.email &#125;&lt;/li&gt;</span><br><span class="line">      &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>看了上面的代码，你可能很快就会联想到，这些代码基本存在于所有的<code>React</code>组件中。</p>
 <p>确实，对于一些小型的项目或者演示型项目，这样编写代码不会产生太大的问题。但是如果在大型或者复杂度很高的项目中，仍然按照这样的风格，则是一件比较糟糕的事情，因为一个组件往往做了它本不应当做的事情（承担了过多的职责）。</p>
 <p>这样会带来什么坏处呢？比如对于以上的<code>api</code>服务，在将来的某天你做出了一些修改，增加了一些额外的逻辑，那么为了使代码能够正常工作，你至少需要修改项目中的两个地方以适应这个修改，一处修改是在<code>API</code>服务中，而另一处则在你的组件中。如果进一步思考的，我们会发现，修改次数与在项目直接使用<code>API</code>服务的次数成正比，如果项目足够复杂，足够大，一处简单的逻辑修改，就需要做出一次贯穿整个系统的适配工作。</p>
@@ -1267,7 +1353,8 @@
 <blockquote>
 <p>在面向对象编程中，上帝对象指一个了解太情或者做太多事情的对象。上帝对象是反模式的一个典型。</p>
 </blockquote>
-<h2 id="什么是职责"><a href="#什么是职责" class="headerlink" title="什么是职责"></a>什么是<code>职责</code></h2><p>职责指软件系统中，每一个指派给特定方法、类、包和模块所完成的工作或者动作。</p>
+<h2>什么是<code>职责</code></h2>
+<p>职责指软件系统中，每一个指派给特定方法、类、包和模块所完成的工作或者动作。</p>
 <blockquote>
 <p>Too much responsibility leads to coupling.</p>
 </blockquote>
@@ -1281,11 +1368,15 @@
 <li>如何测量每个组件的预期任务</li>
 <li>组件如何专注于任务本身</li>
 </ul>
-<p>低内聚性的组件在完成任务时，和它们本身的职责关联并不紧密。比如，我们现在有一个<code>User</code>类，这个类中我们保存了一些基本信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>对于属性本身，如果对于每个属性声明一些<code>getter</code>或者<code>setter</code>方法是没什么问题的。但是如果我们加一些别的方法，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">  // 我们为什么要有以下这些方法？</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>低内聚性的组件在完成任务时，和它们本身的职责关联并不紧密。比如，我们现在有一个<code>User</code>类，这个类中我们保存了一些基本信息：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于属性本身，如果对于每个属性声明一些<code>getter</code>或者<code>setter</code>方法是没什么问题的。但是如果我们加一些别的方法，比如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">  // 我们为什么要有以下这些方法？</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>对于<code>checkAge</code>、<code>validateEmail</code>、<code>slugifyName</code>的职责，与<code>User</code>class本身关系并不紧密，因此就会这些方法就会使<code>User</code>的内聚性变低。</p>
-<p>仔细思考的话，这些方法的职责和校验和格式化用户信息的关系更紧密，因此，它们应当从<code>User</code>中被抽离出来，放入到另一个独立的<code>UserFieldValidation</code>类中，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class UserFieldValidation &#123;</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="什么是变更"><a href="#什么是变更" class="headerlink" title="什么是变更"></a>什么是<code>变更</code></h2><p>变更指对于已存在代码的修改或者改变。</p>
+<p>仔细思考的话，这些方法的职责和校验和格式化用户信息的关系更紧密，因此，它们应当从<code>User</code>中被抽离出来，放入到另一个独立的<code>UserFieldValidation</code>类中，比如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  public age;  </span><br><span class="line">  public name;</span><br><span class="line">  public slug;</span><br><span class="line">  public email;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class UserFieldValidation &#123;</span><br><span class="line">  checkAge();</span><br><span class="line">  validateEmail();</span><br><span class="line">  slugifyName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2>什么是<code>变更</code></h2>
+<p>变更指对于已存在代码的修改或者改变。</p>
 <p>那么问题来了，什么原因迫使我们需要对源码进行变更？从众多过期的软件系统的历史数据的研究来看，大体有三方面原因促使我们需要作出变更：</p>
 <ul>
 <li>增加新功能</li>
@@ -1293,37 +1384,44 @@
 <li>重构代码以适配将来作出的变更</li>
 </ul>
 <p>做为一个程序员，我们天天不都在做这三件事情吗？让我们来用一个例子完整的看一下什么是变更，比方说我们完成了一个组件，现在这个组件性能非常好，而且可读性也非常好，也许是你整个职业生涯中写的最好的一个组件了，所以我们给它一个炫酷的名字叫作<code>SuperDuper</code>（译者注：这个名字的意思是<strong>超级大骗子</strong>）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">    // Super readable and efficient code</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">    // Super readable and efficient code</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>之后过了一段时间，在某一天，你的经理要求你增加一个新功能，比如说去调用别的<code>class</code>中的每个函数，从而可以使当前这个组件完成更多的工作。你决定将这个类以参数的形式传入构造方法，并在你的方法调用它。</p>
-<p>这个需求很简单，只需要增加一行调用的代码即可，然后你做了以下<strong>变更(增加新功能)</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    this.notDuper.invokeSomeMethod()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个需求很简单，只需要增加一行调用的代码即可，然后你做了以下<strong>变更(增加新功能)</strong>：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    this.notDuper.invokeSomeMethod()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>好了，之后你针对你做的变更代码运行了单元测试，然后你突然发现这条简单的代码使<code>100</code>多条的测试用例失败了。具体原因是因为在调用<code>notDuper</code>方法之前，你需要针对一些额外的业务逻辑增加条件判断来决定是否调用它。</p>
-<p>于是你针对这个问题又进行了一次<strong>变更(修复缺陷或者bug)</strong>，或许还会针对一些别的边界条件进行一些额外的修复和改动：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    </span><br><span class="line">    if (someCondition) &#123;</span><br><span class="line">      this.notDuper.invokeSomeMethod()</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      this.callInternalMethod()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>于是你针对这个问题又进行了一次<strong>变更(修复缺陷或者bug)</strong>，或许还会针对一些别的边界条件进行一些额外的修复和改动：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line">  constructor(notDuper: NotSoDuper) &#123;</span><br><span class="line">    this.notDuper = notDuper</span><br><span class="line">  &#125;</span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">    </span><br><span class="line">    if (someCondition) &#123;</span><br><span class="line">      this.notDuper.invokeSomeMethod()</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      this.callInternalMethod()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>又过了一段时间，因为这个<code>SuperDuper</code>毕竟是你职业生涯完成的最棒的类，但是当前调用<code>noDuper</code>的方法实在是有点不够逼格，于是你决定引入事件驱动的理念来达到不在<code>SuperDuper</code>内部直接调用<code>noDuper</code>方法的目的。</p>
-<p>这次实际是对已经代码的一次重构工作，你引入了事件驱动模型，并对已有的代码做出了<strong>变更(重构代码以适配将来作出的变更)</strong>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line"> </span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">     ...</span><br><span class="line">     dispatcher.send(actionForTheNotDuper(payload)) // Send a signal</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这次实际是对已经代码的一次重构工作，你引入了事件驱动模型，并对已有的代码做出了<strong>变更(重构代码以适配将来作出的变更)</strong>:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class SuperDuper &#123;</span><br><span class="line"> </span><br><span class="line">  makeThingsFastAndEasy() &#123;</span><br><span class="line">     // Super readable and efficient code</span><br><span class="line">     ...</span><br><span class="line">     dispatcher.send(actionForTheNotDuper(payload)) // Send a signal</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>现在再来看我们的<code>SuperDuper</code>类，已经和最原始的样子完全不一样了，因为你必须针对新的需求、存在的缺陷和bug或者适配新的软件架构而做出变更。</p>
 <p>因此为了便于我们做出变更，在代码的组织方式上，我们需要用心，这样才会使我们在做出变更时更加容易。</p>
-<h2 id="如何才能使代码贴近这些原则"><a href="#如何才能使代码贴近这些原则" class="headerlink" title="如何才能使代码贴近这些原则"></a>如何才能使代码贴近这些原则</h2><p>很简单，只需要牢记，使代码保持足够简单。</p>
+<h2>如何才能使代码贴近这些原则</h2>
+<p>很简单，只需要牢记，使代码保持足够简单。</p>
 <blockquote>
 <p>Gather together the things that change for the same reasons. Separate those things that change for different reasons.</p>
 </blockquote>
 <blockquote>
 <p>将由于相同原因而做出改变的东西聚集在一起，将由于不同原因而做出改变的东西彼此分离。</p>
 </blockquote>
-<h3 id="孤立变化"><a href="#孤立变化" class="headerlink" title="孤立变化"></a>孤立变化</h3><p>对于所编写的做出变更的代码，你需要仔细的检查它们，无论是从整体检查，还是有逻辑的分而治之，都可以达到孤立变化的目的。你需要更多的了解你所编写的代码，比如，为什么这样写，代码到底做了什么等等，并且，对于一些特别长的方法和类要格外关注。</p>
+<h3>孤立变化</h3>
+<p>对于所编写的做出变更的代码，你需要仔细的检查它们，无论是从整体检查，还是有逻辑的分而治之，都可以达到孤立变化的目的。你需要更多的了解你所编写的代码，比如，为什么这样写，代码到底做了什么等等，并且，对于一些特别长的方法和类要格外关注。</p>
 <blockquote>
 <p>Big is bad, small is good…</p>
 </blockquote>
 <blockquote>
 <p>大即是坏，小即是好。</p>
 </blockquote>
-<h3 id="追踪依赖"><a href="#追踪依赖" class="headerlink" title="追踪依赖"></a>追踪依赖</h3><p>对于一个类，检查它的构造方法是否包含了太多的参数，因为每一个参数都作为这个类的依赖存在，同时这些参数也拥有自身的依赖。如果可能的话，使用<code>DI</code>机制来动态的注入它们。</p>
+<h3>追踪依赖</h3>
+<p>对于一个类，检查它的构造方法是否包含了太多的参数，因为每一个参数都作为这个类的依赖存在，同时这些参数也拥有自身的依赖。如果可能的话，使用<code>DI</code>机制来动态的注入它们。</p>
 <blockquote>
 <p>Use Dependency Injection</p>
 </blockquote>
 <blockquote>
 <p>使用依赖注入</p>
 </blockquote>
-<h3 id="追踪方法参数"><a href="#追踪方法参数" class="headerlink" title="追踪方法参数"></a>追踪方法参数</h3><p>对于一个方法，检查它是否包含了太多参数，一般来讲，一个方法的参数个数往往代表了其内部所实现的职能。</p>
+<h3>追踪方法参数</h3>
+<p>对于一个方法，检查它是否包含了太多参数，一般来讲，一个方法的参数个数往往代表了其内部所实现的职能。</p>
 <p>同时，在方法命名上也投入一精力，尽可能地使方法名保持简单，它将帮助你在重构代码时，更好的达到单一职责。长的函数名称往往意味着其内部有糟糕的味道。</p>
 <blockquote>
 <p>Name things descriptively</p>
@@ -1331,21 +1429,24 @@
 <blockquote>
 <p>描述性命名。</p>
 </blockquote>
-<h3 id="尽早重构"><a href="#尽早重构" class="headerlink" title="尽早重构"></a>尽早重构</h3><p>尽可能早的重构代码，当你看到一些代码可以以更简明的方式进行时，重构它。这将帮助你在项目进行的整个周期不断的整理代码以便于更好的重构。</p>
+<h3>尽早重构</h3>
+<p>尽可能早的重构代码，当你看到一些代码可以以更简明的方式进行时，重构它。这将帮助你在项目进行的整个周期不断的整理代码以便于更好的重构。</p>
 <blockquote>
 <p>Refactor to Design Patterns</p>
 </blockquote>
 <blockquote>
 <p>按设计模式重构代码</p>
 </blockquote>
-<h3 id="善于做出改变"><a href="#善于做出改变" class="headerlink" title="善于做出改变"></a>善于做出改变</h3><p>最后，在需要做出改变时，果断地去做。当然这些改变会使系统的耦合性更低，内聚性更高，而不是往相反的方向，这样你的代码会一直建立在这些原则之上。</p>
+<h3>善于做出改变</h3>
+<p>最后，在需要做出改变时，果断地去做。当然这些改变会使系统的耦合性更低，内聚性更高，而不是往相反的方向，这样你的代码会一直建立在这些原则之上。</p>
 <blockquote>
 <p>Introduce change where it matters. Keep things simple but not simpler.</p>
 </blockquote>
 <blockquote>
 <p>在重要的地方介绍改变。保持事情的简单性，但不是一味追求简单。</p>
 </blockquote>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>单一职责原则其实在我们日常工作中经常会接触到，比方说</p>
+<h2>译者注</h2>
+<p>单一职责原则其实在我们日常工作中经常会接触到，比方说</p>
 <ul>
 <li>我们经常会听到<code>DIY（dont repeat yourself）</code>原则，其本身就是单一职责的一个缩影，为了达到<code>DIY</code>，对于代码中的一些通用方法，我们经常会抽离到独立的<code>utils</code>目录甚至编写为独立的工具函数库, 比如<code>lodash</code>和<code>ramda</code>等等</li>
 <li><code>OAOO</code>, 指<code>Once And Only Once</code>, 原则本身的含义可以自行搜索，实际工作中我们对于相同只能模块的代码应当尽可能去在抽象层合并它们，提供抽象类，之后通过继承的方式来满足不同的需求</li>
@@ -1369,7 +1470,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>, <a href="/categories/设计模式/前端/">前端</a>, <a href="/categories/设计模式/前端/后端/">后端</a>, <a href="/categories/设计模式/前端/后端/翻译/">翻译</a>, <a href="/categories/设计模式/前端/后端/翻译/编程思想/">编程思想</a>
+        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>
     </span>
     
 
@@ -1423,10 +1524,12 @@
   <div class="article-content">
     <div class="entry">
       
-          <h1 id="Understanding-SOLID-Principles-Dependency-Inversion"><a href="#Understanding-SOLID-Principles-Dependency-Inversion" class="headerlink" title="Understanding SOLID Principles: Dependency Inversion"></a><a href="https://codeburst.io/understanding-solid-principles-dependency-injection-d570c15560ab" target="_blank" rel="noopener">Understanding SOLID Principles: Dependency Inversion</a></h1><blockquote>
+          <h1><a href="https://codeburst.io/understanding-solid-principles-dependency-injection-d570c15560ab" target="_blank" rel="noopener">Understanding SOLID Principles: Dependency Inversion</a></h1>
+<blockquote>
 <p>这是理解<code>SOLID</code>原则中，关于<strong>依赖倒置</strong>原则如何帮助我们编写低耦合和可测试代码的第一篇文章。</p>
 </blockquote>
-<h2 id="写在前头"><a href="#写在前头" class="headerlink" title="写在前头"></a>写在前头</h2><p>当我们在读书，或者在和一些别的开发者聊天的时候，可能会谈及或者听到术语<code>SOILD</code>。在这些讨论中，一些人会提及它的重要性，以及一个理想中的系统，应当包含它所包含的5条原则的特性。</p>
+<h2>写在前头</h2>
+<p>当我们在读书，或者在和一些别的开发者聊天的时候，可能会谈及或者听到术语<code>SOILD</code>。在这些讨论中，一些人会提及它的重要性，以及一个理想中的系统，应当包含它所包含的5条原则的特性。</p>
 <p>我们在每次的工作中，你可能没有那么多时间思考关于<strong>架构</strong>这个比较大的概念，或者在有限的时间内或督促下，你也没有办法实践一些好的设计理念。</p>
 <p>但是，这些原则存在的意义不是让我们“跳过”它们。软件工程师应当将这些原则应用到他们的开发工作中。所以，在你每一次敲代码的时候，如何能够正确的将这些原则付诸于行，才是真正的问题所在。如果可以那样的话，你的代码会变得更优雅。</p>
 <p><code>SOLID</code>原则是由5个基本的原则构成的。这些概念会帮助创造更好（或者说更健壮）的软件架构。这些原则包含（<code>SOLID</code>是这5个原则的开头字母组成的缩略词）：</p>
@@ -1440,7 +1543,8 @@
 <p>起初这些原则是<a href="https://en.wikipedia.org/wiki/Robert_Cecil_Martin" target="_blank" rel="noopener">Robert C. Martin</a>在1990年提出的，遵循这些原则可以帮助我们更好的构建，低耦合、高内聚的软件架构，同时能够真正的对现实中的业务逻辑进行恰到好处的封装。</p>
 <p>不过这些原则并不会使一个差劲的程序员转变为一个优秀的程序员。这些法则取决于你如何应用它们，如果你是很随意的应用它们，那等同于你并没有使用它们一样。</p>
 <p>关于原则和模式的知识能够帮助你决定在何时何地正确的使用它们。尽管这些原则仅仅是启示性的，它们是常见问题的常规解决方案。实践中，这些原则的正确性已经被证实了很多次，所以它们应当成为一种常识。</p>
-<h2 id="依赖倒置原则是什么"><a href="#依赖倒置原则是什么" class="headerlink" title="依赖倒置原则是什么"></a>依赖倒置原则是什么</h2><ul>
+<h2>依赖倒置原则是什么</h2>
+<ul>
 <li>高级模块不应当依赖于低级模块。它们都应当依赖于抽象。</li>
 <li>抽象不应当依赖于实现，实现应当依赖于抽象。</li>
 </ul>
@@ -1451,21 +1555,30 @@
 <p>依赖倒置原则存在的真正意义是指，我们需要将一些对象解耦，它们的耦合关系需要达到当一个对象依赖的对象作出改变时，对象本身不需要更改任何代码。</p>
 <p>这样的架构可以实现一种松耦合的状态的系统，因为系统中所有的组件，彼此之间都了解很少或者不需要了解系统中其余组件的具体定义和实现细节。它同时实现了一种可测试和可替换的系统架构，因为在松耦合的系统中，任何组件都可以被提供相同服务的组件所替换。</p>
 <p>但是相反的，依赖倒置也有一些缺点，就是你需要一个用于处理依赖倒置逻辑的容器，同时，你还需要配置它。容器通常需要具备能够在系统中注入服务，这些服务需要具备正确的作用域和参数，还应当被注入正确的执行上下文中。</p>
-<h2 id="以提供Websocket连接服务为例子"><a href="#以提供Websocket连接服务为例子" class="headerlink" title="以提供Websocket连接服务为例子"></a>以提供Websocket连接服务为例子</h2><p>举个例子，我们可以在这个例子中学到更多关于依赖倒置的知识，我们将使用<code>Inversify.js</code>作为依赖倒置的容器，通过这个依赖倒置容器，我们可以看看如何针对提供<code>Websocket</code>连接服务的业务场景，提供服务。</p>
+<h2>以提供Websocket连接服务为例子</h2>
+<p>举个例子，我们可以在这个例子中学到更多关于依赖倒置的知识，我们将使用<code>Inversify.js</code>作为依赖倒置的容器，通过这个依赖倒置容器，我们可以看看如何针对提供<code>Websocket</code>连接服务的业务场景，提供服务。</p>
 <p>比如，我们有一个web服务器提供<code>WebSockets</code>连接服务，同时客户端想要连接服务器，同时接受更新的通知。当前我们有若干种解决方案来提供一个WebSocket服务，比如说<code>Socket.io</code>、<code>Socks</code>或者使用浏览器提供的关于原生的<code>WebSocket</code>接口。每一套解决方案，都提供不同的接口和方法供我们调用，那么问题来了，我们是否可以在一个接口中，将所有的解决方案都抽象成一个提供<code>WebSocket</code>连接服务的提供者？这样，我们就可以根据我们的实际需求，使用不同的WebSocket服务提供者。</p>
-<p>首先，我们来定义我们的接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export interface WebSocketConfiguration &#123;</span><br><span class="line">  uri: string;</span><br><span class="line">  options?: Object;</span><br><span class="line">&#125;</span><br><span class="line">export interface SocketFactory &#123;</span><br><span class="line">  createSocket(configuration: WebSocketConfiguration): any;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先，我们来定义我们的接口：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export interface WebSocketConfiguration &#123;</span><br><span class="line">  uri: string;</span><br><span class="line">  options?: Object;</span><br><span class="line">&#125;</span><br><span class="line">export interface SocketFactory &#123;</span><br><span class="line">  createSocket(configuration: WebSocketConfiguration): any;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意在接口中，我们没有提供任何的实现细节，因此它既是我们所拥有的<strong>抽象</strong>。</p>
-<p>接下来，如果我们想要一个提供<code>Socket.io</code>服务工厂：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Manager&#125; from &apos;socket.io-client&apos;;</span><br><span class="line"></span><br><span class="line">class SocketIOFactory implements SocketFactory &#123;</span><br><span class="line">  createSocket(configuration: WebSocketConfiguration): any &#123;</span><br><span class="line">    return new Manager(configuration.uri, configuration.opts);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来，如果我们想要一个提供<code>Socket.io</code>服务工厂：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Manager&#125; from &apos;socket.io-client&apos;;</span><br><span class="line"></span><br><span class="line">class SocketIOFactory implements SocketFactory &#123;</span><br><span class="line">  createSocket(configuration: WebSocketConfiguration): any &#123;</span><br><span class="line">    return new Manager(configuration.uri, configuration.opts);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里已经包含了一些具体的实现细节，因此它不再是抽象，因为它声明了一个从<code>Socket.io</code>库中导入的<code>Manager</code>对象，它是我们的具体实现细节。</p>
 <p>我们可以通过实现<code>SocketFactory</code>接口，来增加若干工厂类，只要我们实现这个接口即可。</p>
-<p>我们在提供一个关于客户端连接实例的抽象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export interface SocketClient &#123;</span><br><span class="line">  connect(configuration: WebSocketConfiguration): Promise&lt;any&gt;;</span><br><span class="line">  close(): Promise&lt;any&gt;;</span><br><span class="line">  emit(event: string, ...args: any[]): Promise&lt;any&gt;;</span><br><span class="line">  on(event: string, fn: Function): Promise&lt;any&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后再提供一些实现细节：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">class WebSocketClient implements SocketClient &#123;</span><br><span class="line">  private socketFactory: SocketFactory;</span><br><span class="line">  private socket: any;</span><br><span class="line">  public constructor(webSocketFactory: SocketFactory) &#123;</span><br><span class="line">    this.socketFactory = webSocketFactory;</span><br><span class="line">  &#125;</span><br><span class="line">  public connect(config: WebSocketConfiguration): Promise&lt;any&gt; &#123;</span><br><span class="line">    if (!this.socket) &#123;</span><br><span class="line">      this.socket = this.socketFactory.createSocket(config);</span><br><span class="line">    &#125;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      this.socket.on(&apos;connect&apos;, () =&gt; resolve());</span><br><span class="line">      this.socket.on(&apos;connect_error&apos;, (error: Error) =&gt; reject(error));</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public emit(event: string, ...args: any[]): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;string | Object&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      if (!this.socket) &#123;</span><br><span class="line">        return reject(&apos;No socket connection.&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">      return this.socket.emit(event, args, (response: any) =&gt; &#123;</span><br><span class="line">        if (response.error) &#123;</span><br><span class="line">          return reject(response.error);</span><br><span class="line">        &#125;</span><br><span class="line">        return resolve();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public on(event: string, fn: Function): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      if (!this.socket) &#123;</span><br><span class="line">        return reject(&apos;No socket connection.&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">      this.socket.on(event, fn);</span><br><span class="line">      resolve();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public close(): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve) =&gt; &#123;</span><br><span class="line">      this.socket.close(() =&gt; &#123;</span><br><span class="line">        this.socket = null;</span><br><span class="line">        resolve();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们在提供一个关于客户端连接实例的抽象：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export interface SocketClient &#123;</span><br><span class="line">  connect(configuration: WebSocketConfiguration): Promise&lt;any&gt;;</span><br><span class="line">  close(): Promise&lt;any&gt;;</span><br><span class="line">  emit(event: string, ...args: any[]): Promise&lt;any&gt;;</span><br><span class="line">  on(event: string, fn: Function): Promise&lt;any&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后再提供一些实现细节：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">class WebSocketClient implements SocketClient &#123;</span><br><span class="line">  private socketFactory: SocketFactory;</span><br><span class="line">  private socket: any;</span><br><span class="line">  public constructor(webSocketFactory: SocketFactory) &#123;</span><br><span class="line">    this.socketFactory = webSocketFactory;</span><br><span class="line">  &#125;</span><br><span class="line">  public connect(config: WebSocketConfiguration): Promise&lt;any&gt; &#123;</span><br><span class="line">    if (!this.socket) &#123;</span><br><span class="line">      this.socket = this.socketFactory.createSocket(config);</span><br><span class="line">    &#125;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      this.socket.on(&apos;connect&apos;, () =&gt; resolve());</span><br><span class="line">      this.socket.on(&apos;connect_error&apos;, (error: Error) =&gt; reject(error));</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public emit(event: string, ...args: any[]): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;string | Object&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      if (!this.socket) &#123;</span><br><span class="line">        return reject(&apos;No socket connection.&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">      return this.socket.emit(event, args, (response: any) =&gt; &#123;</span><br><span class="line">        if (response.error) &#123;</span><br><span class="line">          return reject(response.error);</span><br><span class="line">        &#125;</span><br><span class="line">        return resolve();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public on(event: string, fn: Function): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve, reject) =&gt; &#123;</span><br><span class="line">      if (!this.socket) &#123;</span><br><span class="line">        return reject(&apos;No socket connection.&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">      this.socket.on(event, fn);</span><br><span class="line">      resolve();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  public close(): Promise&lt;any&gt; &#123;</span><br><span class="line">    return new Promise&lt;any&gt;((resolve) =&gt; &#123;</span><br><span class="line">      this.socket.close(() =&gt; &#123;</span><br><span class="line">        this.socket = null;</span><br><span class="line">        resolve();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>值得注意的是，这里我们在构造函数中，传入了一个类型是<code>SocketFactory</code>的参数，这是为了满足关于依赖倒置原则的第一条规则。对于第二条规则，我们需要一种方式来提供这个不需要了解内部实现细节的、可替换的、易于配置的参数。</p>
-<p>这也是为什么我们要使用<code>Inversify</code>这个库的原因，我们来加入一些额外的代码和注解（装饰器）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import &#123;injectable&#125; from &apos;inversify&apos;;</span><br><span class="line">const webSocketFactoryType: symbol = Symbol(&apos;WebSocketFactory&apos;);</span><br><span class="line">const webSocketClientType: symbol = Symbol(&apos;WebSocketClient&apos;);</span><br><span class="line">let TYPES: any = &#123;</span><br><span class="line">    WebSocketFactory: webSocketFactoryType,</span><br><span class="line">    WebSocketClient: webSocketClientType</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">@injectable()</span><br><span class="line">class SocketIOFactory implements SocketFactory &#123;...&#125;</span><br><span class="line">...</span><br><span class="line">@injectable()</span><br><span class="line">class WebSocketClient implements SocketClient &#123;</span><br><span class="line">public constructor(@inject(TYPES.WebSocketFactory) webSocketFactory: SocketFactory) &#123;</span><br><span class="line">  this.socketFactory = webSocketFactory;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这些注释（装饰器）仅仅会在代码运行时，在如何提供这些组件实例时，提供一些元数据，接下来我们仅仅需要创建一个依赖倒置容器，并将所有的对象按正确的类型绑定起来，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Container&#125; from &apos;inversify&apos;;</span><br><span class="line">import &apos;reflect-metadata&apos;;</span><br><span class="line">import &#123;TYPES, SocketClient, SocketFactory, SocketIOFactory, WebSocketClient&#125; from &apos;@web/app&apos;;</span><br><span class="line">const provider = new Container(&#123;defaultScope: &apos;Singleton&apos;&#125;);</span><br><span class="line">// Bindings</span><br><span class="line">provider.bind&lt;SocketClient&gt;(TYPES.WebSocketClient).to(WebSocketClient);</span><br><span class="line">provider.bind&lt;SocketFactory&gt;(TYPES.WebSocketFactory).to(SocketIOFactory);</span><br><span class="line">export default provider;</span><br></pre></td></tr></table></figure></p>
-<p>让我们来看看我们如何使用我们提供连接服务的客户端实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var socketClient = provider.get&lt;SocketClient&gt;(TYPES.WebSocketClient);</span><br></pre></td></tr></table></figure></p>
+<p>这也是为什么我们要使用<code>Inversify</code>这个库的原因，我们来加入一些额外的代码和注解（装饰器）：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import &#123;injectable&#125; from &apos;inversify&apos;;</span><br><span class="line">const webSocketFactoryType: symbol = Symbol(&apos;WebSocketFactory&apos;);</span><br><span class="line">const webSocketClientType: symbol = Symbol(&apos;WebSocketClient&apos;);</span><br><span class="line">let TYPES: any = &#123;</span><br><span class="line">    WebSocketFactory: webSocketFactoryType,</span><br><span class="line">    WebSocketClient: webSocketClientType</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">@injectable()</span><br><span class="line">class SocketIOFactory implements SocketFactory &#123;...&#125;</span><br><span class="line">...</span><br><span class="line">@injectable()</span><br><span class="line">class WebSocketClient implements SocketClient &#123;</span><br><span class="line">public constructor(@inject(TYPES.WebSocketFactory) webSocketFactory: SocketFactory) &#123;</span><br><span class="line">  this.socketFactory = webSocketFactory;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这些注释（装饰器）仅仅会在代码运行时，在如何提供这些组件实例时，提供一些元数据，接下来我们仅仅需要创建一个依赖倒置容器，并将所有的对象按正确的类型绑定起来，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Container&#125; from &apos;inversify&apos;;</span><br><span class="line">import &apos;reflect-metadata&apos;;</span><br><span class="line">import &#123;TYPES, SocketClient, SocketFactory, SocketIOFactory, WebSocketClient&#125; from &apos;@web/app&apos;;</span><br><span class="line">const provider = new Container(&#123;defaultScope: &apos;Singleton&apos;&#125;);</span><br><span class="line">// Bindings</span><br><span class="line">provider.bind&lt;SocketClient&gt;(TYPES.WebSocketClient).to(WebSocketClient);</span><br><span class="line">provider.bind&lt;SocketFactory&gt;(TYPES.WebSocketFactory).to(SocketIOFactory);</span><br><span class="line">export default provider;</span><br></pre></td></tr></table></figure></p>
+<p>让我们来看看我们如何使用我们提供连接服务的客户端实例：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var socketClient = provider.get&lt;SocketClient&gt;(TYPES.WebSocketClient);</span><br></pre></td></tr></table></figure></p>
 <p>当然，使用<code>Inversify</code>可以提供一些更简单易用的绑定，可以通过浏览它的网站来了解。</p>
-<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>一般说到依赖倒置原则，往往第一个想到的术语即是<code>依赖注入</code>，这种在各个技术栈都有应用，之后又会马上想到<code>spring</code>、<code>ng</code>等前后端框架。</p>
+<h2>译者注</h2>
+<p>一般说到依赖倒置原则，往往第一个想到的术语即是<code>依赖注入</code>，这种在各个技术栈都有应用，之后又会马上想到<code>spring</code>、<code>ng</code>等前后端框架。</p>
 <p>我们确实是通过使用这些框架熟知这个概念的，但是如果你仔细想想的话，是否还有其他的一些场景也使用了类似的概念呢？</p>
 <p>比如：</p>
 <ul>
@@ -1488,7 +1601,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>, <a href="/categories/设计模式/前端/">前端</a>, <a href="/categories/设计模式/前端/后端/">后端</a>, <a href="/categories/设计模式/前端/后端/翻译/">翻译</a>, <a href="/categories/设计模式/前端/后端/翻译/编程思想/">编程思想</a>
+        <a href="/categories/翻译/">翻译</a>, <a href="/categories/翻译/设计模式/">设计模式</a>
     </span>
     
 
@@ -1556,35 +1669,23 @@ inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
             
                 <a href="/categories/其他/" title="其他" rel="3">其他</a>
             
-                <a href="/categories/前端/" title="前端" rel="8">前端</a>
+                <a href="/categories/翻译/前端/" title="前端" rel="8">前端</a>
             
-                <a href="/categories/翻译/前端/" title="前端" rel="1">前端</a>
+                <a href="/categories/原创/前端/" title="前端" rel="4">前端</a>
             
-                <a href="/categories/设计模式/前端/" title="前端" rel="6">前端</a>
-            
-                <a href="/categories/翻译/设计模式/前端/" title="前端" rel="6">前端</a>
-            
-                <a href="/categories/前端/后端/" title="后端" rel="1">后端</a>
-            
-                <a href="/categories/设计模式/前端/后端/" title="后端" rel="6">后端</a>
+                <a href="/categories/原创/" title="原创" rel="7">原创</a>
             
                 <a href="/categories/心情/" title="心情" rel="1">心情</a>
             
                 <a href="/categories/其他/心情/" title="心情" rel="3">心情</a>
             
-                <a href="/categories/前端/源码分析/" title="源码分析" rel="1">源码分析</a>
+                <a href="/categories/源码分析/" title="源码分析" rel="1">源码分析</a>
             
-                <a href="/categories/设计模式/前端/后端/翻译/编程思想/" title="编程思想" rel="5">编程思想</a>
+                <a href="/categories/翻译/" title="翻译" rel="13">翻译</a>
             
-                <a href="/categories/翻译/" title="翻译" rel="8">翻译</a>
+                <a href="/categories/翻译/设计模式/" title="设计模式" rel="5">设计模式</a>
             
-                <a href="/categories/设计模式/前端/后端/翻译/" title="翻译" rel="5">翻译</a>
-            
-                <a href="/categories/前端/设计模式/" title="设计模式" rel="1">设计模式</a>
-            
-                <a href="/categories/翻译/设计模式/" title="设计模式" rel="6">设计模式</a>
-            
-                <a href="/categories/设计模式/" title="设计模式" rel="6">设计模式</a>
+                <a href="/categories/原创/软件架构/" title="软件架构" rel="1">软件架构</a>
             
     </div>
 
