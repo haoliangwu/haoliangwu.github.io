@@ -125,19 +125,29 @@
 <blockquote>
 <p>repo: <a href="https://github.com/haoliangwu/todoMVCs/tree/master/async-for-js" target="_blank" rel="noopener">async-for-js</a></p>
 </blockquote>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>插入3个div元素，其中第二个div元素使用<code>setTimeout</code>模拟异步操作，理想的插入顺序为div1 div2 div3，但这里的代码的插入顺序为div1 div3 div2。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// async way</span><br><span class="line">function _async() &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  setTimeout(function () &#123;</span><br><span class="line">    document.body.appendChild(div2)</span><br><span class="line">  &#125;, 2000)</span><br><span class="line"></span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_async()</span><br></pre></td></tr></table></figure></p>
-<h2 id="Callback"><a href="#Callback" class="headerlink" title="Callback"></a>Callback</h2><p>最常用的方法是利用<code>callback</code>(回调函数)的方式，因为js中函数也是作为对象存在的，因此可以被当做参数传入另一个函数中，只需要在异步操作执行代码后调用回调函数即可。</p>
-<p>但是使用回调函数有很明显的局限性，一方面体现在需要自己对异步操作进行控制，另一方面还很容易陷入”回调地狱”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// use plain callback to sync</span><br><span class="line">function _callback(cb) &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  setTimeout(function () &#123;</span><br><span class="line">    document.body.appendChild(div2)</span><br><span class="line">    cb(&apos;done&apos;)</span><br><span class="line">  &#125;, 2000)</span><br><span class="line"></span><br><span class="line">  return &apos;done&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_callback(function () &#123;</span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-<h2 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h2><p>因为回调地狱的问题，后来聪明的人使用将回调延迟执行的思想，从而发明了promise库，调用者可以根据异步流程随心所欲的resolve或reject某个值给之后的操作，从而解决了毁掉地狱的问题。</p>
-<p>不过使用promise仍然有问题，就是当代码逻辑很长的时候，总需要带着大片大片的<code>then</code>方法，可读性仍然不够清晰。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// use promise to sync</span><br><span class="line">function _promise() &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  return new Promise(res =&gt; &#123;</span><br><span class="line">    setTimeout(function () &#123;</span><br><span class="line">      document.body.appendChild(div2)</span><br><span class="line">      res(&apos;done&apos;)</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_promise().then(data =&gt; &#123;</span><br><span class="line">  console.log(data)</span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-<h2 id="Generate"><a href="#Generate" class="headerlink" title="Generate"></a>Generate</h2><p>后来promise加入了es6标准，同时推出了新的异步解决方案，叫做generate函数，大体讲是提供了一个具有状态机功能的函数，每次执行会停止在实现者声明的某个状态，下次调用会继续从这个状态开始执行。</p>
+<h2>例子</h2>
+<p>插入3个div元素，其中第二个div元素使用<code>setTimeout</code>模拟异步操作，理想的插入顺序为div1 div2 div3，但这里的代码的插入顺序为div1 div3 div2。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// async way</span><br><span class="line">function _async() &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  setTimeout(function () &#123;</span><br><span class="line">    document.body.appendChild(div2)</span><br><span class="line">  &#125;, 2000)</span><br><span class="line"></span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_async()</span><br></pre></td></tr></table></figure></p>
+<h2>Callback</h2>
+<p>最常用的方法是利用<code>callback</code>(回调函数)的方式，因为js中函数也是作为对象存在的，因此可以被当做参数传入另一个函数中，只需要在异步操作执行代码后调用回调函数即可。</p>
+<p>但是使用回调函数有很明显的局限性，一方面体现在需要自己对异步操作进行控制，另一方面还很容易陷入&quot;回调地狱&quot;。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// use plain callback to sync</span><br><span class="line">function _callback(cb) &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  setTimeout(function () &#123;</span><br><span class="line">    document.body.appendChild(div2)</span><br><span class="line">    cb(&apos;done&apos;)</span><br><span class="line">  &#125;, 2000)</span><br><span class="line"></span><br><span class="line">  return &apos;done&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_callback(function () &#123;</span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h2>Promise</h2>
+<p>因为回调地狱的问题，后来聪明的人使用将回调延迟执行的思想，从而发明了promise库，调用者可以根据异步流程随心所欲的resolve或reject某个值给之后的操作，从而解决了毁掉地狱的问题。</p>
+<p>不过使用promise仍然有问题，就是当代码逻辑很长的时候，总需要带着大片大片的<code>then</code>方法，可读性仍然不够清晰。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// use promise to sync</span><br><span class="line">function _promise() &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  return new Promise(res =&gt; &#123;</span><br><span class="line">    setTimeout(function () &#123;</span><br><span class="line">      document.body.appendChild(div2)</span><br><span class="line">      res(&apos;done&apos;)</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_promise().then(data =&gt; &#123;</span><br><span class="line">  console.log(data)</span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h2>Generate</h2>
+<p>后来promise加入了es6标准，同时推出了新的异步解决方案，叫做generate函数，大体讲是提供了一个具有状态机功能的函数，每次执行会停止在实现者声明的某个状态，下次调用会继续从这个状态开始执行。</p>
 <p>generate的出现，使必须依靠<code>callback</code>实现异步操作的代码风格，可以使用同步代码风格实现，是一颗非常甜的语法糖。</p>
 <p>但是它仍有有一些缺点，就是它作为状态机，无法自执行，必须借助实现一个run函数或使用第三方库(如<code>co</code>)。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// use generate to sync</span><br><span class="line">function* _generate() &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  yield function (cb) &#123;</span><br><span class="line">    setTimeout(function () &#123;</span><br><span class="line">      document.body.appendChild(div2)</span><br><span class="line">      cb()</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line"></span><br><span class="line">  return &apos;done&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function run(fn) &#123;</span><br><span class="line">  var gen = fn()</span><br><span class="line"></span><br><span class="line">  function next(data) &#123;</span><br><span class="line">    var result = gen.next(data)</span><br><span class="line"></span><br><span class="line">    console.log(result.value)</span><br><span class="line"></span><br><span class="line">    if (result.done) return</span><br><span class="line"></span><br><span class="line">    result.value(next)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  next()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">run(_generate)</span><br></pre></td></tr></table></figure>
-<h2 id="Async-await"><a href="#Async-await" class="headerlink" title="Async/await"></a>Async/await</h2><p>为了解决generate的缺点，es7很快发布了继generate更强大的一个东西，叫做async函数。简单说，它并没有什么新特性，把它看做是可以自执行的generate函数即可，其中的await的操作符可以看做是yield操作符的翻版。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// use async/await and promise to sync</span><br><span class="line">const fn = function () &#123;</span><br><span class="line">  return new Promise(res =&gt; &#123;</span><br><span class="line">    setTimeout(function () &#123;</span><br><span class="line">      res(document.body.appendChild(div2))</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">async function _await () &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line">  const f = await fn()</span><br><span class="line">  console.log(f)</span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_await()</span><br></pre></td></tr></table></figure>
-<h2 id="Observable"><a href="#Observable" class="headerlink" title="Observable"></a>Observable</h2><p>最近很火的rxjs也快成用来解决这个问题，详细的介绍可以去它的<a href="http://reactivex.io/rxjs/manual/overview.html" target="_blank" rel="noopener">官网</a>了解。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// use rxjs and callback to sync</span><br><span class="line">const _callbackObservable = Observable.bindCallback(_callback)</span><br><span class="line">const result = _callbackObservable()</span><br><span class="line"></span><br><span class="line">// result.subscribe(x =&gt; &#123;</span><br><span class="line">//   document.body.appendChild(div3)</span><br><span class="line">//   console.log(x)</span><br><span class="line">// &#125;)</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// use generate to sync</span><br><span class="line">function* _generate() &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line"></span><br><span class="line">  yield function (cb) &#123;</span><br><span class="line">    setTimeout(function () &#123;</span><br><span class="line">      document.body.appendChild(div2)</span><br><span class="line">      cb()</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line"></span><br><span class="line">  return &apos;done&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function run(fn) &#123;</span><br><span class="line">  var gen = fn()</span><br><span class="line"></span><br><span class="line">  function next(data) &#123;</span><br><span class="line">    var result = gen.next(data)</span><br><span class="line"></span><br><span class="line">    console.log(result.value)</span><br><span class="line"></span><br><span class="line">    if (result.done) return</span><br><span class="line"></span><br><span class="line">    result.value(next)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  next()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">run(_generate)</span><br></pre></td></tr></table></figure></p>
+<h2>Async/await</h2>
+<p>为了解决generate的缺点，es7很快发布了继generate更强大的一个东西，叫做async函数。简单说，它并没有什么新特性，把它看做是可以自执行的generate函数即可，其中的await的操作符可以看做是yield操作符的翻版。</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// use async/await and promise to sync</span><br><span class="line">const fn = function () &#123;</span><br><span class="line">  return new Promise(res =&gt; &#123;</span><br><span class="line">    setTimeout(function () &#123;</span><br><span class="line">      res(document.body.appendChild(div2))</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">async function _await () &#123;</span><br><span class="line">  document.body.appendChild(div1)</span><br><span class="line">  const f = await fn()</span><br><span class="line">  console.log(f)</span><br><span class="line">  document.body.appendChild(div3)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_await()</span><br></pre></td></tr></table></figure></p>
+<h2>Observable</h2>
+<p>最近很火的rxjs也快成用来解决这个问题，详细的介绍可以去它的<a href="http://reactivex.io/rxjs/manual/overview.html" target="_blank" rel="noopener">官网</a>了解。</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// use rxjs and callback to sync</span><br><span class="line">const _callbackObservable = Observable.bindCallback(_callback)</span><br><span class="line">const result = _callbackObservable()</span><br><span class="line"></span><br><span class="line">// result.subscribe(x =&gt; &#123;</span><br><span class="line">//   document.body.appendChild(div3)</span><br><span class="line">//   console.log(x)</span><br><span class="line">// &#125;)</span><br></pre></td></tr></table></figure></p>
+
       
     </div>
     
@@ -204,9 +214,15 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>转行做前端开发正好一周了，仔细一想，是真正意义上的一周呀，因为连上了7天班了。</p>
+      
+          <p>转行做前端开发正好一周了，仔细一想，是真正意义上的一周呀，因为连上了7天班了。</p>
 <p>说到感觉如何，我只能说，那是太好了。自从来了新公司，心情一下就变好了，回想这半年来，一直因为一些事情闷闷不乐，我也是蛮能拼的。不过总体工作还是比较忙，因为正好赶上项目要发布的最后一周，而且前端组的好多工作似乎还堆积了，不过好在最后也是按时完成了任务。</p>
+<p>&lt;!--more--&gt;</p>
+<p>说到公司整体印象，挺好的。我本来寻思吧，估计大连没有像Liferay一样自由的公司了，然而我得到的答案是“自由最自由，只有更自由”。不过这种自由和Liferay相比还不一样，平时的时候，很自由，很轻松，工作或者解决问题的时候，大家又变得很认真、很紧张，这点不同对于我来说，其实是好的。其实原来我也一直在寻找这种感觉，就是大家为一个目标共同努力，共同工作，最后一直也没有找到。原来在Liferay的感觉是，虽然大家都在一起工作，但其实彼此的工作，联系似乎太少了，总是感觉个干个的，交流也少，整体的工作的节奏也比较慢，能解决的事情就解决，解决不了就拖着，慢慢就不了了之了。</p>
+<p>说到工作内容，我还是有点惭愧的。我本想，作为一个新来的，代码也不熟悉，业务也不熟悉，然后就把一部分核心功能交给我做了。我只能说，对于我这种半路出家的前端开发，这是有多信任我啊，我自己都有点受宠若惊的感觉。按我的理解，一般新来还不先改改bug，熟悉熟悉业务，之后慢慢再开始做功能，先做次要的，再做主要的，再来核心的。所以导致我写代码的时候，总是有一种使命感似的，因为要对得起这份别人的信任啊。这种感觉仔细想想，似乎仅仅在两年前刚入职Liferay那会有，所以我后来就下定决心好好学习了，现在这种感觉又回来了，真好。</p>
+<p>最后，我只想说，作为一个新的开始，只要仍然能够做到不忘初心，能够真心实意的为做一些事情而付出，开开心心的度过每一天，我就很满足了。</p>
+<p><img src="/img/new_start.jpg" width="500" height="350"></p>
+
       
     </div>
     
@@ -266,11 +282,38 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>距离离开Liferay还剩下用指头可以数出来的日子了，心中不禁感慨万千。这一个月除了做一些交接工作和下一份工作的准备意外，剩下的时间基本都在思考在Liferay的两年半时间我到底得到了什么，又留下了什么？仔细想想，好像没留下什么，至于得到的，确是很多的，毕竟这是我毕业步入社会进入的第一家公司，很多事情从未知到已知都是从这里开始。</p>
+      
+          <p>距离离开Liferay还剩下用指头可以数出来的日子了，心中不禁感慨万千。这一个月除了做一些交接工作和下一份工作的准备意外，剩下的时间基本都在思考在Liferay的两年半时间我到底得到了什么，又留下了什么？仔细想想，好像没留下什么，至于得到的，确是很多的，毕竟这是我毕业步入社会进入的第一家公司，很多事情从未知到已知都是从这里开始。</p>
 <p>在这里认识了不少人，我从他们身上都学到了很多很多，不经意间也帮助了我很多很多，我衷心说声谢谢，同时我也想说，对于我的离职我只想说，离别是为了下次更好的相遇。</p>
 <p>不过写这篇的目的并不是为了怀旧，只是最近稍微熟悉点儿的人都在问我一个问题，“你为什么离职？”。这个问题，我从有离职想法的那天，到念头一点点变大，再到最后做出离职的决定，我已经问过自己无数次了。细说起来，大大小小的原因有很多，不过大体概括也就两点，一，我无法得到我想要的，二，Liferay同时也并不需要我这样的人，仅此而已，所以我选择离开。</p>
 <p>这里直接说Liferay好像扣上了一个很大的帽子，好吧，这里只是说中国这边的Liferay，后边不特殊说明均指代Liferay CN，如果再具体些，可以指代Liferay CNQA。</p>
+<p>&lt;!--more--&gt;</p>
+<p>时间回到两年前，我刚刚来Liferay的时候，呆了一个星期左右，大体的感觉是，中国竟然还有这样人性化的公司？弹性制，不加班，年假长，事还少，虽然待遇差点，我心想也值得了，多给我个1000、2000的估计我也不会换其他公司，我也暗自决定，虽然闲，但是不能浪费这些时间，要好好利用空余的时间好好提升自己。事实上，我也是这么做的，这两年间我基本把所有空余的时间都投入到了学技术，学英语，学xx上。但越到后边，越觉的感觉不对，总觉的自己与公司、团队的距离越来越远了，最终不得不选择离职。</p>
+<p>最直接的感觉是，团队的技术氛围越来越淡了，做事风格也越来越浮躁了，做很多事情只求结果。还有一些我至今也不是特别懂的事情莫名其妙就发生了，比如:</p>
+<p>以前一个关一个ticket是很有自豪感，可以很负责任地说我关闭了它，它是没有问题的，现在我可以以各种流程为理由关闭它，但我再也不敢说它是没有问题的了。</p>
+<p>前段时间CN这边也开始做test-fix，其实一开始我挺期待的，后边才发现确实不适合我做，我遇事但求个明白，我一直想要一个fix的技术标准，得到的标准却是as it work。</p>
+<p>我后来抽时间给团队分享了一本有关公司测试脚本语音的学习笔记，心想水平虽然比不上某些去美国培训的人强吧，至少也是我自学这么长时间的一些心得体会，抛钻引玉而已，然后竟然被贴了一个“不尊重上级”的标签，还被越级告了一状。</p>
+<p>再后来，我给团队写一个editor吧，也是对培养我两年之久的团队的一个证明，心想不求能极大的提高团队效率，能节省3、5分钟也是极好的，最终却令某些人嗤之以鼻，以“用工具最终出了问题谁负责”，“３、５分钟Lyon也许你觉得很重要，反正我觉得不重要”，“IDE评估了要半年才能做好这么一个东西”等理由被拒绝，最终说我态度有问题和我吵了一架，然后也没有下文了。后来我交了辞职信从别人口中得知，似乎也是尝试性地用过我做的这个editor的，之后似乎是真的没有下文了。不过对于这个editor反馈是好，还是不好，我一点都不清楚。在我看来，这更多算是一种“无声抗议”吧，你也不能说人家就是不愿意用你做的东西不是？但是人家就是不愿意。</p>
+<p>我想说的是，和我这么多的不痛快，到底图个啥？我自以为，归根结底是因为我做很多事情，总是先斩后奏，导致别人总觉得上级领导是偏心我怎么的。据我猜测，应该是我这个人总让人产生不安全感，总让人觉的盛气凌人，总让人觉得会从别人那里抢走什么似的。那我确实不知道说什么了，毕竟这是人的问题，性格问题，处心积虑地为保全自己的地位来这么一次，我表示理解。</p>
+<p>其实对于别人的想法，我是略委屈的，有些时候我也不知道我做这些最终图个啥？从未计较过薪酬待遇，也未曾计较过一官半职，只想尽情做自己想做的事情，为团队尽力所能及之力，改变一些事情。到头来却发现困难重重，一方面是因为团队相对别的office资源本来较少，工作中又常常处于被动的一方，没有什么话语权，另一方面则是团队大部分人本身就缺乏积极性，对于做出改变这种事情，大家大多选择安于现状，对于新鲜事毫无兴趣，少数人甚至比较排斥。</p>
+<p>这两年来，我最大的遗憾，莫过于没有向美国证明，中国这边也是可以做技术活儿的，并不一定要依赖他们。我一直很不爽的事情，莫过于被人轻视，不过也是怪我，将这种情结也联系到了工作上面，致使我一直这么觉的，中国office是被美国轻视的，然后qa组的在中国的是被别的组的轻视的，然而最终还是证明我图样图森破，以一己之力，怎么可以带动整个团队？反过来想，现在的这样子的一个团队似乎也不能怪人家轻视。既缺乏核心技术竞争力，同时又处于工作中的被动方，人力成本又便宜，轻视你，怎么了？</p>
+<p>我离开Liferay只因为我做事太爱钻死理儿。逢事必问为什么，不然只能靠自己去寻找答案，却在寻找答案的过程中，碰了某些人的所谓的底线。</p>
+<p>我离开Liferay只因为我做事不喜欢拖太久。今日事今日毕，有些时候其实并不怪我有些事情先斩后奏，实在是就算先奏，等能斩的时候黄花菜都凉了。</p>
+<p>我离开Liferay只因为我做事脑子太“懒”，手却太“勤”，总强调一个效率。时间就是金钱我的朋友，别总和我说３分钟，５分钟不重要这种话，对于我，很重要，对于团队，也很重要。</p>
+<p>我离开Liferay只因为我太执着，很多事情但凡投入心血，很难放下。是的，很难放下，但是我还是选择离开了，我并非薄情寡义之人，实在有苦难言，有痛难言。</p>
+<p>不过我真心感谢我的直系经理sophia和小组组长steven还有整个fixpack组的每一个人，这两年间给予了我很多支持和鼓励，没有这些，<strong>我想我无法坚持这么久，也无法完成看起来无法完成的事情</strong>。</p>
+<p>mark一下，从加入fixpack到离开的可计量工作（其实不是很完全和准确，因为后来做editor没太多精力了）和一些自发的全栈项目。</p>
+<p>fixpack改为sub task后的工作量分布图:</p>
+<p><img src="/img/sub-tasks.png" width="250" height="350"></p>
+<p>项目:</p>
+<ul>
+<li><a href="https://github.com/haoliangwu/vscode-poshi" target="_blank" rel="noopener">vscode-poshi</a></li>
+<li><a href="https://github.com/haoliangwu/EasyComment" target="_blank" rel="noopener">easycomment</a></li>
+<li><a href="https://github.com/haoliangwu/testray-screenshot" target="_blank" rel="noopener">testray-screenshot</a></li>
+<li><a href="https://github.com/haoliangwu/FixPack-Workbench" target="_blank" rel="noopener">fixpack-workbench</a></li>
+</ul>
+<p>最后祝Liferay越来越好，每个人工作顺利，开心。</p>
+
       
     </div>
     
@@ -330,8 +373,45 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提供的，但是js作为ts的编译对象，同样可以享受这个compiler提供的便利。</p>
+      
+          <p>vscode发布至今已经到1.5.2了，我是从1.1开始用的，经历了几个改动比较大的版本。总体给我的感觉还是很好的，作为一个rich editor，能够提供像webstorm之类ide的代码提示功能非常赞，但是对于这块的配置还真没折腾过，只知道它的提示是基于ts的compiler提供的，虽然是ts提供的，但是js作为ts的编译对象，同样可以享受这个compiler提供的便利。</p>
+<p>&lt;!--more--&gt;</p>
+<p>大体步骤分为：</p>
+<ul>
+<li><a href="#%E8%BF%9B%E8%A1%8Cvscode%E7%9A%84js%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE">配置typings</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85typings%E7%9A%84%E4%BE%9D%E8%B5%96%E8%B5%84%E6%BA%90">安装typings的依赖资源</a></li>
+<li><a href="#%E8%BF%9B%E8%A1%8Cvscode%E7%9A%84js%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE">进行vscode的js项目配置</a></li>
+</ul>
+<h2>配置typings</h2>
+<p>首先你需要安装nodejs环境，这里不赘述了。之后</p>
+<blockquote>
+<p>npm i typings -g</p>
+</blockquote>
+<p>这样全局都可以调用typings这个命令了，然后只需要在你需要提供智能提示的project的根目录执行</p>
+<blockquote>
+<p>typings init</p>
+</blockquote>
+<p>这样会生成一个typings.json文件，这个文件的功能和package.json类似。</p>
+<h2>安装typings的依赖资源</h2>
+<p>安装依赖就容易多了，比如你需要angular的资源，只需要执行</p>
+<blockquote>
+<p>typings i dt~angular --save --global</p>
+</blockquote>
+<p>这里的dt~是指资源的registry，这个可以在typings的帮助信息中查看。</p>
+<p>如果你不确定某个资源的registry，比如你想要react的资源，你可以执行</p>
+<blockquote>
+<p>typings search react</p>
+</blockquote>
+<p>之后console会列出已知的所有资源的registry。</p>
+<h2>进行vscode的js项目配置</h2>
+<p>最后一步，需要为vscode指定js项目配置，这个配置文件叫做jsconfig.json，如果你只需要提供智能提示的功能话，这个文件可以为空。</p>
+<p>这个文件的位置表示以当前位置为项目根目录。</p>
+<p>并行的项目可以提供多个jsconfig在不同的项目中，以此来表示它们是彼此区分的。</p>
+<p>对于嵌套的项目，配置多个jsconfig并不会区分父子关系，不是很建议这么做，因为这个智能提示功能是基于vscode extension的language server实现的，如果一个项目文件过多，可能导致解析超时而导致无法提供正确的提示信息（我遇过n次这种情况，开始还以为是vscode的bug），最好还是采用并行的方式。</p>
+<h2>效果</h2>
+<p>上图一张</p>
+<p><img src="/img/vscode_typings_angular.png" width="566" height="312"></p>
+
       
     </div>
     
@@ -398,8 +478,44 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <h2 id="面试公司"><a href="#面试公司" class="headerlink" title="面试公司"></a>面试公司</h2><p>大连云匠软件</p>
+      
+          <h2>面试公司</h2>
+<p>大连云匠软件</p>
+<p>&lt;!--more--&gt;</p>
+<h2>面试职位</h2>
+<p>Web前端开发</p>
+<h2>面试方式</h2>
+<p>电话面试</p>
+<h2>总结</h2>
+<p>问了一些列范围超级广的问题，不过我感觉大部分问题的答案，面试官还是比较满意的，有一些小问题没有答上来，我觉的并不是因为自己没有能力，其实就是所谓的“约书亚树”道理，当你不明白或者不知道一个事情的时候，如果没有机会去了解它，确实可能永远不可能了解了。就好比这次面试，如果面试官不问我，而我项目经验又比较匮乏，确实真的不知道啊。</p>
+<p>有两个问题我特意去网上查了一下，因此这里特意记录下来，知道的就无视吧，不知道的共勉吧。</p>
+<blockquote>
+<p>display:inline-block为默认样式的标签有哪些？</p>
+</blockquote>
+<p>这个问题我去网上查了一圈，最终按我的理解，这个问题答案的起点应该始于，HTML中有哪些替代标签?</p>
+<p>那么就来查概念吧，<strong>替换标签</strong>是浏览器根据其标签的元素与属性来判断具体显示内容的标签。比如常见的input，根据type属性的值会生成不同功能及样式的标签。所以举一反三咯，a也是，img也是，textarea也是，select也是，因为这些标签本身并没有内容，它们的内容依赖于属性，因此是可&quot;替换&quot;的。</p>
+<p>值得一提的是，替换标签均可以增加行高(line-height)，还可以调整baseline（vertical-align），废话，因为人家是inline嘛。</p>
+<blockquote>
+<p>内容区高度值 = padding-top + padding-bottom + margin-top + margin-bottom + height</p>
+</blockquote>
+<p>那么反过来，<strong>非替换标签</strong>就是浏览器根据其标签内容直接判断具体显示内容的标签。这个就很常见了，因为浏览器中的标签大部分都是非替换的，比如div, p等等。非替换元素添加padding-top或padding-bottom，不影响行框高度，但内容区高度会变化，margin-top，margin- bottom对行框没有任何影响。添加左右边距会影响非替换元素水平位置。要使非替换元素在父元素框内居中，可以设定line-height = 父元素框的高度。</p>
+<p>参考: <a href="http://www.cnblogs.com/huangyin1213/p/5566192.html" target="_blank" rel="noopener">html中label宽度设置、非替换元素和替换元素</a></p>
+<blockquote>
+<p>使用display:inline-block时，标签之间的空格如何解决（非margin）？</p>
+</blockquote>
+<p>这个问题是面试官连着上面的问题问的，当时直接就蒙逼了。后来挂了电话之后，回到电脑上试了一下，这个问题其实以前也确实遇到过，只不过没有在意罢了。</p>
+<p>这个问题的表现类似于这样：</p>
+<p><iframe src="http://jsbin.com/cabetumewu/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe></p>
+<p>其中第一行中的input之间有一个小小的空格，然后呢，源码中并没有类似的的空格，然而真的没有吗，并不是的，这里的空格其实是input后跟着的那个换行符，要解决这个问题，下边的大神博客给了Ｎ种方法，我并没有挨个试，因为我没有额外的ie浏览器进行验证，只挑了几个简单易行的。</p>
+<ul>
+<li>可以不写换行符，直接把元素写到一行，如果觉的可读性不行，那就把换行符写到块级注释中。</li>
+<li>可以使用margin为负值进行调整，但是这个不推荐，因为空格宽度因浏览器不同而不同。</li>
+<li>可以使用无闭合标签</li>
+<li>可以对父元素使用<code>font-size: 0;</code></li>
+</ul>
+<p>这几个方法我亲测有效，其他方法日后有机会也试试，最后感叹句css真是博大精深，我表示除了积累应该是没有捷径了。</p>
+<p>参考: <a href="http://www.zhangxinxu.com/wordpress/?p=2357" target="_blank" rel="noopener">去除inline-block元素间间距的N种方法</a></p>
+
       
     </div>
     
@@ -466,12 +582,59 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <blockquote>
-<p>原文地址: <a href="http://marksheet.io/html-semantics.html" target="_blank" rel="noopener">http://marksheet.io/html-semantics.html</a></p>
+      
+          <blockquote>
+<p>原文地址: http://marksheet.io/html-semantics.html</p>
 </blockquote>
 <p>HTML标签本身的意义是为了传递对于一个document元素的含义，所以再考虑使用正确的标签表达内容之前，考虑你的网页看起来怎么样为时过早，请将注意力集中到每一个你使用的HTML标签上。</p>
 <p>你需要根据你书写的内容及本文本身的含义，来选择与之匹配的HTML标签。</p>
+<p>&lt;!--more--&gt;</p>
+<h2>Structure elements: 组织页面</h2>
+<p>你可以使用<strong>结构</strong>元素来组织页面的主要部分，这些部分通常包含其他的HTML元素。</p>
+<p>下面是一个典型的网页需要包含的<strong>主要部分</strong>:</p>
+<ul>
+<li><code>&lt;header&gt;</code>作为页面的第一个元素，包含logo和tagline。</li>
+<li><code>&lt;nav&gt;</code>作为跳转到其他不同的页面的超链接集合。</li>
+<li><code>&lt;h1&gt;</code>作为页面的标题。</li>
+<li><code>&lt;article&gt;</code>作为页面的内容模块，比如blog的一个post。</li>
+<li><code>&lt;footer&gt;</code>作为页面的最后一个元素，位于最底部。</li>
+</ul>
+<h2>Text elements: 定义内容</h2>
+<p>在结构元素中，通常需要寻找一些<strong>文本</strong>元素来达到定义内容的目的。</p>
+<p>你将主要使用如下标签:</p>
+<ul>
+<li><code>&lt;p&gt;</code>作为段落</li>
+<li><code>&lt;ul&gt;</code>作为无序列表</li>
+<li><code>&lt;ol&gt;</code>作为有序列表</li>
+<li><code>&lt;li&gt;</code>作为列表单元</li>
+<li><code>&lt;blockquote&gt;</code>作为引用</li>
+</ul>
+<h2>Inline elements: 区分文本</h2>
+<p>因为文本标签通常会很长，并且会有不同的内容，<strong>行内</strong>元素使你可以将一些关键部分从文本中区分出来。</p>
+<p>有很多的行内元素可以使用，但是你会经常用到以下几个:</p>
+<ul>
+<li><code>&lt;strong&gt;</code>作为关键字</li>
+<li><code>&lt;em&gt;</code>作为强调字</li>
+<li><code>&lt;a&gt;</code>作为超链接</li>
+<li><code>&lt;small&gt;</code>作为次要字</li>
+<li><code>&lt;abbr&gt;</code>作为缩写</li>
+</ul>
+<p>尝试阅读下面的HTML代码，你就可以很容易的理解每一个元素的用途。</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;article&gt;</span><br><span class="line">  &lt;h1&gt;Main title of the page&lt;/h1&gt;</span><br><span class="line">  &lt;h2&gt;A subtitle&lt;/h2&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">    Something something an other stuff and some &lt;em&gt;emphasis&lt;/em&gt; and even &lt;strong&gt;important&lt;/strong&gt; words.</span><br><span class="line">  &lt;/p&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">    Another paragraph.</span><br><span class="line">  &lt;/p&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li&gt;One&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Two&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;Three&lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">  &lt;blockquote&gt;</span><br><span class="line">    Once said</span><br><span class="line">  &lt;/blockquote&gt;</span><br><span class="line">&lt;/article&gt;</span><br><span class="line">&lt;aside&gt;</span><br><span class="line">  &lt;h3&gt;My latest posts&lt;/h3&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;One&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">&lt;/aside&gt;</span><br></pre></td></tr></table></figure></p>
+<h2>Generic elements 演变标签</h2>
+<p>当没有显而易见的具有语义的标签来匹配相关内容，但你仍然要插入一些标签来达到格式化和分组化的目的，你可以使用一到两个下面的具有演变性的标签:</p>
+<blockquote>
+<p>我理解的演变的意思是这些标签可以通过css样式来变成不同职能的其他标签</p>
+</blockquote>
+<ul>
+<li><code>&lt;div&gt;</code>作为块级元素组</li>
+<li><code>&lt;span&gt;</code>作为行内元素组</li>
+</ul>
+<p>尽管这些标签没有任何的实际意义，但它们与css配合使用将十分有用。</p>
+<h2>Don’t overthink semantics 不要想太多</h2>
+<p>大约有100多种语义标签供你使用。如果可以选择合适的元素来使用，那将是十分不错的选择。</p>
+<p>但是不要花费太多的事情太考虑这件事，仅仅从现在开始，有选择地使用上面所提供的标签，你的网页将会变得更好。</p>
+
       
     </div>
     
@@ -538,8 +701,13 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>portlet是portal中最常用的组件了，所以也来山寨一个70版本的portlet container的UI吧。</p>
+      
+          <p>portlet是portal中最常用的组件了，所以也来山寨一个70版本的portlet container的UI吧。</p>
+<p>&lt;!--more--&gt;</p>
+<p><iframe src="http://jsbin.com/hiviye/edit?output" width="680" height="550" frameborder="0" allowfullscreen></iframe></p>
+<p>唯一花了我不少时间的是，这个对齐的问题，最后才发现，其实只要保证子组件的width+border等于父组件的width就可以了，唉，原谅我的数学是体育老师教的。</p>
+<p>除了配色、左上角和右上角的图标以外，相似度应该很高了，就不截原版图啦。</p>
+
       
     </div>
     
@@ -599,9 +767,19 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>上次山寨了一个smile face，最近因为一直都在测70，然后就又对70的progress bar起了兴趣。</p>
+      
+          <p>上次山寨了一个smile face，最近因为一直都在测70，然后就又对70的progress bar起了兴趣。</p>
 <p>大体上portal的progress bar就两种，一种是线性的，一种是环形的。</p>
+<p>&lt;!--more--&gt;</p>
+<p>先来线性的:</p>
+<p><iframe src="http://jsbin.com/xumove/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe></p>
+<p>线性没有什么困难，值得注意的是，可以使用<code>float</code>属性来模拟一下先向右延伸之后又收缩的效果。</p>
+<p>再来环状的:</p>
+<p><iframe src="http://jsbin.com/zavabaw/edit?output" width="680" height="200" frameborder="0" allowfullscreen></iframe></p>
+<p>环状的比线性的复杂一点，在模拟旋转效果的时候，为了使动画效果不存在偏差（虽然这种偏差十分小，正常情况下是不会被肉眼发现的），在设置<code>transform-origin</code>的时候需要将旋转颗粒的半径也考虑进去，因此旋转中心会变成:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform-origin: $r/2 50px;</span><br></pre></td></tr></table></figure></p>
+<p>就这样，完了有时间再模拟一些portal其他的动画效果。</p>
+
       
     </div>
     
@@ -661,10 +839,71 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <blockquote>
+      
+          <blockquote>
 <p>Set up a server to use as a proxy for requests from Liferay (such as Apache web server)</p>
 </blockquote>
+<p>&lt;!--more--&gt;</p>
+<h1>环境</h1>
+<ul>
+<li>Ubuntu 14.04</li>
+<li>httpd(apache2 for Ubuntu)</li>
+<li>liferay 7.0</li>
+</ul>
+<h1>知识背景</h1>
+<p>这里的proxy server应当是指正向代理(forward proxy)。正向代理大概的意思，就是一个位于客户端和原始服务器之间的服务器，当客户端为了从原始服务器拿一些内容的时候，不向原始服务器直接发送请求而是向代理服务器发送，代理服务器转发客户端请求给原始服务器并将获得内容返还给客户端。</p>
+<p>正向代理的意思，大体就是一个跳板，对于你不方便去的地方或者不能去的地方，它可以带你去，比如一些vpn代理，其原理就是你访问代理服务器，代理服务器访问被墙的网站，之后把内容返还给你。</p>
+<p>既然说了正向代理，就捎带说一下反向代理。反向代理和正向代理相反，对与访问者来说，你访问一个反向代理服务器后，它同样会从原始服务器拿数据，但是这里和正向代理的区别是，访问者不需要进行额外的设置，反向代理服务器判断请求如何转发给原始服务器，之后把内容返还给客户端。</p>
+<p>反向代理的意思，大体就是一个服务柜台，对于你不方便去的地方或者不能去的地方，有人可以帮你去，比如一些设置了防火墙的原始服务器为了提供给外网用户访问，就会使用反向代理。</p>
+<h1>步骤</h1>
+<h3>配置proxy server</h3>
+<p>以ubuntu为例(windows应该会更方便)，直接用apt-get安装</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apache2</span><br></pre></td></tr></table></figure></p>
+<p>之后server的根目录是
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/apache2</span><br></pre></td></tr></table></figure></p>
+<p>进入这里，会发现有一个<strong>apache2.conf</strong>的配置文件，这个文件是apache2的主要配置文件，其中包含了若干子配置文件，分别配置不同模块的配置，看注释就可以大概知道每个模块是做什么的。</p>
+<p>我们这里需要着重看的是<strong>ports.conf</strong>和<strong>000-default.conf</strong>。</p>
+<p>前者主要设置一些关于server监听端口的配置，它的源码如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Listen 80</span><br><span class="line"></span><br><span class="line">&lt;IfModule ssl_module&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_gnutls.c&gt;</span><br><span class="line">	Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure></p>
+<p>大体的意思是</p>
+<blockquote>
+<p>监听80端口，如果有ssl_module和mod_gnutls.c模块加载的话，同时也监听443端口。</p>
+</blockquote>
+<p>如果你还想监听别端口，比如81，可以直接添加
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Listen 81</span><br></pre></td></tr></table></figure></p>
+<p>后者主要设置一些关于虚拟主机的配置，<strong>apache2.conf</strong>中有一行代码
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IncludeOptional sites-enabled/*.conf</span><br></pre></td></tr></table></figure></p>
+<p>意思是会在启动服务器的时候，把所有**./sites-enabled<strong>目录下的配置文件都包含进来，所以我们可以自己新建一个.conf文件，也可以直接更改默认的文件，也就是</strong>000-default.conf**。</p>
+<h2>配置VirtualHost</h2>
+<p>配置完proxy server的监听端口，该配置虚拟主机了，打开默认配置文件，添加如下代码</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br><span class="line">ProxyVia On</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;  </span><br><span class="line">	ServerAdmin prograsliu@gmail.com</span><br><span class="line">    ServerName www.test.com</span><br><span class="line">    ServerAlias test.com</span><br><span class="line">    ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">    CustomLog &quot;logs/test.com-access.log&quot; common    </span><br><span class="line">    </span><br><span class="line">    #正向代理设置</span><br><span class="line">    ProxyRequests On</span><br><span class="line">    ProxyVia On</span><br><span class="line"></span><br><span class="line">    &lt;Proxy *&gt;</span><br><span class="line">        Order deny,allow</span><br><span class="line">        Deny from all</span><br><span class="line">        Allow from 127.0.0.1</span><br><span class="line">    &lt;/Proxy&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure></p>
+<p>开启Apache正向代理
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests On</span><br></pre></td></tr></table></figure></p>
+<p>之后设置控制位于代理服务器链中的代理请求的流向
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ProxyVia On</span><br></pre></td></tr></table></figure></p>
+<p>每个请求和应答都会对应当前主机得到一个&quot;Via:&quot;头。</p>
+<p>再设置对apache监听主机的请求的匹配规则
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这个表示匹配所有80端口的请求，之后又由于这个标签中还有一些其他的设置，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ServerName www.test.com</span><br><span class="line">ServerAlias test.com</span><br><span class="line">ErrorLog &quot;logs/test.com-error.log&quot;</span><br><span class="line">CustomLog &quot;logs/test.com-access.log&quot; common</span><br></pre></td></tr></table></figure></p>
+<p>因此，匹配规则会变为，匹配所有请求www.test.com:80这个主机的请求，同时呢，这个主机的小名是test.com，日志文件根据事件类型按不同路径保存。</p>
+<h2>测试一下</h2>
+<p>设置到这里，proxy server已经设置完成，因此也可以来简单测试一下，比如打开ＦＦ浏览器，之后在<strong>Preference &gt; Advanced &gt; Connection</strong>中，选择<strong>manual proxy configuration</strong>，然后把代理配置填进去，比如
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP proxy: www.test.com</span><br><span class="line">Port: 80</span><br></pre></td></tr></table></figure></p>
+<p>注意下面有一个<strong>No Proxy for</strong>的选项，因此不要拿本地的请求作测试。</p>
+<p>然后访问<strong>www.163.com</strong>，使用f12抓包，可以发现请求的相应头(response header)中，会增加一个字段
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Via: &quot;1.1 www.test.com&quot;</span><br></pre></td></tr></table></figure></p>
+<p>大体意思就是，你打开的163的页面，并不是从网易的浏览器直接获得的，而是从你配置的叫做www.test.com的代理服务器获得的，真正访问网易服务器的是www.test.com。</p>
+<h2>配置liferay</h2>
+<p>接下来就很简单了，只需要让liferay来使用我们配置好的proxy server即可。</p>
+<p>liferay中的system.properties有如下三个参数，
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Set the location of the HTTP proxy that the portal will use to fetch</span><br><span class="line"># external content.</span><br><span class="line">#</span><br><span class="line"># Set http.nonProxyHosts for hosts that will not be proxied. This is useful</span><br><span class="line"># for proxied environments where you need direct access to internal servers.</span><br><span class="line"># This should follow the same semantics as the java.net package.</span><br><span class="line">#</span><br><span class="line">#http.proxyHost=192.168.0.200</span><br><span class="line">#http.proxyPort=4480</span><br><span class="line">#http.nonProxyHosts=192.168.0.250</span><br></pre></td></tr></table></figure></p>
+<p>最后一个不用管，只需要配置前两个，把它改成我们配置的proxy server对应的参数即可，如下
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http.proxyHost=www.test.com</span><br><span class="line">http.proxyPort=80</span><br></pre></td></tr></table></figure></p>
+<p>之后就大功告成了。当portal从外部的server，获取资源时，会使用代理，比如使用亚马逊的s3 store云储存服务时。</p>
+<h3>参考</h3>
+<p><a href="http://www.cnblogs.com/zemliu/archive/2012/04/18/2454655.html" target="_blank" rel="noopener">Apache配置正向代理与反向代理</a></p>
+
       
     </div>
     
@@ -724,8 +963,15 @@
 
   <div class="article-content">
     <div class="entry">
-         
-        <p>说到这个face，自从70开始改版的时候，我就一度以为这个face是歪的，后来才知道，人家就是故意歪的，并且它是一个gif图片，正好最近在学习css相关的东西，借机自己重新仿制一个山寨版的吧。</p>
+      
+          <p>说到这个face，自从70开始改版的时候，我就一度以为这个face是歪的，后来才知道，人家就是故意歪的，并且它是一个gif图片，正好最近在学习css相关的东西，借机自己重新仿制一个山寨版的吧。</p>
+<p>&lt;!--more--&gt;</p>
+<p>原版是这样滴。</p>
+<p><img src="/img/happy_new_content_right.gif" width="250" height="250"></p>
+<p>然后山寨的是这样滴。</p>
+<p><iframe src="http://jsbin.com/fosotew/edit?output" width="680" height="350" frameborder="0" allowfullscreen></iframe></p>
+<p>除了这个相比原版的“嘴角上扬”无法破以外，其他基本一致了，如果有大神能有办法改的话，源码在jsbin中。</p>
+
       
     </div>
     
