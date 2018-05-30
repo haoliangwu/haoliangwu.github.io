@@ -10,11 +10,9 @@
   
 
   
-  <meta name="description" content="问题简述
-给予一个多维数组和一个描述取值路径的一维数组, 通过调用函数f返回取值路径描述的值，如
-f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&amp;gt; 1
+  <meta name="description" content="问题简述给予一个多维数组和一个描述取值路径的一维数组, 通过调用函数f返回取值路径描述的值，如f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&amp;gt; 1
 原问题传送门
-之所以想记录一下是因为之前有在codewars刷题的习惯，后来工作忙就怠慢了，今天闲来无事就准备刷几">
+之所以想记录一下是因为之前有在codewars刷题的习惯，后来工作忙就怠慢了，今天闲来无事就准备刷几道玩">
   
 
   
@@ -133,9 +131,7 @@ f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&amp;gt; 1
   <div class="article-content">
     <div class="entry">
       
-          <h2>问题简述</h2>
-<p>给予一个多维数组和一个描述取值路径的一维数组, 通过调用函数<code>f</code>返回取值路径描述的值，如
-<code>f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&gt; 1</code></p>
+          <h2 id="问题简述"><a href="#问题简述" class="headerlink" title="问题简述"></a>问题简述</h2><p>给予一个多维数组和一个描述取值路径的一维数组, 通过调用函数<code>f</code>返回取值路径描述的值，如<br><code>f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&gt; 1</code></p>
 <p><a href="https://www.codewars.com/kata/multidimensional-array/train/javascript" target="_blank" rel="noopener">原问题传送门</a></p>
 <p>之所以想记录一下是因为之前有在<code>codewars</code>刷题的习惯，后来工作忙就怠慢了，今天闲来无事就准备刷几道玩玩，然后就挑了一个比较简单的<code>7kyu</code>（<code>codewars</code>中的难度评级）的题。</p>
 <p>因为这题比较简单，我也没多想，上来就干，仔细想了下，很容易嘛，不就是递归吗？按大学老师教的来一套：</p>
@@ -143,13 +139,11 @@ f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&amp;gt; 1
 <li>先找递归退出的条件，<code>当路径取到最后</code>或者<code>目标数组已经取尽</code>（这里似乎题目没有说清楚，暂定不对取值路径做限定吧）</li>
 <li>再找递归的模式, <code>如果不满足递归退出的条件，则将目标数组缩小一维，传递新的取值路径并递归</code></li>
 </ul>
-<p>然后就有了第一版代码
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后就有了第一版代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>然后跑了跑作者提供的简单测试用例，<code>all passed</code>，我就说嘛，这么简单的题目不一把过岂不是有点丢脸，然后就直接点了提交，然后就蹦了一大片的<code>failed</code>测试用例出来，仔细看了看失败的测试用例，并没有看懂，因为都是很多莫名奇妙的数据，并且每次返回的结果都不一致（后来才知道是随机的用例）。</p>
 <p>之后一直以为是自己有一些边界情况没有考虑到，就前前后后又看了几次自己的答案，并没有发现什么大的问题，但是无论怎么提交都是失败。之后前前后后大概看了15分钟左右，突然就觉得是我自己把问题想简单了。</p>
 <p>因为最近一直在看函数式的东西，突然就联想到，自己写的这个函数，并不<code>纯</code>。关于纯函数是函数式编程中最基本的概念之一，所谓纯既是要求函数没有副作用，我这里的<code>getElement</code>使用了<code>Array.shift</code>方法，会对原数组进行修改，从而产生副作用。这么一想一下就和之前每次跑用例总是产生意想不到的结果的情况联系上了，随机用例的失败原因一定是因为测试路径会有很多个，但是测试目标数组只有一个，因此有副作用的话，只有第一次测试的结果是正确的，后面都会因副作用产生不同的结果。</p>
-<p>既然是因为数组是<code>引用类型</code>而产生的问题，那么直接来一个<code>深拷贝</code>就可以了。因为这里只是答题，所以使用一个最简单粗暴的深拷贝大法<code>x =&gt; JSON.parse(JSON.stringify(x))</code>，然后代码就有了第二版代码
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  array = JSON.parse(JSON.stringify(array))</span><br><span class="line">  indexes = JSON.parse(JSON.stringify(indexes))</span><br><span class="line">  </span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>既然是因为数组是<code>引用类型</code>而产生的问题，那么直接来一个<code>深拷贝</code>就可以了。因为这里只是答题，所以使用一个最简单粗暴的深拷贝大法<code>x =&gt; JSON.parse(JSON.stringify(x))</code>，然后代码就有了第二版代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  array = JSON.parse(JSON.stringify(array))</span><br><span class="line">  indexes = JSON.parse(JSON.stringify(indexes))</span><br><span class="line">  </span><br><span class="line">  const idx = indexes.shift()</span><br><span class="line">  </span><br><span class="line">  if(indexes.length === 0 || array[idx].constructor !== Array ) return array[idx]</span><br><span class="line">  else return getElement(array[idx], indexes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>之后提交，所有的用例都通过了。但是还没有结束，因为自己的代码在实现上还是挺啰嗦的，同时还使用了深拷贝大法，有没有更简单的方法呢？</p>
 <p>有的。如果仔细思考一下，这里的解题的思路其实和<code>Array.reduce</code>的模式很像</p>
 <ul>
@@ -157,13 +151,10 @@ f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&amp;gt; 1
 <li>每次遍历返回一个值，并作为参数传入下一次遍历（对目标函数的降维）</li>
 <li>在遍历完成后，返回一个结果（取值路径对应的值）</li>
 </ul>
-<p>因此利用<code>Array.reduce</code>，这个问题一行代码就可以解决，如下
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return indexes.reduce((a, i) =&gt; a[i], array);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因此利用<code>Array.reduce</code>，这个问题一行代码就可以解决，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return indexes.reduce((a, i) =&gt; a[i], array);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>同样多考虑一下，它是<code>纯函数</code>吗？是的，它是纯的。因为这里只做了取值的操作（<code>a[i]</code>），并不涉及任何的修改原数组的操作。这个答案也是在我提交后，所有答案中实现方案最好的一个。</p>
-<p>当然还有其他的暴力破解法，我觉的想法也不错，比如
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return eval(`array[$&#123;indexes.join(&quot;][&quot;)&#125;]`);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>还有利用<code>spread</code>运算符的方法，如
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const getElement = (array,[index,...moreIndices]) =&gt; moreIndices.length ? getElement( array[index], moreIndices ) : array[index]</span><br></pre></td></tr></table></figure></p>
+<p>当然还有其他的暴力破解法，我觉的想法也不错，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function getElement(array, indexes) &#123;</span><br><span class="line">  return eval(`array[$&#123;indexes.join(&quot;][&quot;)&#125;]`);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>还有利用<code>spread</code>运算符的方法，如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const getElement = (array,[index,...moreIndices]) =&gt; moreIndices.length ? getElement( array[index], moreIndices ) : array[index]</span><br></pre></td></tr></table></figure></p>
 <p>所以工作累了，或者闲来无事，刷刷题还是挺有意思的，可以看见一些自己平时很熟悉但是在需要用时又难以想起的知识。</p>
 
       
@@ -197,7 +188,7 @@ f([[1, 2], [3, 4], [5, 6]], [0, 0]) -&amp;gt; 1
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">问题简述</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题简述"><span class="toc-number">1.</span> <span class="toc-text">问题简述</span></a></li></ol>
 </div>
 
 

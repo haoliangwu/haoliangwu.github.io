@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>高级 Angular 组件模式 (6) | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+  <meta name="description" content="06 Use 
+原文: Use 
+
+[Render Props](https://reactjs.org/docs/render-props.html)最近在React社区中引起了轰动，但是与之类似的模式在Angular中似乎并没有得到太多关注。我在之前写的文章提及过，TemplateRefs就是A">
+  
+
+  
+  
+  <meta name="keywords" content="js,angular">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="高级 Angular 组件模式 (6)"/>
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
+
+        
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+          
+
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+                    <article class="article-container ">
+
+  
+    
+    <h3 class="article-title"><span>高级 Angular 组件模式 (6)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/05/30/aacp-6/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-05-30T03:06:00.000Z">
+          2018-05-30
+        </time>
+      </a>
+    </span>
+    <br />
+    
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+    
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+          <h2 id="06-Use"><a href="#06-Use" class="headerlink" title="06 Use "></a>06 Use <ng-template></ng-template></h2><blockquote>
+<p>原文: <a href="https://blog.angularindepth.com/use-ng-template-c72852c37fba" target="_blank" rel="noopener">Use <ng-template></ng-template></a></p>
+</blockquote>
+<p><code>[Render Props](https://reactjs.org/docs/render-props.html)</code>最近在<code>React</code>社区中引起了轰动，但是与之类似的模式在Angular中似乎并没有得到太多关注。我在之前写的文章提及过，<code>TemplateRefs</code>就是<code>Angular</code>中的<code>Render Props</code>，同时我会在这篇文章中列举一个简单易用的例子。</p>
+<blockquote>
+<p>Note: <code>TemplateRef</code>是一个类名而<code>&lt;ng-template&gt;</code>是一个<code>html</code>标签，它们本质上是相同的。不过你可能会在项目中更频繁地使用<code>&lt;ng-template&gt;</code>，但是在网上你可以很容易的搜索到关于<code>TemplateRef</code>的知识，因为<code>&lt;ng-template&gt;</code>会给你提供很多<code>html5</code>中的<code>&lt;template&gt;</code>标签的信息。</p>
+</blockquote>
+<p>我们已有的实现中，使用自定义内容指令(content directives)。当组件作者提前了解使用该<code>toggle</code>组件的父组件所需要的状态时，那么它将会正常的运作。但是如果父组件所需要的状态并不在我们的设想之内，我们该怎么办？</p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>将<code>toggle</code>组件的状态直接提供给父组件，同时允许父组件提供相应的渲染视图(<code>view</code>)。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p><code>&lt;ng-template&gt;</code>组件可以完美地解决问题。</p>
+<h4 id="1-Toggle-组件"><a href="#1-Toggle-组件" class="headerlink" title="1. Toggle 组件"></a>1. <code>Toggle</code> 组件</h4><p><code>&lt;toggle&gt;</code>组件能够通过<code>ContentChild</code>装饰器得到关于<code>&lt;ng-template&gt;</code>的引用，之后会赋予模板在渲染时所需要的状态，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;ng-container</span><br><span class="line">  *ngTemplateOutlet=&quot;layoutTemplate; context: &#123; on: this.on, toggle: this.toggle, fns: &#123; toggle: this.toggle &#125; &#125;&quot;&gt;</span><br><span class="line">&lt;/ng-container&gt;</span><br></pre></td></tr></table></figure>
+<p>这里<code>&lt;ng-container&gt;</code>被当做一个占位符来使用，之后你可以使用<code>*ngTemplateOutlet</code>指令来填充它，<code>layoutTemplate</code>变量指代的是需要被渲染的模板，<code>context</code>对象包含的键值对会作为组件状态注入<code>layoutTemplate</code>中。</p>
+<h4 id="2-父组件"><a href="#2-父组件" class="headerlink" title="2. 父组件"></a>2. 父组件</h4><p>从<code>toggle</code>组件中传入的状态是通过<code>let</code>关键字在父组件的<code>&lt;ng-template&gt;</code>标签上显示声明的。</p>
+<p><code>let</code>关键字的使用方式类是这样的：<code>let-templatevar=&quot;inputvar&quot;</code>，<code>templatevar</code>指代在<code>&lt;ng-template&gt;</code>标签中，关联组件状态值的变量名，而<code>inputvar</code>指代使用<code>&lt;toggle&gt;</code>组件的模板作用域中的变量名。</p>
+<p>这种语法会有效地避免命名冲突，比如在父组件作用域中已经有一个<code>inputvar</code>变量了。</p>
+<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><p><a href="https://stackblitz.com/edit/adv-ng-patterns-06-use-template-refs" target="_blank" rel="noopener">stackblitz演示地址</a></p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这种组件设计模式按我个人的理解，其实是依赖倒置原则在视图渲染层的一种延伸，为什么这么说呢？是因为通常情况下子组件视图的渲染逻辑取决于传入的<code>props</code>状态和自身提供的模板，这在大多数情况下不会造成任何困扰，但是当我们无法在提前得知我们需要渲染什么的时候，这个问题就会变得十分棘手。</p>
+<p>一种解决方法，我们可以使用条件渲染指令，根据传入的状态来判定组件渲染的状态，这种解决方法在情况比较少的情况下是可以解决问题的，但是当情况数量十分庞大的情况下，增加过多的条件判定会致使子组件的模板代码量剧增，同时降低性能，因为每次渲染都会进行若干次条件逻辑判断。</p>
+<p>除了上面的解决方法，就是使用正文中所提及的模式了，这种模式将子组件视图的渲染逻辑倒置为子组件仅仅声明模板中所会使用的状态变量，对于这些变量和模板的注入工作，全权赋予父组件，因此会使子组件的复用性和可测试性大大提高。</p>
+<p>正文中仅列举了一个简单的例子中，我这里在简单提及一个实际工作可能会用到的例子，就是表单校验的错误提示组件，一般前端组件设计但凡涉及表单，都会是十分复杂的，更不用说校验这种灵活性很高的功能了。</p>
+<p>为了适应表单校验的灵活性，我们使用这种模式会事半功倍，提供校验信息的组件仅仅声明渲染表单错误提示信息需要设计的状态变量即可，比如<code>dirty</code>、<code>touched</code>等等，对于错误信息的文案及样式，统统交由错误提示组件的使用者完成。</p>
+
+      
+    </div>
+    
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/翻译/">翻译</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/js/">js</a><a href="/tags/angular/">angular</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+  
+    
+    
+  
+</article>
+   
+    <div id="toc" class="toc-article ">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#06-Use"><span class="toc-number">1.</span> <span class="toc-text">06 Use </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#目标"><span class="toc-number">1.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实现"><span class="toc-number">1.2.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Toggle-组件"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. Toggle 组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-父组件"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 父组件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#成果"><span class="toc-number">1.3.</span> <span class="toc-text">成果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">2.</span> <span class="toc-text">译者注</span></a></li></ol>
+</div>
+
+
+  
+
+	<!-- async load  -->
+	<script>
+			function async(u, c) {
+				var d = document, t = 'script',
+						o = d.createElement(t),
+						s = d.getElementsByTagName(t)[0];
+				o.src = u;
+				if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+				s.parentNode.insertBefore(o, s);
+			}
+	</script>
+	<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+	<script>
+			async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+					anchors.options = {
+						visible: 'hover',
+						placement: 'left',
+						// icon: '#'
+					};
+					anchors.add().remove('.article-title').remove('.subheading').remove('.sidebar-container h5');
+			})
+	</script>
+	<style>
+			/* place left on bigger screen */
+			@media all and (min-width: 800px) {
+					.anchorjs-link{
+							position: absolute;
+							left: -0.75em;
+							font-size: 1.1em;
+							margin-top : -0.1em;
+					}
+			}
+	</style>
+
+
+
+
+<!-- UY BEGIN -->
+	<div id="gitment-container"></div>
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script src="/js/web-pinyin.js"></script>
+	<script>
+		function toUnicode(s){ 
+			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+			return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+			});
+		}
+		var title = '高级 Angular 组件模式 (6)'
+		var GitHub_id = 'haoliangwu'
+		var client_id = 'e9cb0c90dcba4035e2d9'
+		var client_secret = '038be595d0dc58ec53b640f87bc5c9ebb94ec399'
+		var repo = 'littlelyon.me'
+		var gitment = new Gitment({
+		// id: '页面 ID', // 可选。默认为 location.href
+		// id:"11" ,
+		id: title,
+		title: title,
+		owner: GitHub_id,//'你的 GitHub ID',
+		repo: repo,//'存储评论的 repo',
+		oauth: {
+			client_id: client_id,//'你的 client ID',
+			client_secret: client_secret,//'你的 client secret',
+		},
+		})
+		gitment.render('gitment-container')
+	</script>
+<!-- UY END -->
+
+
+
+
+                  </main>
+                </div>
+              </div>
+              
+
+
+
+
+
+                <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+                  
+      </div>
+
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
+
+  </body>
+
+</html>

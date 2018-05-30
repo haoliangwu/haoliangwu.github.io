@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html>
+<head >
+  <meta charset="utf-8">
+  
+  <title>小心 Angular 中的单例 Service | Fine, thank you, and you. | 一切安好，感谢有你，与你同行。</title>
+
+  
+  <meta name="author" content="Lyon Wu">
+  
+
+  
+  <meta name="description" content="原文: Angular Services do NOT have to be Singletons
+
+你可能知道，当我们通过@NgModule()装饰器来声明一个service时，它将符合单例模式，同时还意味着它与整个应用的生命周期保持一致。比如：
+123456export class AdminS">
+  
+
+  
+  
+  <meta name="keywords" content="js,angular">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="小心 Angular 中的单例 Service"/>
+
+  <meta property="og:site_name" content="Fine, thank you, and you."/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link href="/favicon.ico" rel="icon">
+
+  <link rel="alternate" href="/atom.xml" title="Fine, thank you, and you." type="application/atom+xml">
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+
+</head>
+
+
+  <body>
+    <style>
+      .loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(/images/magic_cube_loading_spinner.gif) center no-repeat #fff;
+      }
+    </style>
+    <div class="loading"></div>
+    <div class="blog">
+      <div class="content">
+
+        
+
+    <header class="header-container" style="background-image: url('/images/blog-bg.jpg');">
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+          <button type="button" id="tglBtn" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Lyon Wu</a>
+        </div>
+        <div id="bosenyblog-navbar">
+          <div class="navbar-collapse" id="bs-example-navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+            
+              <li><a href="/">Home</a></li>
+            
+              <li><a href="/archives">Archives</a></li>
+            
+            </ul>
+          </div>
+        </div>
+
+    </div>
+ </nav>
+ <div class="gotop-btn">
+
+ </div>
+</header>
+
+          
+
+              <div class="container ">
+                <div class="row">
+                  <main class="site-main posts-loop col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container" style="position: inherit;">
+                    <article class="article-container ">
+
+  
+    
+    <h3 class="article-title"><span>小心 Angular 中的单例 Service</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/04/27/angular-services-do-not-have-to-be-singletons/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-04-27T09:58:30.000Z">
+          2018-04-27
+        </time>
+      </a>
+    </span>
+    <br />
+    
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+    
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+          <blockquote>
+<p>原文: <a href="https://netbasal.com/angular-services-do-not-have-to-be-singletons-ffa879e62082" target="_blank" rel="noopener">Angular Services do NOT have to be Singletons</a></p>
+</blockquote>
+<p>你可能知道，当我们通过<code>@NgModule()</code>装饰器来声明一个<code>service</code>时，它将符合<a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">单例模式</a>，同时还意味着它与整个应用的生命周期保持一致。比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export class AdminService &#123;</span><br><span class="line">  data = Array(10000).fill(dummy);</span><br><span class="line">&#125;</span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  providers: [AdminService, AdminDataService]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>我们在刚开始接触<em>Angular</em>的时候，总是不计后果的将所有<code>service</code>都使用<code>@NgModule()</code>来声明，这将会造成一个不易发现的问题：</p>
+<blockquote>
+<p>You are not releasing memory.</p>
+</blockquote>
+<p>在上面的例子中，尽管你不再需要这些内存中储存的数据，但是让我们停下来仔细想一想，我们真的需要将一个<code>service</code>声明为单例的吗？</p>
+<p>比如，在我们整个应用中，我们会有一个管理区域需要呈现大量的表格数据（同时这些数据只在这个管理区域展现），这些数据会储存在内存中。在这种情况下，我们没有必要将这个<code>service</code>声明为单例的，因为我们不需要缓冲层来缓存这些数据以供应用中的其他模块使用。</p>
+<p>进一步讲，当前我们仅仅是想使这些表格数据在多个<code>component</code>之间共享，同时将数据与<code>service</code>中的多个<code>helper</code>方法耦合起来。所以我们完全可以直接使用<code>@Component()</code>装饰器来声明<code>service</code>，这样它就会成为一个<strong>非单例</strong>的<code>service</code>，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  selector: &apos;admin-tab&apos;,</span><br><span class="line">  providers: [AdminService, AdminDataService]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样做的好处是，当<em>Angular</em>注销组件实例时，<em>Angular</em>将同时注销与之绑定的<code>service</code>实例，y也会释放那些用来储存数据的内存。</p>
+<h3 id="OnDestroy-钩子函数"><a href="#OnDestroy-钩子函数" class="headerlink" title="OnDestroy 钩子函数"></a>OnDestroy 钩子函数</h3><p>许多开发者也许不知道<strong>非单例</strong>的<code>service</code>有<code>ngOnDestroy()</code>生命周期，所以你也可以在这个生命周期中进行一些销毁逻辑代码的编写，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export class AdminService implements OnDestroy &#123;</span><br><span class="line">  ngOnDestroy() &#123;</span><br><span class="line">    // Clean subscriptions, intervals, etc</span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外，如果我们调用<code>NgModuleRef.destroy()</code>或者<code>PlatformRef.destroy()</code>，单例<code>service</code>的<code>ngOnDestroy</code>钩子函数也会被[执行]。(<a href="https://github.com/angular/angular/blob/674c3def319e2c444823319ae43394d46f3973b7/packages/core/src/view/ng_module.ts#L199-L204)。" target="_blank" rel="noopener">https://github.com/angular/angular/blob/674c3def319e2c444823319ae43394d46f3973b7/packages/core/src/view/ng_module.ts#L199-L204)。</a></p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>之所以翻译了这篇文章，是因为今天在整理项目代码的时候，偶然发现了这个问题，虽然我使用<code>Angular</code>也有一段时间了，但是依然将很多没有必要声明在<code>NgModule</code>中的服务以单例模式的方式声明了。文章中指出的问题确实是一个重要但又难以发现的问题。</p>
+<p>大体总结一下<code>Angular</code>中声明<code>service</code>的不同方式和应用场景。</p>
+<h3 id="使用-Component"><a href="#使用-Component" class="headerlink" title="使用@Component"></a>使用<code>@Component</code></h3><p>这时<code>service</code>与组件本身生命周期保持一致，非单例，适合声明一些需要<em>暂存</em>数据的工具类或者仅在某个或某几个组件中需要<em>缓存</em>数据的状态管理类<code>service</code></p>
+<h3 id="使用-NgModule的providers"><a href="#使用-NgModule的providers" class="headerlink" title="使用@NgModule的providers"></a>使用<code>@NgModule</code>的<code>providers</code></h3><p>这时<code>service</code>与应用本身生命周期保持一致（非懒加载），单例，适合声明一些需要在全局<em>缓存</em>数据的状态管理类<code>service</code>。</p>
+<p>但是有一个特例，懒加载模块中的<code>service</code>是会在模块加载时重新创建一个实例的，懒加载模块中均会注入后创建的<code>service</code>实例，因此懒加载模块与非懒加载模块间的<code>service</code>非单例。</p>
+<h3 id="使用forRoot"><a href="#使用forRoot" class="headerlink" title="使用forRoot"></a>使用<code>forRoot</code></h3><p>使用<code>forRoot</code>可以保证当前模块即使是懒加载模块，在加载时也不会重新创建一个新的<code>service</code>实例，因为懒加载模块在加载时，会临时创建一个从属于根<code>injector</code>的子<code>injector</code>，根据<em>Angular</em>中的依赖注入流程，当尝试通过一个子<code>injector</code>中注入不存在的实例对象时，会尝试向父级<code>injector</code>获取，因此最终可保证该<code>service</code>在应用任何地方被注入均是单例。</p>
+<p>关于官方文档的介绍，可以参考<a href="https://angular.io/guide/providers" target="_blank" rel="noopener">Providers</a>和<a href="https://angular.io/guide/singleton-services" target="_blank" rel="noopener">Singleton Services</a>。</p>
+
+      
+    </div>
+    
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/翻译/">翻译</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/js/">js</a><a href="/tags/angular/">angular</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+  
+    
+    
+  
+</article>
+   
+    <div id="toc" class="toc-article ">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#OnDestroy-钩子函数"><span class="toc-number">1.</span> <span class="toc-text">OnDestroy 钩子函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number"></span> <span class="toc-text">译者注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-Component"><span class="toc-number">1.</span> <span class="toc-text">使用@Component</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-NgModule的providers"><span class="toc-number">2.</span> <span class="toc-text">使用@NgModule的providers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用forRoot"><span class="toc-number">3.</span> <span class="toc-text">使用forRoot</span></a></li></ol>
+</div>
+
+
+  
+
+	<!-- async load  -->
+	<script>
+			function async(u, c) {
+				var d = document, t = 'script',
+						o = d.createElement(t),
+						s = d.getElementsByTagName(t)[0];
+				o.src = u;
+				if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+				s.parentNode.insertBefore(o, s);
+			}
+	</script>
+	<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+	<script>
+			async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+					anchors.options = {
+						visible: 'hover',
+						placement: 'left',
+						// icon: '#'
+					};
+					anchors.add().remove('.article-title').remove('.subheading').remove('.sidebar-container h5');
+			})
+	</script>
+	<style>
+			/* place left on bigger screen */
+			@media all and (min-width: 800px) {
+					.anchorjs-link{
+							position: absolute;
+							left: -0.75em;
+							font-size: 1.1em;
+							margin-top : -0.1em;
+					}
+			}
+	</style>
+
+
+
+
+<!-- UY BEGIN -->
+	<div id="gitment-container"></div>
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script src="/js/web-pinyin.js"></script>
+	<script>
+		function toUnicode(s){ 
+			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+			return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+			});
+		}
+		var title = '小心 Angular 中的单例 Service'
+		var GitHub_id = 'haoliangwu'
+		var client_id = 'e9cb0c90dcba4035e2d9'
+		var client_secret = '038be595d0dc58ec53b640f87bc5c9ebb94ec399'
+		var repo = 'littlelyon.me'
+		var gitment = new Gitment({
+		// id: '页面 ID', // 可选。默认为 location.href
+		// id:"11" ,
+		id: title,
+		title: title,
+		owner: GitHub_id,//'你的 GitHub ID',
+		repo: repo,//'存储评论的 repo',
+		oauth: {
+			client_id: client_id,//'你的 client ID',
+			client_secret: client_secret,//'你的 client secret',
+		},
+		})
+		gitment.render('gitment-container')
+	</script>
+<!-- UY END -->
+
+
+
+
+                  </main>
+                </div>
+              </div>
+              
+
+
+
+
+
+                <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/BosenY/Lap" target="_blank">Lap</a>
+    <br/><span id="busuanzi_container_site_uv"> 
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+    </br>
+    
+      
+        &copy; 2018 Lyon Wu
+      
+    
+  </p>
+</footer>
+                  
+      </div>
+
+    </div>
+    <script>
+      window.onload = function () {
+        document.querySelector('.loading').remove()
+      }
+    </script>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/search.js"></script>
+
+  </body>
+
+</html>

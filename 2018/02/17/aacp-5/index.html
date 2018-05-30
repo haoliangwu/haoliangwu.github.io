@@ -11,10 +11,9 @@
 
   
   <meta name="description" content="05 Handle Template Reference Variables with Directives
-
 原文: Handle Template Reference Variables with Directives
 
-在之前的例子中，已经出现多次使用template reference va">
+在之前的例子中，已经出现多次使用template reference var">
   
 
   
@@ -133,15 +132,12 @@
   <div class="article-content">
     <div class="entry">
       
-          <h2>05 Handle Template Reference Variables with Directives</h2>
-<blockquote>
+          <h2 id="05-Handle-Template-Reference-Variables-with-Directives"><a href="#05-Handle-Template-Reference-Variables-with-Directives" class="headerlink" title="05 Handle Template Reference Variables with Directives"></a>05 Handle Template Reference Variables with Directives</h2><blockquote>
 <p>原文: <a href="https://blog.angularindepth.com/handle-template-reference-variables-with-directives-223081bc70c2" target="_blank" rel="noopener">Handle Template Reference Variables with Directives</a></p>
 </blockquote>
 <p>在之前的例子中，已经出现多次使用<code>template reference variable（模板引用变量）</code>的场景，现在让我们来深入研究如何通过使用模板引用变量来关联某个具体指令。</p>
-<h2>目标</h2>
-<p>在视图模板内，获取一个指令的引用。</p>
-<h2>实现</h2>
-<p>模板引用变量是获取某个元素、组件或者指令引用的一种方式，这个引用可以在当前的视图模板中的任何地方使用。它们通常是以<code>#baseToggle</code>或者<code>#myToggle=&quot;toggle&quot;</code>的语法声明的。一旦声明，在视图模板的任何地方就可以使用它。</p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在视图模板内，获取一个指令的引用。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>模板引用变量是获取某个元素、组件或者指令引用的一种方式，这个引用可以在当前的视图模板中的任何地方使用。它们通常是以<code>#baseToggle</code>或者<code>#myToggle=&quot;toggle&quot;</code>的语法声明的。一旦声明，在视图模板的任何地方就可以使用它。</p>
 <p>Note: 请注意作用域的问题，如果你使用<code>&lt;ng-template&gt;</code>或者是一个结构性指令，比如<code>*ngIf</code>或者<code>*ngFor</code>，它会在这个模板上创建一个新的作用域，之后在其内部声明的模板引用变量无法在该模板作用域以外使用。</p>
 <p>模板引用变量的解析顺序通常为：</p>
 <ol>
@@ -150,24 +146,14 @@
 <li>原生html元素，并且没有任何组件绑定与它，比如<code>&lt;div #someDiv&gt;&lt;/div&gt;</code></li>
 </ol>
 <p>之后我们来分别看3个例子。</p>
-<h3>指令与<code>exportAs</code></h3>
-<p>指令可以在它的元数据中声明<code>exportAs</code>属性，这个属性表示它被这个模板引用变量所标识，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// toggle.directive.ts</span><br><span class="line">@Directive(&#123;</span><br><span class="line">  selector: &apos;[toggle]&apos;,</span><br><span class="line">  exportAs: &apos;toggle&apos;,</span><br><span class="line">&#125;)</span><br><span class="line">export class ToggleDirective &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后我们可以在视图模板中直接使用<code>toggle</code>来获取指令的引用，如下：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div toggle #myTemplateRefVar=&quot;toggle&quot;&gt;&lt;/div&gt;</span><br><span class="line">// myTemplateRefVar is the ToggleDirective</span><br></pre></td></tr></table></figure></p>
-<h3>组件</h3>
-<p>对于每一个<code>html</code>元素，只会有一个组件与之对应。当一个组件绑定于一个元素时，那么声明的模板引用变量将会被解析为当前元素上所绑定的组件，比如：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</span><br><span class="line">// toggleOn is the ToggleOnComponent</span><br></pre></td></tr></table></figure></p>
-<h3>HTML元素</h3>
-<p>如果没有组件与元素绑定，模板引用变量会指向当前这个<code>html</code>元素。
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div #someDiv&gt;&lt;/div&gt;</span><br><span class="line">// someDiv is an HTMLDivElement</span><br></pre></td></tr></table></figure></p>
-<h3>成果</h3>
-<p>Note: 在<code>stackblitz</code>中，我通过打印模板引用变量所指向的类的名字（constructor.name）来演示它所代表的引用。</p>
-<p>https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables</p>
-<h2>译者注</h2>
-<p>这篇文章作者关于模板引用变量，仅仅介绍了关于如何声明和在视图模板中如何使用，我在这里再补充一些，如何在组件或者指令类的内部使用。</p>
-<p>在类内部获取模板引用变量所指向的引用是通过使用<code>ViewChild</code>装饰器完成的，比如上述文章中的第二个例子:
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  selector: &apos;my-app&apos;,</span><br><span class="line">  template: `</span><br><span class="line">    &lt;div #myDiv&gt;&lt;/div&gt;</span><br><span class="line">  `,</span><br><span class="line">&#125;)</span><br><span class="line">export class AppComponent &#123;</span><br><span class="line">  @ViewChild(&apos;myDiv&apos;)</span><br><span class="line">  myDiv: ElementRef;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    console.log(this.myDiv);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="指令与exportAs"><a href="#指令与exportAs" class="headerlink" title="指令与exportAs"></a>指令与<code>exportAs</code></h3><p>指令可以在它的元数据中声明<code>exportAs</code>属性，这个属性表示它被这个模板引用变量所标识，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// toggle.directive.ts</span><br><span class="line">@Directive(&#123;</span><br><span class="line">  selector: &apos;[toggle]&apos;,</span><br><span class="line">  exportAs: &apos;toggle&apos;,</span><br><span class="line">&#125;)</span><br><span class="line">export class ToggleDirective &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后我们可以在视图模板中直接使用<code>toggle</code>来获取指令的引用，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div toggle #myTemplateRefVar=&quot;toggle&quot;&gt;&lt;/div&gt;</span><br><span class="line">// myTemplateRefVar is the ToggleDirective</span><br></pre></td></tr></table></figure></p>
+<h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><p>对于每一个<code>html</code>元素，只会有一个组件与之对应。当一个组件绑定于一个元素时，那么声明的模板引用变量将会被解析为当前元素上所绑定的组件，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;toggle-on #toggleOn&gt;&lt;/toggle-on&gt;</span><br><span class="line">// toggleOn is the ToggleOnComponent</span><br></pre></td></tr></table></figure></p>
+<h3 id="HTML元素"><a href="#HTML元素" class="headerlink" title="HTML元素"></a>HTML元素</h3><p>如果没有组件与元素绑定，模板引用变量会指向当前这个<code>html</code>元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// app.component.html</span><br><span class="line">&lt;div #someDiv&gt;&lt;/div&gt;</span><br><span class="line">// someDiv is an HTMLDivElement</span><br></pre></td></tr></table></figure></p>
+<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><p>Note: 在<code>stackblitz</code>中，我通过打印模板引用变量所指向的类的名字（constructor.name）来演示它所代表的引用。</p>
+<p><a href="https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables" target="_blank" rel="noopener">https://stackblitz.com/edit/adv-ng-patterns-05-template-ref-variables</a></p>
+<h2 id="译者注"><a href="#译者注" class="headerlink" title="译者注"></a>译者注</h2><p>这篇文章作者关于模板引用变量，仅仅介绍了关于如何声明和在视图模板中如何使用，我在这里再补充一些，如何在组件或者指令类的内部使用。</p>
+<p>在类内部获取模板引用变量所指向的引用是通过使用<code>ViewChild</code>装饰器完成的，比如上述文章中的第二个例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  selector: &apos;my-app&apos;,</span><br><span class="line">  template: `</span><br><span class="line">    &lt;div #myDiv&gt;&lt;/div&gt;</span><br><span class="line">  `,</span><br><span class="line">&#125;)</span><br><span class="line">export class AppComponent &#123;</span><br><span class="line">  @ViewChild(&apos;myDiv&apos;)</span><br><span class="line">  myDiv: ElementRef;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    console.log(this.myDiv);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里的<code>myDiv</code>即指向当前模板引用变量所指向的html元素。</p>
 <p>Note: 在类中获取模板引用变量所指向的引用时，请格外注意你期望获取的引用类型，在例子中，我们期望获取html元素，因此这里的引用类型是<code>ElementRef</code>，如果是指令或者组件，则分别要对应其类型的<code>Type</code>。</p>
 
@@ -209,7 +195,7 @@
    
     <div id="toc" class="toc-article ">
     <div class="toc-title">目录</div>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">05 Handle Template Reference Variables with Directives</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">指令与exportAs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.</span> <span class="toc-text">HTML元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.4.</span> <span class="toc-text">成果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">译者注</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#05-Handle-Template-Reference-Variables-with-Directives"><span class="toc-number">1.</span> <span class="toc-text">05 Handle Template Reference Variables with Directives</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目标"><span class="toc-number">2.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#指令与exportAs"><span class="toc-number">3.1.</span> <span class="toc-text">指令与exportAs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组件"><span class="toc-number">3.2.</span> <span class="toc-text">组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTML元素"><span class="toc-number">3.3.</span> <span class="toc-text">HTML元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#成果"><span class="toc-number">3.4.</span> <span class="toc-text">成果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#译者注"><span class="toc-number">4.</span> <span class="toc-text">译者注</span></a></li></ol>
 </div>
 
 
